@@ -74,7 +74,7 @@ housing.add(shell);
 const topRib = new THREE.Mesh(new THREE.BoxGeometry(5.8, .22, 4.65), new THREE.MeshStandardMaterial({color:0x46546b,metalness:.7,roughness:.3}));
 topRib.position.y = 2.1;
 housing.add(topRib);
-mark(housing, 'GBX-042', 'Compact Gearbox Assembly');
+mark(housing, 'GBX-042', 'コンパクト減速機アセンブリ');
 scene.add(housing);
 
 const shaft1 = new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,8.8,24),materials.shaft);
@@ -94,7 +94,7 @@ gearSet.add(g1);
 const g2 = gear(1.62,.78,28,materials.gear2);
 g2.position.set(.5,-.9,0);
 gearSet.add(g2);
-mark(gearSet,'GEARSET-01','Gear Pair');
+mark(gearSet,'GEARSET-01','歯車ペア');
 scene.add(gearSet);
 
 const bearing = new THREE.Group();
@@ -105,7 +105,7 @@ const inner = new THREE.Mesh(new THREE.TorusGeometry(.43,.08,16,40),materials.sh
 inner.rotation.y=Math.PI/2;
 bearing.add(inner);
 bearing.position.set(3.35,-.9,0);
-mark(bearing,'BRG-01','Output Bearing');
+mark(bearing,'BRG-01','出力側ベアリング');
 scene.add(bearing);
 
 const floor = new THREE.Mesh(new THREE.CircleGeometry(8,64),new THREE.MeshBasicMaterial({color:0x0b1120,transparent:true,opacity:.52}));
@@ -120,6 +120,78 @@ let reviewData = null;
 let knowledgeData = {items: []};
 let ruleCatalog = {rules: []};
 
+const documentLabels = {
+    AssemblyDrawing: '組立図',
+    WorkInstruction: '作業指示書',
+    InspectionReport: '検査記録',
+    AcceptanceReport: '受入記録',
+};
+
+const sourceLabels = {
+    'assembly_drawing.json': '組立図',
+    'work_instruction.json': '作業指示書',
+    'inspection_report.json': '検査記録',
+    'acceptance_report.json': '受入記録',
+};
+
+const assetLabels = {
+    'GBX-042': 'コンパクト減速機アセンブリ',
+    'GEARSET-01': '歯車ペア',
+    'BRG-01': '出力側ベアリング',
+};
+
+const fieldLabels = {
+    drawing_revision: '図面改訂番号',
+    inspection_revision: '検査参照改訂番号',
+    gear_ratio_design: '設計減速比',
+    gear_ratio_measured: '実測減速比',
+    clearance_min_mm: 'すきま下限（mm）',
+    clearance_max_mm: 'すきま上限（mm）',
+    clearance_measured_mm: '実測すきま（mm）',
+    design: '設計値',
+    measured: '実測値',
+    minimum: '下限値',
+    maximum: '上限値',
+    part_number: '部品番号',
+    material_grade: '材質',
+    lubricant_grade: '潤滑油種別',
+};
+
+const taskLabels = {
+    field_extraction: '項目抽出候補',
+    entity_linking: 'エンティティ関連付け候補',
+    evidence_location: 'エビデンス位置特定候補',
+};
+
+const statusLabels = {
+    pass: '適合',
+    needs_review: '要確認',
+    candidate: '候補',
+    unknown: '未確認',
+    not_evaluated: '未評価',
+    human_review_required: '人手確認が必要',
+    no_issue_found: '問題なし',
+};
+
+const outputLabels = {
+    pass: '適合',
+    revision_consistent: '改訂番号は整合',
+    drawing_revision_mismatch: '図面改訂番号に差異',
+    ratio_within_demo_tolerance: '減速比は許容範囲内',
+    ratio_out_of_tolerance: '減速比が許容範囲外',
+    clearance_within_demo_range: 'すきまは範囲内',
+    clearance_out_of_range: 'すきまが範囲外',
+    not_evaluated: '未評価',
+};
+
+const locatorLabels = {
+    page: 'ページ',
+    table: '表',
+    row: '行',
+    section: '節',
+    column: '列',
+};
+
 function escapeHtml(value) {
     return String(value ?? '')
         .replaceAll('&', '&amp;')
@@ -127,6 +199,26 @@ function escapeHtml(value) {
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#039;');
+}
+
+function fieldLabel(value) {
+    return fieldLabels[value] ?? value;
+}
+
+function documentLabel(value) {
+    return documentLabels[value] ?? value;
+}
+
+function sourceLabel(value) {
+    return sourceLabels[value] ?? value;
+}
+
+function statusLabel(value) {
+    return statusLabels[value] ?? value;
+}
+
+function outputLabel(value) {
+    return outputLabels[value] ?? value;
 }
 
 function setAsset(assetId) {
@@ -140,7 +232,7 @@ function setAsset(assetId) {
         });
     });
     const root = componentRoots.get(assetId);
-    document.querySelector('#selected-name').textContent = root?.userData.name ?? assetId;
+    document.querySelector('#selected-name').textContent = root?.userData.name ?? assetLabels[assetId] ?? assetId;
     document.querySelector('#selected-id').textContent = assetId;
     renderReviewPanels();
 }
@@ -173,21 +265,19 @@ function animate() {
 }
 animate();
 
-const labels = {AssemblyDrawing:'組立図',WorkInstruction:'作業指示',InspectionReport:'検査記録',AcceptanceReport:'受入記録'};
-
 function locatorText(locator) {
-    if (!locator) return 'locator: n/a';
-    return Object.entries(locator).map(([key,value]) => `${escapeHtml(key)}: ${escapeHtml(value)}`).join(' · ');
+    if (!locator) return '位置情報: なし';
+    return Object.entries(locator).map(([key,value]) => `${escapeHtml(locatorLabels[key] ?? key)}: ${escapeHtml(value)}`).join(' · ');
 }
 
 function renderDocuments() {
     const container = document.querySelector('#documents');
-    document.querySelector('#document-count').textContent = `${reviewData.documents.length} documents · ${reviewData.entities.length} assets`;
+    document.querySelector('#document-count').textContent = `${reviewData.documents.length} 文書 · ${reviewData.entities.length} 対象`; 
     container.innerHTML = reviewData.documents.map((doc,index) => `
         <button class="doc-card" data-document-index="${index}">
-            <div class="doc-type">0${index+1} · ${escapeHtml(doc.document_type)}</div>
-            <div class="doc-title">${escapeHtml(labels[doc.document_type] ?? doc.document_type)}</div>
-            <div class="doc-meta">${escapeHtml(doc.source_document)}<br>version ${escapeHtml(doc.document_version)} · ${escapeHtml(doc.document_date)}</div>
+            <div class="doc-type">0${index+1} · ${escapeHtml(documentLabel(doc.document_type))}</div>
+            <div class="doc-title">${escapeHtml(documentLabel(doc.document_type))}</div>
+            <div class="doc-meta">${escapeHtml(sourceLabel(doc.source_document))}<br>版 ${escapeHtml(doc.document_version)} · ${escapeHtml(doc.document_date)}</div>
         </button>
     `).join('');
     container.querySelectorAll('.doc-card').forEach(button => button.addEventListener('click', () => openDocument(Number(button.dataset.documentIndex))));
@@ -197,15 +287,15 @@ function renderReviewPanels() {
     if (!reviewData) return;
     const rules = reviewData.rule_results.filter(rule => rule.target_asset_id === selectedAsset);
     document.querySelector('#rules').innerHTML = rules.length ? rules.map(rule => {
-        const inputs = (rule.inputs ?? []).map(input => `<div class="rule-input"><span>${escapeHtml(input.name)}</span><strong>${escapeHtml(input.value ?? 'n/a')}</strong></div>`).join('');
-        return `<div class="rule-card selected"><div class="rule-id">${escapeHtml(rule.rule_id)}</div><div class="rule-title">${escapeHtml(rule.title)}</div><div class="rule-text">${escapeHtml(rule.public_rule)}</div><div class="rule-inputs">${inputs}</div><span class="status ${rule.status === 'pass' ? 'status-pass' : 'status-review'}">${escapeHtml(rule.status.toUpperCase())}</span></div>`;
+        const inputs = (rule.inputs ?? []).map(input => `<div class="rule-input"><span>${escapeHtml(fieldLabel(input.name))}</span><strong>${escapeHtml(input.value ?? 'なし')}</strong></div>`).join('');
+        return `<div class="rule-card selected"><div class="rule-id">${escapeHtml(rule.rule_id)}</div><div class="rule-title">${escapeHtml(rule.title)}</div><div class="rule-text">${escapeHtml(rule.public_rule)}</div><div class="rule-inputs">${inputs}</div><span class="status ${rule.status === 'pass' ? 'status-pass' : 'status-review'}">${escapeHtml(statusLabel(rule.status))}</span></div>`;
     }).join('') : '<div class="rule-card"><div class="rule-text">この部品に直接紐付く公開デモルールはありません。</div></div>';
 
     const evidence = rules.flatMap(rule => (rule.evidence ?? []).map(item => ({...item, rule_id:rule.rule_id})));
-    document.querySelector('#evidence').innerHTML = evidence.length ? evidence.map(item => `<div class="evidence-card"><div class="evidence-source">${escapeHtml(item.rule_id)} · ${escapeHtml(item.source_document)}</div><div class="evidence-value">${escapeHtml(item.value)}</div><div class="evidence-locator">${escapeHtml(item.document_type)}<br>${locatorText(item.locator)}</div></div>`).join('') : '<div class="evidence-card"><div class="evidence-locator">部品を選ぶと関連 Evidence を表示します。</div></div>';
+    document.querySelector('#evidence').innerHTML = evidence.length ? evidence.map(item => `<div class="evidence-card"><div class="evidence-source">${escapeHtml(item.rule_id)} · ${escapeHtml(sourceLabel(item.source_document))}</div><div class="evidence-value">${escapeHtml(item.value)}</div><div class="evidence-locator">${escapeHtml(documentLabel(item.document_type))}<br>${locatorText(item.locator)}</div></div>`).join('') : '<div class="evidence-card"><div class="evidence-locator">部品を選ぶと関連エビデンスを表示します。</div></div>';
 
     const candidates = (reviewData.ai_assist?.candidates ?? []).filter(item => item.asset_id === selectedAsset);
-    document.querySelector('#ai-candidates').innerHTML = candidates.length ? candidates.map(item => `<div class="ai-card"><div class="ai-task">${escapeHtml(item.task)}</div><div class="rule-title">${escapeHtml(item.candidate_id)}</div><div class="ai-meta">${escapeHtml(item.source_document)}<br>${item.field ? `${escapeHtml(item.field)}: ${escapeHtml(item.candidate_value)}` : escapeHtml(item.source_label ?? '')}</div><div class="confidence">confidence ${Math.round(item.confidence*100)}% · ${escapeHtml(item.status)}</div></div>`).join('') : '<div class="ai-card"><div class="ai-meta">この部品に紐付く AI 候補はありません。</div></div>';
+    document.querySelector('#ai-candidates').innerHTML = candidates.length ? candidates.map(item => `<div class="ai-card"><div class="ai-task">${escapeHtml(taskLabels[item.task] ?? item.task)}</div><div class="rule-title">${escapeHtml(item.candidate_id)}</div><div class="ai-meta">${escapeHtml(sourceLabel(item.source_document))}<br>${item.field ? `${escapeHtml(fieldLabel(item.field))}: ${escapeHtml(item.candidate_value)}` : escapeHtml(item.source_label ?? '')}</div><div class="confidence">信頼度 ${Math.round(item.confidence*100)}% · ${escapeHtml(statusLabel(item.status))}</div></div>`).join('') : '<div class="ai-card"><div class="ai-meta">この部品に紐付くAI候補はありません。</div></div>';
 }
 
 function renderKnowledge(filter = '') {
@@ -214,29 +304,29 @@ function renderKnowledge(filter = '') {
         const haystack = [item.title,item.category,item.summary,item.guidance,...(item.keywords ?? []),...(item.linked_rules ?? [])].join(' ').toLowerCase();
         return !query || haystack.includes(query);
     });
-    document.querySelector('#knowledge-list').innerHTML = items.length ? items.map(item => `<article class="knowledge-card"><div class="knowledge-top"><span class="knowledge-id">${escapeHtml(item.knowledge_id)}</span><span class="knowledge-category">${escapeHtml(item.category)}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="guidance">${escapeHtml(item.guidance)}</div><div class="linked">${(item.linked_rules ?? []).map(rule => `<span>${escapeHtml(rule)}</span>`).join('')}</div></article>`).join('') : '<div class="empty-state">該当する Knowledge がありません。</div>';
+    document.querySelector('#knowledge-list').innerHTML = items.length ? items.map(item => `<article class="knowledge-card"><div class="knowledge-top"><span class="knowledge-id">${escapeHtml(item.knowledge_id)}</span><span class="knowledge-category">${escapeHtml(item.category)}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="guidance">${escapeHtml(item.guidance)}</div><div class="linked">${(item.linked_rules ?? []).map(rule => `<span>${escapeHtml(rule)}</span>`).join('')}</div></article>`).join('') : '<div class="empty-state">該当するナレッジがありません。</div>';
 }
 
 function renderRuleCatalog() {
     const evaluations = new Map((reviewData?.rule_results ?? []).map(item => [item.rule_id, item]));
     const passCount = [...evaluations.values()].filter(item => item.status === 'pass').length;
     const reviewCount = [...evaluations.values()].filter(item => item.status !== 'pass').length;
-    document.querySelector('#rule-summary').innerHTML = `<span class="summary-chip"><strong>${ruleCatalog.rules.length}</strong> rules</span><span class="summary-chip"><strong>${passCount}</strong> pass</span><span class="summary-chip"><strong>${reviewCount}</strong> review</span>`;
+    document.querySelector('#rule-summary').innerHTML = `<span class="summary-chip"><strong>${ruleCatalog.rules.length}</strong> ルール</span><span class="summary-chip"><strong>${passCount}</strong> 適合</span><span class="summary-chip"><strong>${reviewCount}</strong> 要確認</span>`;
     document.querySelector('#rule-catalog').innerHTML = ruleCatalog.rules.map(rule => {
         const evaluation = evaluations.get(rule.rule_id);
         const inputValues = new Map((evaluation?.inputs ?? []).map(item => [item.name, item.value]));
-        return `<article class="rule-row"><div class="rule-cell"><label>Rule</label><strong>${escapeHtml(rule.rule_id)}</strong><p>${escapeHtml(rule.title)}</p></div><div class="rule-cell"><label>Input</label><div class="input-stack">${rule.inputs.map(input => `<div>${escapeHtml(input.name)} <span>· ${escapeHtml(input.document_type)}</span><br><strong>${escapeHtml(inputValues.get(input.name) ?? 'n/a')}</strong></div>`).join('')}</div></div><div class="rule-cell"><label>Judgment</label><p>${escapeHtml(rule.judgment ?? rule.public_rule)}</p>${rule.parameters?.max_relative_error_percent ? `<p>demo tolerance: ${escapeHtml(rule.parameters.max_relative_error_percent)}%</p>` : ''}</div><div class="rule-cell"><label>Output</label><div class="output-code">${escapeHtml(evaluation?.output_code ?? 'not_evaluated')}</div><p>${escapeHtml(evaluation?.status ?? 'unknown')}</p></div><div class="rule-cell"><label>Evidence / Review</label><p>${(rule.evidence_requirements ?? []).map(escapeHtml).join('<br>')}</p><div class="review-mark">${rule.human_review ? '● Human Review' : '○ automatic'}</div></div></article>`;
+        return `<article class="rule-row"><div class="rule-cell"><label>ルール</label><strong>${escapeHtml(rule.rule_id)}</strong><p>${escapeHtml(rule.title)}</p></div><div class="rule-cell"><label>入力</label><div class="input-stack">${rule.inputs.map(input => `<div>${escapeHtml(fieldLabel(input.name))} <span>· ${escapeHtml(documentLabel(input.document_type))}</span><br><strong>${escapeHtml(inputValues.get(input.name) ?? 'なし')}</strong></div>`).join('')}</div></div><div class="rule-cell"><label>判断</label><p>${escapeHtml(rule.judgment ?? rule.public_rule)}</p>${rule.parameters?.max_relative_error_percent ? `<p>デモ用許容差: ${escapeHtml(rule.parameters.max_relative_error_percent)}%</p>` : ''}</div><div class="rule-cell"><label>結果</label><div class="output-code">${escapeHtml(outputLabel(evaluation?.output_code ?? 'not_evaluated'))}</div><p>${escapeHtml(statusLabel(evaluation?.status ?? 'unknown'))}</p></div><div class="rule-cell"><label>エビデンス / 確認</label><p>${(rule.evidence_requirements ?? []).map(escapeHtml).join('<br>')}</p><div class="review-mark">${rule.human_review ? '● 人手確認' : '○ 自動判定'}</div></div></article>`;
     }).join('');
 }
 
 function openDocument(index) {
     const doc = reviewData.documents[index];
     if (!doc) return;
-    document.querySelector('#modal-title').textContent = labels[doc.document_type] ?? doc.document_type;
-    document.querySelector('#modal-meta').textContent = `${doc.source_document} · ${doc.document_id} · version ${doc.document_version} · ${doc.document_date}`;
+    document.querySelector('#modal-title').textContent = documentLabel(doc.document_type);
+    document.querySelector('#modal-meta').textContent = `${sourceLabel(doc.source_document)} · ${doc.document_id} · 版 ${doc.document_version} · ${doc.document_date}`;
     document.querySelector('#modal-content').innerHTML = doc.assets.map(asset => {
-        const fields = Object.entries(asset.snapshot ?? {}).map(([key,value]) => `<div><span>${escapeHtml(key)}</span>${escapeHtml(value)}</div>`).join('');
-        return `<section class="doc-section"><h4>${escapeHtml(asset.asset_id)} · ${escapeHtml(asset.asset_name)}</h4><div class="field-grid">${fields}</div></section>`;
+        const fields = Object.entries(asset.snapshot ?? {}).map(([key,value]) => `<div><span>${escapeHtml(fieldLabel(key))}</span>${escapeHtml(value)}</div>`).join('');
+        return `<section class="doc-section"><h4>${escapeHtml(asset.asset_id)} · ${escapeHtml(assetLabels[asset.asset_id] ?? asset.asset_name)}</h4><div class="field-grid">${fields}</div></section>`;
     }).join('');
     const modal = document.querySelector('#document-modal');
     modal.classList.remove('hidden');
@@ -266,7 +356,7 @@ function addChatMessage(role, text, sources = []) {
     const messages = document.querySelector('#chat-messages');
     const node = document.createElement('div');
     node.className = `chat-message ${role}`;
-    node.innerHTML = `<div class="chat-avatar">${role === 'user' ? 'YOU' : 'AI'}</div><div><div class="chat-bubble">${escapeHtml(text)}</div>${sources.length ? `<div class="chat-sources">${sources.map(escapeHtml).join(' · ')}</div>` : ''}</div>`;
+    node.innerHTML = `<div class="chat-avatar">${role === 'user' ? '自分' : 'AI'}</div><div><div class="chat-bubble">${escapeHtml(text)}</div>${sources.length ? `<div class="chat-sources">${sources.map(escapeHtml).join(' · ')}</div>` : ''}</div>`;
     messages.appendChild(node);
     messages.scrollTop = messages.scrollHeight;
 }
@@ -289,7 +379,7 @@ document.querySelector('#chat-form').addEventListener('submit', async event => {
     try {
         await askAssistant(message);
     } catch (error) {
-        addChatMessage('assistant', '現在は回答サービスに接続できません。Rule Catalog または Knowledge Base を直接確認してください。', ['UI fallback']);
+        addChatMessage('assistant', '現在は回答サービスに接続できません。ルールカタログまたはナレッジベースを直接確認してください。', ['画面内の代替案内']);
         console.error(error);
     } finally {
         input.disabled = false;
@@ -311,13 +401,13 @@ Promise.all([
     reviewData = review;
     knowledgeData = knowledge;
     ruleCatalog = rules;
-    document.querySelector('#review-status').textContent = `${review.case_id} · ${review.summary.review_status}`;
+    document.querySelector('#review-status').textContent = `${review.case_id} · ${statusLabel(review.summary.review_status)}`;
     renderDocuments();
     renderKnowledge();
     renderRuleCatalog();
     setAsset('GBX-042');
 }).catch(error => {
-    document.querySelector('#review-status').textContent = 'API load failed';
-    document.querySelector('#documents').innerHTML = '<div class="loading">Review API could not be loaded.</div>';
+    document.querySelector('#review-status').textContent = 'APIの読み込みに失敗しました';
+    document.querySelector('#documents').innerHTML = '<div class="loading">レビュー情報を読み込めませんでした。</div>';
     console.error(error);
 });
