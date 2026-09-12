@@ -1,0 +1,46 @@
+{
+  "schema": "public_demo_rule_catalog_v1",
+  "note": "All rules and numeric values are fictional and only demonstrate the review flow.",
+  "rules": [
+    {
+      "rule_id": "DEMO-R01",
+      "title": "図面改訂番号の整合",
+      "rule_type": "all_equal",
+      "target_asset_id": "GBX-042",
+      "public_rule": "組立図と検査記録が同じ図面 Rev を参照していること",
+      "inputs": [
+        {"name": "drawing_revision", "document_type": "AssemblyDrawing", "field": "drawing_revision"},
+        {"name": "inspection_revision", "document_type": "InspectionReport", "field": "drawing_revision"}
+      ],
+      "parameters": {},
+      "on_fail": "drawing_revision_mismatch"
+    },
+    {
+      "rule_id": "DEMO-R02",
+      "title": "減速比の確認",
+      "rule_type": "relative_tolerance",
+      "target_asset_id": "GEARSET-01",
+      "public_rule": "設計値と実測値の差がデモ用許容差以内であること",
+      "inputs": [
+        {"name": "design", "document_type": "AssemblyDrawing", "field": "gear_ratio_design"},
+        {"name": "measured", "document_type": "InspectionReport", "field": "gear_ratio_measured"}
+      ],
+      "parameters": {"max_relative_error_percent": 1.5},
+      "on_fail": "ratio_out_of_tolerance"
+    },
+    {
+      "rule_id": "DEMO-R03",
+      "title": "ベアリングすきまの確認",
+      "rule_type": "numeric_range",
+      "target_asset_id": "BRG-01",
+      "public_rule": "実測すきまがデモ用の下限・上限範囲内であること",
+      "inputs": [
+        {"name": "minimum", "document_type": "AssemblyDrawing", "field": "clearance_min_mm"},
+        {"name": "maximum", "document_type": "AssemblyDrawing", "field": "clearance_max_mm"},
+        {"name": "measured", "document_type": "InspectionReport", "field": "clearance_measured_mm"}
+      ],
+      "parameters": {},
+      "on_fail": "clearance_out_of_range"
+    }
+  ]
+}

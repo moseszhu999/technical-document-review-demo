@@ -5,10 +5,10 @@ namespace App\Services;
 class EvidenceChainBuilder
 {
     private const ORDER = [
-        'ProjectSummary' => 10,
-        'TechnicalMeasurementReport' => 20,
-        'InspectionRecord' => 30,
-        'AcceptanceConclusion' => 40,
+        'AssemblyDrawing' => 10,
+        'WorkInstruction' => 20,
+        'InspectionReport' => 30,
+        'AcceptanceReport' => 40,
     ];
 
     /** @return array<int, array<string, mixed>> */

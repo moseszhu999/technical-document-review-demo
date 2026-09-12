@@ -1,0 +1,27 @@
+{
+  "case_id": "MFG-DEMO-042",
+  "document_id": "INSP-042",
+  "document_type": "InspectionReport",
+  "document_version": "1.0",
+  "document_date": "2026-02-18",
+  "assets": [
+    {
+      "asset_id": "GBX-042",
+      "asset_name": "Compact Gearbox Assembly",
+      "snapshot": {"part_number": "GBX-042", "drawing_revision": "D2"},
+      "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Header"}}
+    },
+    {
+      "asset_id": "GEARSET-01",
+      "asset_name": "Gear Pair",
+      "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_measured": 12.62},
+      "locators": {"gear_ratio_measured": {"page": 7, "table": "I-02", "row": "3"}, "part_number": {"page": 7, "table": "I-02", "row": "1"}}
+    },
+    {
+      "asset_id": "BRG-01",
+      "asset_name": "Output Bearing",
+      "snapshot": {"part_number": "BRG-X1", "clearance_measured_mm": 0.24},
+      "locators": {"clearance_measured_mm": {"page": 8, "table": "I-03", "row": "2"}, "part_number": {"page": 8, "table": "I-03", "row": "1"}}
+    }
+  ]
+}

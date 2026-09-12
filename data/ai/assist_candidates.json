@@ -1,0 +1,38 @@
+{
+  "mode": "fixture",
+  "note": "公開デモ用の AI 支援候補です。実モデルの出力や実案件データではありません。",
+  "candidates": [
+    {
+      "candidate_id": "AI-C01",
+      "task": "field_extraction",
+      "asset_id": "GEARSET-01",
+      "source_document": "inspection_report.json",
+      "field": "gear_ratio_measured",
+      "candidate_value": 12.62,
+      "confidence": 0.94,
+      "status": "candidate",
+      "evidence_locator": {"page": 7, "table": "I-02", "row": "3"}
+    },
+    {
+      "candidate_id": "AI-C02",
+      "task": "entity_linking",
+      "asset_id": "BRG-01",
+      "source_document": "work_instruction.json",
+      "source_label": "Output support bearing",
+      "confidence": 0.87,
+      "status": "needs_review",
+      "evidence_locator": {"page": 3, "section": "Assembly step 4"}
+    },
+    {
+      "candidate_id": "AI-C03",
+      "task": "evidence_location",
+      "asset_id": "GBX-042",
+      "source_document": "inspection_report.json",
+      "field": "drawing_revision",
+      "candidate_value": "D2",
+      "confidence": 0.99,
+      "status": "candidate",
+      "evidence_locator": {"page": 1, "section": "Title block"}
+    }
+  ]
+}

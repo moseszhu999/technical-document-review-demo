@@ -5,15 +5,14 @@ namespace App\Services;
 class CrossDocumentComparator
 {
     private const COMPARE_FIELDS = [
-        'installation_reference',
-        'operating_mode',
-        'rated_capacity',
-        'equipment_model',
+        'part_number',
+        'material_grade',
+        'lubricant_grade',
     ];
 
     /**
-     * 同一設備について文書ごとの値を集め、値が分かれた項目だけを Finding にします。
-     * 差異はこの段階では「誤り」と断定しません。
+     * 同一部品の一般属性を文書横断で比較します。
+     * 専門ルールによる判断は RuleEvaluator 側へ分離します。
      *
      * @return array<int, array<string, mixed>>
      */
@@ -41,6 +40,7 @@ class CrossDocumentComparator
                         'document_version' => $document['document_version'],
                         'source_document' => $document['source_document'],
                         'field' => "assets.{$assetId}.snapshot.{$field}",
+                        'locator' => data_get($asset, "locators.{$field}"),
                     ];
                 }
             }
@@ -50,17 +50,14 @@ class CrossDocumentComparator
 
         foreach ($observations as $assetId => $fields) {
             foreach ($fields as $field => $items) {
-                $distinctValues = collect($items)
-                    ->pluck('value')
-                    ->uniqueStrict()
-                    ->values();
+                $distinctValues = collect($items)->pluck('value')->uniqueStrict()->values();
 
                 if ($distinctValues->count() < 2) {
                     continue;
                 }
 
                 $findings[] = [
-                    'finding_id' => sprintf('F-%03d', count($findings) + 1),
+                    'finding_id' => sprintf('DOC-F-%03d', count($findings) + 1),
                     'asset_id' => $assetId,
                     'asset_name' => $assetNames[$assetId],
                     'field' => $field,

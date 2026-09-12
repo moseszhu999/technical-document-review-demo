@@ -1,0 +1,27 @@
+{
+  "case_id": "MFG-DEMO-042",
+  "document_id": "ACC-042",
+  "document_type": "AcceptanceReport",
+  "document_version": "1.0",
+  "document_date": "2026-02-20",
+  "assets": [
+    {
+      "asset_id": "GBX-042",
+      "asset_name": "Compact Gearbox Assembly",
+      "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220", "acceptance_status": "conditional"},
+      "locators": {"acceptance_status": {"page": 2, "section": "Conclusion"}, "part_number": {"page": 1, "section": "Header"}}
+    },
+    {
+      "asset_id": "GEARSET-01",
+      "asset_name": "Gear Pair",
+      "snapshot": {"part_number": "GP-042"},
+      "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "2"}}
+    },
+    {
+      "asset_id": "BRG-01",
+      "asset_name": "Output Bearing",
+      "snapshot": {"part_number": "BRG-X1"},
+      "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "3"}}
+    }
+  ]
+}
