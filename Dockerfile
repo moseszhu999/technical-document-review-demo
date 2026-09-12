@@ -24,4 +24,4 @@ ENV QUEUE_CONNECTION=sync
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "if [ -z \"${APP_KEY:-}\" ]; then export APP_KEY=\"base64:$(php -r 'echo base64_encode(random_bytes(32));')\"; fi; exec php -S 0.0.0.0:${PORT:-10000} -t public public/router.php"]
+CMD ["sh", "-c", "export APP_KEY=\"base64:$(php -r 'echo base64_encode(random_bytes(32));')\"; exec php -S 0.0.0.0:${PORT:-10000} -t public public/router.php"]
