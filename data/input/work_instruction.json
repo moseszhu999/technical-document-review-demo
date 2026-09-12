@@ -4,18 +4,51 @@
   "document_type": "WorkInstruction",
   "document_version": "2.1",
   "document_date": "2026-02-14",
+  "document_content": {
+    "title": "GBX-042 組立作業指示書",
+    "subtitle": "公開デモ用・架空文書",
+    "pages": [
+      {
+        "page": 1,
+        "heading": "作業指示・基本情報",
+        "blocks": [
+          {"type": "kv", "section": "Header", "title": "作業指示ヘッダー", "rows": [
+            {"label": "対象品", "value": "GBX-042"},
+            {"label": "作業指示番号", "value": "WI-042"},
+            {"label": "版", "value": "2.1"},
+            {"label": "作業区分", "value": "最終組立"}
+          ]},
+          {"type": "list", "title": "事前確認", "items": ["部品番号を照合する。", "図面改訂番号を確認する。", "測定器の点検状態を確認する。"]}
+        ]
+      },
+      {
+        "page": 2,
+        "heading": "潤滑工程",
+        "blocks": [
+          {"type": "kv", "section": "Lubrication", "title": "潤滑指定", "rows": [
+            {"label": "対象", "value": "GBX-042"},
+            {"label": "潤滑油種別", "value": "LUBE-220"},
+            {"label": "確認方法", "value": "油量窓と塗布状態を目視確認"}
+          ]},
+          {"type": "paragraph", "title": "注意", "text": "潤滑油コードは組立図 A-04 の指定と一致していることを確認し、差異があれば作業を止めて担当者へ確認する。"}
+        ]
+      },
+      {
+        "page": 3,
+        "heading": "組立工程",
+        "blocks": [
+          {"type": "table", "table": "WORK-STEPS", "title": "主要作業ステップ", "columns": ["工程", "対象", "作業内容", "確認"], "rows": [
+            {"row": "1", "cells": ["1", "ハウジング", "清掃・異物確認", "目視"]},
+            {"row": "2", "cells": ["2", "歯車ペア", "歯当たりと回転を確認", "手回し"]},
+            {"row": "4", "cells": ["4", "BRG-01", "出力側ベアリングを組付け、すきまを測定", "検査記録へ転記"]}
+          ]},
+          {"type": "paragraph", "section": "Assembly step 4", "title": "工程4 詳細", "text": "BRG-01 の組付け後、すきまを測定し、測定値を検査記録 I-03 に記録する。設計範囲外の場合は最終判定せず、人手確認へ送る。"}
+        ]
+      }
+    ]
+  },
   "assets": [
-    {
-      "asset_id": "GBX-042",
-      "asset_name": "Compact Gearbox Assembly",
-      "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220"},
-      "locators": {"lubricant_grade": {"page": 2, "section": "Lubrication"}, "part_number": {"page": 1, "section": "Header"}}
-    },
-    {
-      "asset_id": "BRG-01",
-      "asset_name": "Output Bearing",
-      "snapshot": {"part_number": "BRG-X1"},
-      "locators": {"part_number": {"page": 3, "section": "Assembly step 4"}}
-    }
+    {"asset_id": "GBX-042", "asset_name": "Compact Gearbox Assembly", "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220"}, "locators": {"lubricant_grade": {"page": 2, "section": "Lubrication"}, "part_number": {"page": 1, "section": "Header"}}},
+    {"asset_id": "BRG-01", "asset_name": "Output Bearing", "snapshot": {"part_number": "BRG-X1"}, "locators": {"part_number": {"page": 3, "section": "Assembly step 4"}}}
   ]
 }
