@@ -4,24 +4,41 @@
   "document_type": "AcceptanceReport",
   "document_version": "1.0",
   "document_date": "2026-02-20",
+  "document_content": {
+    "title": "GBX-042 受入確認記録",
+    "subtitle": "公開デモ用・架空文書",
+    "pages": [
+      {
+        "page": 1,
+        "heading": "受入確認・結果一覧",
+        "blocks": [
+          {"type": "kv", "section": "Header", "title": "受入記録ヘッダー", "rows": [
+            {"label": "受入記録番号", "value": "ACC-042"},
+            {"label": "対象品", "value": "GBX-042"},
+            {"label": "受入日", "value": "2026-02-20"},
+            {"label": "受入状態", "value": "条件付き受入"}
+          ]},
+          {"type": "table", "table": "Result summary", "title": "確認結果サマリー", "columns": ["行", "対象", "確認項目", "結果", "備考"], "rows": [
+            {"row": "1", "cells": ["1", "GBX-042", "外観・部品番号", "確認済み", "外観上の重大問題なし"]},
+            {"row": "2", "cells": ["2", "GEARSET-01", "減速比", "適合", "実測 12.62"]},
+            {"row": "3", "cells": ["3", "BRG-01", "出力側すきま", "要確認", "実測 0.24 mm"]}
+          ]}
+        ]
+      },
+      {
+        "page": 2,
+        "heading": "結論・引継ぎ事項",
+        "blocks": [
+          {"type": "paragraph", "section": "Conclusion", "title": "受入結論", "text": "本デモでは、減速比は公開デモ用ルール上で適合。一方、図面改訂番号の差異と出力側ベアリングすきまについて確認が必要なため、受入状態を『条件付き受入』として人手確認へ引き継ぐ。"},
+          {"type": "list", "title": "確認依頼", "items": ["組立図 D3 と検査記録 D2 の参照関係を確認する。", "BRG-01 の測定条件と実測値 0.24 mm を再確認する。", "確認後に正式な受入状態を更新する。"]},
+          {"type": "paragraph", "title": "システム境界", "text": "この画面の判定は公開デモ用の候補です。最終的な専門判断と承認は担当者が行います。"}
+        ]
+      }
+    ]
+  },
   "assets": [
-    {
-      "asset_id": "GBX-042",
-      "asset_name": "Compact Gearbox Assembly",
-      "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220", "acceptance_status": "conditional"},
-      "locators": {"acceptance_status": {"page": 2, "section": "Conclusion"}, "part_number": {"page": 1, "section": "Header"}}
-    },
-    {
-      "asset_id": "GEARSET-01",
-      "asset_name": "Gear Pair",
-      "snapshot": {"part_number": "GP-042"},
-      "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "2"}}
-    },
-    {
-      "asset_id": "BRG-01",
-      "asset_name": "Output Bearing",
-      "snapshot": {"part_number": "BRG-X1"},
-      "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "3"}}
-    }
+    {"asset_id": "GBX-042", "asset_name": "Compact Gearbox Assembly", "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220", "acceptance_status": "conditional"}, "locators": {"acceptance_status": {"page": 2, "section": "Conclusion"}, "part_number": {"page": 1, "section": "Header"}}},
+    {"asset_id": "GEARSET-01", "asset_name": "Gear Pair", "snapshot": {"part_number": "GP-042"}, "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "2"}}},
+    {"asset_id": "BRG-01", "asset_name": "Output Bearing", "snapshot": {"part_number": "BRG-X1"}, "locators": {"part_number": {"page": 1, "table": "Result summary", "row": "3"}}}
   ]
 }
