@@ -11,13 +11,21 @@ class ArkChatService
     /** @return array{answer:string,sources:array<int,string>,model:string} */
     public function answer(string $message): array
     {
-        $apiKey = (string) config('services.ark.api_key');
-        $baseUrl = rtrim((string) config('services.ark.base_url'), '/');
-        $model = (string) config('services.ark.model');
+        $apiKey = $this->normalizeApiKey((string) config('services.ark.api_key'));
+        $baseUrl = rtrim($this->normalizeEnvValue((string) config('services.ark.base_url')), '/');
+        $model = $this->normalizeEnvValue((string) config('services.ark.model'));
         $timeout = (int) config('services.ark.timeout', 25);
 
         if ($apiKey === '') {
             throw new RuntimeException('ARK_API_KEY is not configured.');
+        }
+
+        if ($baseUrl === '') {
+            throw new RuntimeException('ARK_BASE_URL is not configured.');
+        }
+
+        if ($model === '') {
+            throw new RuntimeException('ARK_MODEL is not configured.');
         }
 
         $response = Http::withToken($apiKey)
@@ -44,6 +52,8 @@ class ArkChatService
             Log::warning('Ark chat request failed', [
                 'status' => $response->status(),
                 'model' => $model,
+                'ark_error_code' => $this->safeErrorField($response->json('error.code')),
+                'ark_error_message' => $this->safeErrorField($response->json('error.message')),
             ]);
             throw new RuntimeException('Ark API request failed with status ' . $response->status());
         }
@@ -59,6 +69,43 @@ class ArkChatService
             'sources' => $this->extractSources($answer),
             'model' => $model,
         ];
+    }
+
+    private function normalizeApiKey(string $value): string
+    {
+        $value = $this->normalizeEnvValue($value);
+        $value = preg_replace('/^Bearer\s+/i', '', $value) ?? $value;
+
+        return trim($value);
+    }
+
+    private function normalizeEnvValue(string $value): string
+    {
+        $value = trim($value);
+
+        if (strlen($value) >= 2) {
+            $first = $value[0];
+            $last = $value[strlen($value) - 1];
+            if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                $value = substr($value, 1, -1);
+            }
+        }
+
+        return trim($value);
+    }
+
+    private function safeErrorField(mixed $value): ?string
+    {
+        if (! is_scalar($value)) {
+            return null;
+        }
+
+        $text = trim((string) $value);
+        if ($text === '') {
+            return null;
+        }
+
+        return mb_substr($text, 0, 240);
     }
 
     private function systemPrompt(): string
