@@ -7,7 +7,6 @@ use App\Http\Controllers\DemoRuleCatalogController;
 use App\Services\ArkChatService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
-use Throwable;
 
 Route::get('/demo/review', DemoReviewController::class);
 Route::get('/demo/knowledge', DemoKnowledgeController::class);
@@ -22,7 +21,7 @@ Route::get('/demo/chat-probe', function (ArkChatService $ark): JsonResponse {
             'ok' => true,
             'model' => $result['model'],
         ]);
-    } catch (Throwable) {
+    } catch (\Throwable) {
         return response()->json(['ok' => false], 503);
     }
 })->middleware('throttle:1,1');
