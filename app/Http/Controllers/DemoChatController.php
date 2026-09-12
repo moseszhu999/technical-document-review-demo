@@ -9,6 +9,8 @@ use Throwable;
 
 class DemoChatController
 {
+    private const FALLBACK_NOTICE = 'AI接続失敗・固定デモ回答に切替';
+
     public function __invoke(Request $request, ArkChatService $ark): JsonResponse
     {
         $message = trim((string) $request->input('message', ''));
@@ -35,9 +37,9 @@ class DemoChatController
 
             return response()->json([
                 'mode' => 'grounded_fallback',
-                'answer' => $fallback['answer'],
+                'answer' => '【' . self::FALLBACK_NOTICE . '】 ' . $fallback['answer'],
                 'sources' => $fallback['sources'],
-                'warning' => 'AIサービスに接続できないため、公開デモ内の固定根拠から回答しています。',
+                'warning' => self::FALLBACK_NOTICE,
             ]);
         }
     }
