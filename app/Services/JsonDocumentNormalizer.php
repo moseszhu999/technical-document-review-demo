@@ -15,6 +15,7 @@ class JsonDocumentNormalizer implements DocumentNormalizer
             'document_version' => $document['document_version'] ?? '1',
             'document_date' => $document['document_date'] ?? null,
             'source_document' => $sourceDocument,
+            'document_content' => $document['document_content'] ?? null,
             'assets' => $document['assets'] ?? [],
         ];
     }
