@@ -4,24 +4,56 @@
   "document_type": "InspectionReport",
   "document_version": "1.0",
   "document_date": "2026-02-18",
+  "document_content": {
+    "title": "GBX-042 最終検査記録",
+    "subtitle": "公開デモ用・架空文書",
+    "pages": [
+      {
+        "page": 1,
+        "heading": "検査記録・基本情報",
+        "blocks": [
+          {"type": "kv", "section": "Title block", "title": "検査表題欄", "rows": [
+            {"label": "検査記録番号", "value": "INSP-042"},
+            {"label": "対象品", "value": "GBX-042"},
+            {"label": "参照図面改訂番号", "value": "D2"},
+            {"label": "検査日", "value": "2026-02-18"}
+          ]},
+          {"type": "kv", "section": "Header", "title": "対象情報", "rows": [
+            {"label": "部品番号", "value": "GBX-042"},
+            {"label": "検査区分", "value": "最終機能・寸法確認"},
+            {"label": "記録者", "value": "公開デモ検査担当"}
+          ]},
+          {"type": "paragraph", "title": "検査方針", "text": "測定値は元文書位置と結び付け、差異が見つかった場合は自動的に最終不適合とせず、担当者の確認対象として扱う。"}
+        ]
+      },
+      {
+        "page": 7,
+        "heading": "歯車・減速比検査",
+        "blocks": [
+          {"type": "table", "table": "I-02", "title": "減速比測定結果", "columns": ["行", "対象", "項目", "設計値", "実測値", "結果"], "rows": [
+            {"row": "1", "cells": ["1", "GP-042", "部品番号確認", "GP-042", "GP-042", "一致"]},
+            {"row": "2", "cells": ["2", "GEARSET-01", "回転状態", "滑らか", "滑らか", "確認済み"]},
+            {"row": "3", "cells": ["3", "GEARSET-01", "減速比", "12.50", "12.62", "デモ許容差内"]}
+          ]},
+          {"type": "paragraph", "title": "所見", "text": "実測減速比 12.62 は公開デモ用ルール DEMO-R02 の許容差内であり、ルール判定では適合となる。"}
+        ]
+      },
+      {
+        "page": 8,
+        "heading": "出力側ベアリング検査",
+        "blocks": [
+          {"type": "table", "table": "I-03", "title": "ベアリングすきま測定結果", "columns": ["行", "対象", "項目", "下限", "上限", "実測値", "結果"], "rows": [
+            {"row": "1", "cells": ["1", "BRG-X1", "部品番号確認", "-", "-", "BRG-X1", "一致"]},
+            {"row": "2", "cells": ["2", "BRG-01", "出力側すきま", "0.10", "0.20", "0.24 mm", "要確認"]}
+          ]},
+          {"type": "paragraph", "title": "所見", "text": "実測値 0.24 mm は公開デモ上の上限 0.20 mm を超えているため、最終不適合とは確定せず、元文書と測定条件を確認する。"}
+        ]
+      }
+    ]
+  },
   "assets": [
-    {
-      "asset_id": "GBX-042",
-      "asset_name": "Compact Gearbox Assembly",
-      "snapshot": {"part_number": "GBX-042", "drawing_revision": "D2"},
-      "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Header"}}
-    },
-    {
-      "asset_id": "GEARSET-01",
-      "asset_name": "Gear Pair",
-      "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_measured": 12.62},
-      "locators": {"gear_ratio_measured": {"page": 7, "table": "I-02", "row": "3"}, "part_number": {"page": 7, "table": "I-02", "row": "1"}}
-    },
-    {
-      "asset_id": "BRG-01",
-      "asset_name": "Output Bearing",
-      "snapshot": {"part_number": "BRG-X1", "clearance_measured_mm": 0.24},
-      "locators": {"clearance_measured_mm": {"page": 8, "table": "I-03", "row": "2"}, "part_number": {"page": 8, "table": "I-03", "row": "1"}}
-    }
+    {"asset_id": "GBX-042", "asset_name": "Compact Gearbox Assembly", "snapshot": {"part_number": "GBX-042", "drawing_revision": "D2"}, "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Header"}}},
+    {"asset_id": "GEARSET-01", "asset_name": "Gear Pair", "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_measured": 12.62}, "locators": {"gear_ratio_measured": {"page": 7, "table": "I-02", "row": "3"}, "part_number": {"page": 7, "table": "I-02", "row": "1"}}},
+    {"asset_id": "BRG-01", "asset_name": "Output Bearing", "snapshot": {"part_number": "BRG-X1", "clearance_measured_mm": 0.24}, "locators": {"clearance_measured_mm": {"page": 8, "table": "I-03", "row": "2"}, "part_number": {"page": 8, "table": "I-03", "row": "1"}}}
   ]
 }
