@@ -10,78 +10,17 @@
 <div class="ambient ambient-a"></div>
 <div class="ambient ambient-b"></div>
 <main class="workspace">
-    <header class="hero">
-        <div>
-            <div class="eyebrow">TECHNICAL DOCUMENT REVIEW / PUBLIC DEMO</div>
-            <h1>Manufacturing Evidence Workspace</h1>
-            <p>文書・部品・ルール・Evidence を1つのレビュー面にまとめる架空のギヤボックス案件。</p>
-        </div>
-        <div class="hero-status">
-            <span class="pulse"></span>
-            <span id="review-status">Loading review...</span>
-        </div>
-    </header>
-
-    <section class="pipeline">
-        <span>01 DOCUMENT</span><b>→</b><span>02 AI CANDIDATE</span><b>→</b><span>03 RULE</span><b>→</b><span>04 EVIDENCE</span><b>→</b><span>05 HUMAN REVIEW</span>
-    </section>
-
-    <section class="grid">
-        <aside class="panel documents-panel">
-            <div class="panel-heading"><span>DOCUMENTS</span><small>case evidence chain</small></div>
-            <div id="documents" class="document-list"></div>
-            <div class="legend-note">すべて公開用の架空文書です。</div>
-        </aside>
-
-        <section class="panel model-panel">
-            <div class="panel-heading">
-                <span>3D ASSET VIEW</span>
-                <small>click a component</small>
-            </div>
-            <div id="model-stage">
-                <div class="model-overlay">
-                    <div id="selected-name">Compact Gearbox Assembly</div>
-                    <div id="selected-id">GBX-042</div>
-                </div>
-                <canvas id="gearbox-canvas"></canvas>
-                <div class="model-hint">DRAG TO ROTATE · SCROLL TO ZOOM · CLICK PART</div>
-            </div>
-            <div class="part-tabs">
-                <button data-asset="GBX-042" class="part-tab active">Housing / Assembly</button>
-                <button data-asset="GEARSET-01" class="part-tab">Gear Pair</button>
-                <button data-asset="BRG-01" class="part-tab">Output Bearing</button>
-            </div>
-        </section>
-
-        <aside class="panel rules-panel">
-            <div class="panel-heading"><span>RULE REVIEW</span><small>synthetic public rules</small></div>
-            <div id="rules" class="rule-list"></div>
-        </aside>
-    </section>
-
-    <section class="lower-grid">
-        <section class="panel evidence-panel">
-            <div class="panel-heading"><span>EVIDENCE</span><small>trace back to document location</small></div>
-            <div id="evidence" class="evidence-grid"></div>
-        </section>
-        <section class="panel ai-panel">
-            <div class="panel-heading"><span>AI ASSIST</span><small>candidate only · not final decision</small></div>
-            <div id="ai-candidates" class="ai-list"></div>
-        </section>
-    </section>
-
-    <footer>
-        PUBLIC DEMO · ALL DOCUMENTS, VALUES AND RULES ARE FICTIONAL · NO CLIENT DATA
-    </footer>
+<header class="hero"><div><div class="eyebrow">TECHNICAL DOCUMENT REVIEW / PUBLIC DEMO</div><h1>Manufacturing Evidence Workspace</h1><p>文書・知識・ルール・AI候補・Evidence・3D部品を1つのレビュー体験にまとめた架空の製造業デモ。</p></div><div class="hero-status"><span class="pulse"></span><span id="review-status">Loading...</span></div></header>
+<section class="pipeline"><span>01 DOCUMENT</span><b>→</b><span>02 KNOWLEDGE</span><b>→</b><span>03 AI CANDIDATE</span><b>→</b><span>04 RULE</span><b>→</b><span>05 EVIDENCE</span><b>→</b><span>06 HUMAN REVIEW</span></section>
+<nav class="workspace-nav"><button class="nav-tab active" data-view="review-view">REVIEW WORKSPACE</button><button class="nav-tab" data-view="knowledge-view">KNOWLEDGE BASE</button><button class="nav-tab" data-view="rules-view">RULE CATALOG</button><button class="nav-tab" data-view="chat-view">AI REVIEW CHAT</button></nav>
+<section id="review-view" class="view active"><section class="grid"><aside class="panel documents-panel"><div class="panel-heading"><span>DOCUMENTS</span><small id="document-count">case evidence chain</small></div><div id="documents" class="document-list"></div><div class="legend-note">すべて公開用の架空文書です。クリックすると内容を確認できます。</div></aside><section class="panel model-panel"><div class="panel-heading"><span>3D ASSET VIEW</span><small>click a component</small></div><div id="model-stage"><div class="model-overlay"><div id="selected-name">Compact Gearbox Assembly</div><div id="selected-id">GBX-042</div></div><canvas id="gearbox-canvas"></canvas><div class="model-hint">DRAG TO ROTATE · SCROLL TO ZOOM · CLICK PART</div></div><div class="part-tabs"><button data-asset="GBX-042" class="part-tab active">Housing / Assembly</button><button data-asset="GEARSET-01" class="part-tab">Gear Pair</button><button data-asset="BRG-01" class="part-tab">Output Bearing</button></div></section><aside class="panel rules-panel"><div class="panel-heading"><span>RULE REVIEW</span><small>live evaluation</small></div><div id="rules" class="rule-list"></div></aside></section><section class="lower-grid"><section class="panel evidence-panel"><div class="panel-heading"><span>EVIDENCE</span><small>trace back to document location</small></div><div id="evidence" class="evidence-grid"></div></section><section class="panel ai-panel"><div class="panel-heading"><span>AI ASSIST</span><small>candidate only · not final decision</small></div><div id="ai-candidates" class="ai-list"></div><button class="primary-action" id="open-chat">Open AI Review Chat →</button></section></section></section>
+<section id="knowledge-view" class="view"><div class="section-intro"><div><div class="eyebrow">KNOWLEDGE BASE</div><h2>Manufacturing Review Knowledge</h2><p>レビューに使う知識を、ルールとは分けて参照できるようにした公開デモ用の架空ナレッジ。</p></div><div class="search-box"><span>⌕</span><input id="knowledge-search" type="search" placeholder="図面、減速比、Evidence..." autocomplete="off"></div></div><div id="knowledge-list" class="knowledge-grid"></div></section>
+<section id="rules-view" class="view"><div class="section-intro"><div><div class="eyebrow">RULE CATALOG</div><h2>入力 → 判断 → 結果 → Evidence → Human Review</h2><p>ルールは Prompt に埋め込まず、入力項目と判断結果を確認できる独立したレビュー単位として表示。</p></div><div class="rule-summary" id="rule-summary"></div></div><div id="rule-catalog" class="rule-catalog"></div></section>
+<section id="chat-view" class="view"><div class="chat-layout"><section class="panel chat-panel"><div class="panel-heading"><span>AI REVIEW ASSISTANT</span><small>grounded demo · human decides</small></div><div id="chat-messages" class="chat-messages"><div class="chat-message assistant"><div class="chat-avatar">AI</div><div><div class="chat-bubble">このデモの文書・Knowledge Base・Rule・Evidenceについて質問できます。最終的な専門判断は人が行います。</div><div class="chat-sources">KB-004 · Evidence 追跡ガイド</div></div></div></div><form id="chat-form" class="chat-form"><input id="chat-input" type="text" maxlength="500" placeholder="例：減速比の判定は？" autocomplete="off"><button type="submit">ASK</button></form></section><aside class="panel prompt-panel"><div class="panel-heading"><span>TRY THESE</span><small>grounded questions</small></div><button class="prompt-button" data-prompt="減速比の判定は？">減速比の判定は？</button><button class="prompt-button" data-prompt="ベアリングの判定は？">ベアリングの判定は？</button><button class="prompt-button" data-prompt="図面改訂について教えて">図面改訂について教えて</button><button class="prompt-button" data-prompt="ルールを3つ教えて">ルールを3つ教えて</button><button class="prompt-button" data-prompt="Knowledge Baseには何がある？">Knowledge Baseには何がある？</button><div class="ai-boundary"><strong>AI boundary</strong><p>AI は候補抽出・関連付け・Evidence候補の提示を支援。ルール判定と最終確認は別レイヤーで扱います。</p></div></aside></div></section>
+<footer>PUBLIC DEMO · ALL DOCUMENTS, KNOWLEDGE, VALUES AND RULES ARE FICTIONAL · NO CLIENT DATA</footer>
 </main>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-  }
-}
-</script>
+<div id="document-modal" class="modal hidden" aria-hidden="true"><div class="modal-backdrop"></div><section class="modal-card"><button class="modal-close" id="modal-close" aria-label="Close">×</button><div class="eyebrow">DOCUMENT PREVIEW</div><h2 id="modal-title">Document</h2><div id="modal-meta" class="modal-meta"></div><div id="modal-content" class="document-preview"></div></section></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script type="module" src="/js/gearbox-demo.js"></script>
 </body>
 </html>
