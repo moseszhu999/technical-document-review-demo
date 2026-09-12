@@ -2,9 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Services\RuleCatalog;
 use App\Services\RuleEvaluator;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class RuleEvaluatorTest extends TestCase
 {
@@ -23,9 +22,7 @@ class RuleEvaluatorTest extends TestCase
             ]),
         ];
 
-        $catalog = $this->createMock(RuleCatalog::class);
-        $catalog->method('all')->willReturn(json_decode(file_get_contents(base_path('data/rules/public_demo_rules.json')), true)['rules']);
-        $results = (new RuleEvaluator($catalog))->evaluate($documents);
+        $results = $this->app->make(RuleEvaluator::class)->evaluate($documents);
 
         $this->assertCount(3, $results);
         $this->assertSame('needs_review', $results[0]['status']);
@@ -36,11 +33,22 @@ class RuleEvaluatorTest extends TestCase
 
     private function document(string $type, array $assets): array
     {
-        return ['document_id' => $type, 'document_type' => $type, 'document_version' => '1', 'source_document' => strtolower($type).'.json', 'assets' => $assets];
+        return [
+            'document_id' => $type,
+            'document_type' => $type,
+            'document_version' => '1',
+            'source_document' => strtolower($type).'.json',
+            'assets' => $assets,
+        ];
     }
 
     private function asset(string $id, array $snapshot): array
     {
-        return ['asset_id' => $id, 'asset_name' => $id, 'snapshot' => $snapshot, 'locators' => []];
+        return [
+            'asset_id' => $id,
+            'asset_name' => $id,
+            'snapshot' => $snapshot,
+            'locators' => [],
+        ];
     }
 }
