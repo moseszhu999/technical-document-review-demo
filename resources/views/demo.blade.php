@@ -6,7 +6,7 @@
     <title>製造業 技術文書レビュー・ワークスペース</title>
     <link rel="stylesheet" href="/css/demo.css">
     <link rel="stylesheet" href="/css/document-preview.css">
-    <link rel="stylesheet" href="/css/chat-status.css?v=20260912-2">
+    <link rel="stylesheet" href="/css/chat-status.css?v=20260912-3">
 </head>
 <body>
 <div class="ambient ambient-a"></div>
@@ -23,7 +23,7 @@
 </main>
 <div id="document-modal" class="modal hidden" aria-hidden="true"><div class="modal-backdrop"></div><section class="modal-card"><button class="modal-close" id="modal-close" aria-label="閉じる">×</button><div class="eyebrow">文書プレビュー</div><h2 id="modal-title">文書</h2><div id="modal-meta" class="modal-meta"></div><div id="modal-content" class="document-preview"></div></section></div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script src="/js/chat-connection-status.js?v=20260912-2"></script>
+<script src="/js/chat-connection-status.js?v=20260912-3"></script>
 <script type="module" src="/js/gearbox-demo.js"></script>
 <script type="module" src="/js/document-preview.js"></script>
 </body>
