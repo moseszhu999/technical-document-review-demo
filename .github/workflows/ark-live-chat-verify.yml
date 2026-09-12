@@ -1,0 +1,17 @@
+name: Ark Live Chat Verify
+
+on:
+  push:
+    branches:
+      - diag/ark-probe-run
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify live chat
+        run: >-
+          curl -sS -i --max-time 60 -X POST
+          -H 'Content-Type: application/json'
+          --data '{"message":"減速比の判定は？"}'
+          https://technical-document-review-demo.onrender.com/api/demo/chat
