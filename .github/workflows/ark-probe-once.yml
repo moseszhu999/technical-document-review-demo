@@ -1,0 +1,14 @@
+name: Ark Probe Once
+
+on:
+  push:
+    branches:
+      - diag/ark-probe-run
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call live Ark probe
+        run: |
+          curl -sS -i --max-time 60 https://technical-document-review-demo.onrender.com/api/demo/chat-probe || true
