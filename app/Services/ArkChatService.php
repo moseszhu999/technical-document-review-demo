@@ -12,12 +12,13 @@ class ArkChatService
     public function answer(string $message): array
     {
         $apiKey = $this->normalizeApiKey((string) config('services.ark.api_key'));
+        $apiKeySource = (string) config('services.ark.api_key_source', 'unknown');
         $baseUrl = rtrim($this->normalizeEnvValue((string) config('services.ark.base_url')), '/');
         $model = $this->normalizeEnvValue((string) config('services.ark.model'));
         $timeout = (int) config('services.ark.timeout', 25);
 
         if ($apiKey === '') {
-            throw new RuntimeException('ARK_API_KEY is not configured.');
+            throw new RuntimeException('Ark API key is not configured.');
         }
 
         if ($baseUrl === '') {
@@ -52,6 +53,7 @@ class ArkChatService
             Log::warning('Ark chat request failed', [
                 'status' => $response->status(),
                 'model' => $model,
+                'api_key_source' => $apiKeySource,
                 'ark_error_code' => $this->safeErrorField($response->json('error.code')),
                 'ark_error_message' => $this->safeErrorField($response->json('error.message')),
             ]);
