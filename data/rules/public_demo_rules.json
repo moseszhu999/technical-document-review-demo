@@ -1,24 +1,24 @@
 {
   "schema": "public_demo_rule_catalog_v1",
-  "note": "All rules and numeric values are fictional and only demonstrate the review flow.",
+  "note": "すべてのルールと数値は公開デモ用の架空データです。",
   "rules": [
     {
       "rule_id": "DEMO-R01",
       "title": "図面改訂番号の整合",
       "rule_type": "all_equal",
       "target_asset_id": "GBX-042",
-      "public_rule": "組立図と検査記録が同じ図面 Rev を参照していること",
+      "public_rule": "組立図と検査記録が同じ図面改訂番号を参照していること",
       "inputs": [
         {"name": "drawing_revision", "document_type": "AssemblyDrawing", "field": "drawing_revision"},
         {"name": "inspection_revision", "document_type": "InspectionReport", "field": "drawing_revision"}
       ],
-      "judgment": "2つの入力値が一致していれば PASS。一致しなければ NEEDS_REVIEW。",
+      "judgment": "2つの入力値が一致していれば適合。一致しなければ要確認。",
       "output": {
         "pass": "revision_consistent",
         "needs_review": "drawing_revision_mismatch"
       },
       "parameters": {},
-      "evidence_requirements": ["組立図の Rev", "検査記録の Rev"],
+      "evidence_requirements": ["組立図の改訂番号", "検査記録の改訂番号"],
       "human_review": true,
       "on_fail": "drawing_revision_mismatch"
     },
@@ -32,7 +32,7 @@
         {"name": "design", "document_type": "AssemblyDrawing", "field": "gear_ratio_design"},
         {"name": "measured", "document_type": "InspectionReport", "field": "gear_ratio_measured"}
       ],
-      "judgment": "設計値と実測値の相対差を確認し、デモ用の許容差以内なら PASS。",
+      "judgment": "設計値と実測値の相対差を確認し、デモ用の許容差以内なら適合。",
       "output": {
         "pass": "ratio_within_demo_tolerance",
         "needs_review": "ratio_out_of_tolerance"
@@ -53,7 +53,7 @@
         {"name": "maximum", "document_type": "AssemblyDrawing", "field": "clearance_max_mm"},
         {"name": "measured", "document_type": "InspectionReport", "field": "clearance_measured_mm"}
       ],
-      "judgment": "実測値が下限以上かつ上限以下なら PASS。範囲外なら NEEDS_REVIEW。",
+      "judgment": "実測値が下限以上かつ上限以下なら適合。範囲外なら要確認。",
       "output": {
         "pass": "clearance_within_demo_range",
         "needs_review": "clearance_out_of_range"
