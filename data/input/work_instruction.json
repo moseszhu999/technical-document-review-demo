@@ -1,0 +1,21 @@
+{
+  "case_id": "MFG-DEMO-042",
+  "document_id": "WI-042",
+  "document_type": "WorkInstruction",
+  "document_version": "2.1",
+  "document_date": "2026-02-14",
+  "assets": [
+    {
+      "asset_id": "GBX-042",
+      "asset_name": "Compact Gearbox Assembly",
+      "snapshot": {"part_number": "GBX-042", "lubricant_grade": "LUBE-220"},
+      "locators": {"lubricant_grade": {"page": 2, "section": "Lubrication"}, "part_number": {"page": 1, "section": "Header"}}
+    },
+    {
+      "asset_id": "BRG-01",
+      "asset_name": "Output Bearing",
+      "snapshot": {"part_number": "BRG-X1"},
+      "locators": {"part_number": {"page": 3, "section": "Assembly step 4"}}
+    }
+  ]
+}

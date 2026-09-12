@@ -11,6 +11,8 @@ class DocumentReviewService
         private readonly DocumentNormalizer $normalizer,
         private readonly CrossDocumentComparator $comparator,
         private readonly EvidenceChainBuilder $evidenceChainBuilder,
+        private readonly RuleEvaluator $ruleEvaluator,
+        private readonly AiCandidateReader $aiCandidateReader,
     ) {}
 
     /** @return array<string, mixed> */
@@ -37,19 +39,26 @@ class DocumentReviewService
             ->values()
             ->all();
 
-        $findings = $this->comparator->compare($documents);
+        $documentFindings = $this->comparator->compare($documents);
+        $ruleResults = $this->ruleEvaluator->evaluate($documents);
+        $failedRuleCount = collect($ruleResults)->where('status', 'needs_review')->count();
+        $reviewRequired = $documentFindings !== [] || $failedRuleCount > 0;
 
         return [
             'case_id' => $caseIds->first(),
             'documents' => $documents,
             'entities' => $entities,
+            'rule_results' => $ruleResults,
+            'document_findings' => $documentFindings,
             'evidence_chain' => $this->evidenceChainBuilder->build($documents),
-            'findings' => $findings,
+            'ai_assist' => $this->aiCandidateReader->read(),
             'summary' => [
                 'document_count' => count($documents),
                 'entity_count' => count($entities),
-                'finding_count' => count($findings),
-                'review_status' => $findings === [] ? 'no_difference_found' : 'human_review_required',
+                'rule_count' => count($ruleResults),
+                'rule_review_count' => $failedRuleCount,
+                'document_finding_count' => count($documentFindings),
+                'review_status' => $reviewRequired ? 'human_review_required' : 'no_issue_found',
             ],
         ];
     }

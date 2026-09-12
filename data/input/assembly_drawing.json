@@ -1,0 +1,27 @@
+{
+  "case_id": "MFG-DEMO-042",
+  "document_id": "DRAW-042",
+  "document_type": "AssemblyDrawing",
+  "document_version": "D3",
+  "document_date": "2026-02-12",
+  "assets": [
+    {
+      "asset_id": "GBX-042",
+      "asset_name": "Compact Gearbox Assembly",
+      "snapshot": {"part_number": "GBX-042", "drawing_revision": "D3", "lubricant_grade": "LUBE-220"},
+      "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Title block"}, "lubricant_grade": {"page": 4, "table": "A-04", "row": "2"}}
+    },
+    {
+      "asset_id": "GEARSET-01",
+      "asset_name": "Gear Pair",
+      "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_design": 12.5},
+      "locators": {"gear_ratio_design": {"page": 2, "table": "A-02", "row": "1"}, "part_number": {"page": 2, "table": "A-02", "row": "1"}}
+    },
+    {
+      "asset_id": "BRG-01",
+      "asset_name": "Output Bearing",
+      "snapshot": {"part_number": "BRG-X1", "clearance_min_mm": 0.1, "clearance_max_mm": 0.2},
+      "locators": {"clearance_min_mm": {"page": 3, "table": "A-03", "row": "5"}, "clearance_max_mm": {"page": 3, "table": "A-03", "row": "5"}}
+    }
+  ]
+}
