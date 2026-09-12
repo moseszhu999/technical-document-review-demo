@@ -4,24 +4,52 @@
   "document_type": "AssemblyDrawing",
   "document_version": "D3",
   "document_date": "2026-02-12",
+  "document_content": {
+    "title": "小型減速機 GBX-042 組立図",
+    "subtitle": "公開デモ用・架空文書",
+    "pages": [
+      {
+        "page": 1,
+        "heading": "表紙・図面表題欄",
+        "blocks": [
+          {"type": "kv", "section": "Title block", "title": "図面表題欄", "rows": [
+            {"label": "図面番号", "value": "DRAW-042"},
+            {"label": "品名", "value": "コンパクト減速機アセンブリ"},
+            {"label": "部品番号", "value": "GBX-042"},
+            {"label": "図面改訂番号", "value": "D3"},
+            {"label": "作成日", "value": "2026-02-12"}
+          ]},
+          {"type": "paragraph", "title": "図面概要", "text": "本図は小型減速機の組立関係と主要設計値を示す公開デモ用の架空文書です。実在する製品や規格を示すものではありません。"}
+        ]
+      },
+      {
+        "page": 2,
+        "heading": "主要設計仕様",
+        "blocks": [
+          {"type": "table", "table": "A-02", "title": "歯車・減速比仕様", "columns": ["行", "対象", "項目", "設計値", "備考"], "rows": [
+            {"row": "1", "cells": ["1", "GEARSET-01", "設計減速比", "12.50", "公開デモ値"]},
+            {"row": "2", "cells": ["2", "GEARSET-01", "材質", "STEEL-A", "架空材質コード"]}
+          ]},
+          {"type": "table", "table": "A-03", "title": "出力側ベアリングすきま", "columns": ["行", "対象", "下限", "上限", "単位"], "rows": [
+            {"row": "5", "cells": ["5", "BRG-01", "0.10", "0.20", "mm"]}
+          ]}
+        ]
+      },
+      {
+        "page": 4,
+        "heading": "潤滑・一般注記",
+        "blocks": [
+          {"type": "table", "table": "A-04", "title": "潤滑条件", "columns": ["行", "対象", "指定", "補足"], "rows": [
+            {"row": "2", "cells": ["2", "GBX-042", "LUBE-220", "公開デモ用の架空潤滑油コード"]}
+          ]},
+          {"type": "list", "title": "一般注記", "items": ["組立前に図面改訂番号を確認する。", "測定結果は検査記録と照合する。", "差異がある場合は人手確認へ送る。"]}
+        ]
+      }
+    ]
+  },
   "assets": [
-    {
-      "asset_id": "GBX-042",
-      "asset_name": "Compact Gearbox Assembly",
-      "snapshot": {"part_number": "GBX-042", "drawing_revision": "D3", "lubricant_grade": "LUBE-220"},
-      "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Title block"}, "lubricant_grade": {"page": 4, "table": "A-04", "row": "2"}}
-    },
-    {
-      "asset_id": "GEARSET-01",
-      "asset_name": "Gear Pair",
-      "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_design": 12.5},
-      "locators": {"gear_ratio_design": {"page": 2, "table": "A-02", "row": "1"}, "part_number": {"page": 2, "table": "A-02", "row": "1"}}
-    },
-    {
-      "asset_id": "BRG-01",
-      "asset_name": "Output Bearing",
-      "snapshot": {"part_number": "BRG-X1", "clearance_min_mm": 0.1, "clearance_max_mm": 0.2},
-      "locators": {"clearance_min_mm": {"page": 3, "table": "A-03", "row": "5"}, "clearance_max_mm": {"page": 3, "table": "A-03", "row": "5"}}
-    }
+    {"asset_id": "GBX-042", "asset_name": "Compact Gearbox Assembly", "snapshot": {"part_number": "GBX-042", "drawing_revision": "D3", "lubricant_grade": "LUBE-220"}, "locators": {"drawing_revision": {"page": 1, "section": "Title block"}, "part_number": {"page": 1, "section": "Title block"}, "lubricant_grade": {"page": 4, "table": "A-04", "row": "2"}}},
+    {"asset_id": "GEARSET-01", "asset_name": "Gear Pair", "snapshot": {"part_number": "GP-042", "material_grade": "STEEL-A", "gear_ratio_design": 12.5}, "locators": {"gear_ratio_design": {"page": 2, "table": "A-02", "row": "1"}, "part_number": {"page": 2, "table": "A-02", "row": "1"}}},
+    {"asset_id": "BRG-01", "asset_name": "Output Bearing", "snapshot": {"part_number": "BRG-X1", "clearance_min_mm": 0.1, "clearance_max_mm": 0.2}, "locators": {"clearance_min_mm": {"page": 2, "table": "A-03", "row": "5"}, "clearance_max_mm": {"page": 2, "table": "A-03", "row": "5"}}}
   ]
 }
