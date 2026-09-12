@@ -51,18 +51,28 @@ AI を「最終判定者」にはしていません。このデモでは AI の�
 - 同一部品への紐付け候補
 - Evidence 位置の候補
 - Finding の説明文・報告草稿の支援
+- 公開デモ内の根拠に限定した AI Review Chat
 
-公開リポジトリでは外部 AI を実行せず、`data/ai/assist_candidates.json` に**候補データの契約だけ**を置いています。Prompt、モデル選定、Agent ノード、MCP の具体的な Tool 分割は含めません。
+`data/ai/assist_candidates.json` は AI 支援候補の公開 fixture です。一方、チャット画面はサーバー側から火山方舟 Ark を呼び出せる構成になっています。API Key は Laravel 側だけで保持し、ブラウザへは渡しません。
 
-重要なのは、AI 候補の後ろに決定論的なルールと Evidence、Human Review があることです。
+外部 AI 接続が失敗した場合は、画面上に `AI接続失敗・固定デモ回答に切替` と明示し、固定の grounded fallback に切り替えます。フォールバックを実 AI の回答として見せません。
+
+重要なのは、AI 候補や AI の説明の後ろに決定論的なルールと Evidence、Human Review があることです。
+
+詳細は [AI Assistance Boundary](docs/ai_assistance.md) を参照してください。
 
 ## API
 
 ```text
 GET /api/demo/review
+GET /api/demo/knowledge
+GET /api/demo/rules
+POST /api/demo/chat
 ```
 
-主なレスポンス:
+`POST /api/demo/chat` は公開デモ内の文書・ナレッジ・ルール・AI候補だけを grounding context として AI に渡します。外部 AI 接続失敗時は `grounded_fallback` モードを返します。
+
+`GET /api/demo/review` の主なレスポンス:
 
 - `documents` — 正規化済み文書
 - `entities` — 部品 / アセンブリ
@@ -82,6 +92,7 @@ app/Services/
 ├── RuleCatalog.php
 ├── RuleEvaluator.php
 ├── AiCandidateReader.php
+├── ArkChatService.php
 └── JsonDocumentNormalizer.php
 ```
 
@@ -94,6 +105,15 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan serve
+```
+
+Ark を使った AI Review Chat を有効にする場合は `.env` またはデプロイ環境へ次を設定します。
+
+```text
+ARK_API_KEY=<Ark API Key>
+ARK_MODEL=doubao-seed-2.1-pro
+ARK_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+ARK_TIMEOUT=25
 ```
 
 テスト:
