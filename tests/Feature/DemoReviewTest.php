@@ -33,4 +33,17 @@ class DemoReviewTest extends TestCase
             ->assertOk()
             ->assertSee('製造業エビデンス・ワークスペース');
     }
+
+    public function test_chat_fallback_is_clearly_labeled_when_ark_is_unavailable(): void
+    {
+        config(['services.ark.api_key' => '']);
+
+        $this->postJson('/api/demo/chat', ['message' => '今日何曜日？'])
+            ->assertOk()
+            ->assertJsonPath('mode', 'grounded_fallback')
+            ->assertJsonPath('warning', 'AI接続失敗・固定デモ回答に切替')
+            ->assertJsonFragment([
+                'answer' => '【AI接続失敗・固定デモ回答に切替】 この公開デモでは、文書、ルール、エビデンス、AI候補について回答できます。たとえば「減速比は？」「ベアリングの判定は？」「図面改訂は？」「ルールを教えて」と質問してください。',
+            ]);
+    }
 }
