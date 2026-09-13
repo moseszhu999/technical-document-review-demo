@@ -1,3 +1,4 @@
+.twin-3d-stage>.twin-map{display:none!important}.twin-3d-stage>.twin-legend{z-index:6;right:15px;bottom:15px}
 .twin-shell-3d{grid-template-columns:minmax(0,1.9fr) minmax(330px,.78fr)}
 .twin-map-panel-3d{min-width:0}
 .twin-3d-stage{position:relative;min-height:650px;height:650px;padding:0!important;overflow:hidden;background:radial-gradient(circle at 52% 38%,rgba(39,124,171,.16),transparent 34%),linear-gradient(180deg,#07111c,#050a11)!important;isolation:isolate}
