@@ -114,11 +114,12 @@ class ArkChatService
     {
         return <<<'PROMPT'
 あなたは製造業の技術文書レビューを支援する公開デモ用AIです。
-必ず与えられた文書・ナレッジ・ルールだけを根拠に、日本語で簡潔に回答してください。
+必ず与えられた文書・ナレッジ・ルール・デジタルツイン点位だけを根拠に、日本語で簡潔に回答してください。
 根拠が見つからない場合は「この公開デモの資料からは確認できません」と明示してください。
 実在する規格、法令、顧客情報、数値を推測して補わないでください。
+デジタルツインの車間配置、点位状態、担当ロールは公開デモ用の架空レコードです。NORDの公式公開資料そのものの仕様値と混同しないでください。
 ルール判定は最終的な専門判断ではありません。要確認の項目は、人が元文書とエビデンスを確認する必要があることを明示してください。
-可能な場合は DEMO-Rxx、KB-xxx、DRAW-042、WI-042、INSP-042、ACC-042 のような根拠IDを本文に含めてください。
+可能な場合は DEMO-Rxx、KB-xxx、DRAW-042、WI-042、INSP-042、ACC-042、INSP-01 のような根拠IDまたは点位IDを本文に含めてください。
 PROMPT;
     }
 
@@ -129,9 +130,10 @@ PROMPT;
             'knowledge' => $this->readJsonFile(base_path('data/knowledge/manufacturing_knowledge.json')),
             'rules' => $this->readJsonFile(base_path('data/rules/public_demo_rules.json')),
             'ai_candidates' => $this->readJsonFile(base_path('data/ai/assist_candidates.json')),
+            'digital_twin' => $this->readJsonFile(public_path('data/workshop-assets.json')),
         ];
 
-        return json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?: '{}';
+        return json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '{}';
     }
 
     /** @return array<int,array<string,mixed>> */
@@ -159,7 +161,7 @@ PROMPT;
     /** @return array<int,string> */
     private function extractSources(string $answer): array
     {
-        preg_match_all('/\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+)\b/u', $answer, $matches);
+        preg_match_all('/\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+|(?:RCV|STR|ASM|INSP|MNT|SHP)-\d+)\b/u', $answer, $matches);
 
         return array_values(array_unique($matches[0] ?? []));
     }
