@@ -1,0 +1,78 @@
+{
+  "schema": "workshop_digital_twin_v1",
+  "workspace_id": "MFG-WORKSHOP-01",
+  "workspace_label": "MAXXDRIVE Review Workshop",
+  "default_asset_id": "INSP-01",
+  "status_labels": {
+    "available": "Available",
+    "in_review": "In Review",
+    "review_required": "Review Required",
+    "confirmed": "Confirmed",
+    "idle": "No Recent Activity"
+  },
+  "zones": [
+    {"zone_id":"receiving","label":"Receiving / 受入区","x":5,"y":8,"w":27,"h":24},
+    {"zone_id":"assembly","label":"Assembly Line / 装配区","x":36,"y":8,"w":58,"h":24},
+    {"zone_id":"storage","label":"Parts Storage / 备件区","x":5,"y":39,"w":27,"h":24},
+    {"zone_id":"inspection","label":"Inspection / 检验区","x":36,"y":39,"w":58,"h":24},
+    {"zone_id":"maintenance","label":"Maintenance / 保全区","x":5,"y":70,"w":42,"h":22},
+    {"zone_id":"shipping","label":"Shipping / 出货区","x":52,"y":70,"w":42,"h":22}
+  ],
+  "assets": [
+    {
+      "asset_id":"RCV-01","label":"Incoming Gear Unit","zone_id":"receiving","status":"available","x":18,"y":20,
+      "owner_role":"Incoming Quality","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":["DEMO-R01"],
+      "linked_documents":["B1050","F1050","ACC-042"],"evidence_topics":["Incoming acceptance","Revision identity"],
+      "ai_prompt":"RCV-01 の受入時に確認すべき根拠と改訂番号の確認ポイントを教えてください。"
+    },
+    {
+      "asset_id":"STR-01","label":"Spare Parts Rack","zone_id":"storage","status":"available","x":18,"y":51,
+      "owner_role":"Parts Control","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":[],
+      "linked_documents":["PL1050","F1050"],"evidence_topics":["Parts structure","Component reference"],
+      "ai_prompt":"STR-01 の部品構成を確認する場合、どの公開資料を参照すべきですか？"
+    },
+    {
+      "asset_id":"ASM-01","label":"Gearbox Assembly Line","zone_id":"assembly","status":"in_review","x":51,"y":20,
+      "owner_role":"Assembly Lead","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":["DEMO-R01"],
+      "linked_documents":["B1050","G1050","DRAW-042","WI-042"],"evidence_topics":["Drawing revision","Assembly instruction"],
+      "ai_prompt":"ASM-01 の組立レビューで図面改訂と作業指示の根拠を整理してください。"
+    },
+    {
+      "asset_id":"ASM-02","label":"Bearing Fit Station","zone_id":"assembly","status":"review_required","x":78,"y":20,
+      "owner_role":"Assembly Engineer","product_family":"NORD MAXXDRIVE","linked_entity":"BRG-01","linked_rules":["DEMO-R03"],
+      "linked_documents":["B1050","PL1050","INSP-042"],"evidence_topics":["Bearing clearance","Parts reference"],
+      "ai_prompt":"ASM-02 のベアリングすきま判定について、根拠と人手確認ポイントを教えてください。"
+    },
+    {
+      "asset_id":"INSP-01","label":"Ratio Inspection Bench","zone_id":"inspection","status":"review_required","x":51,"y":51,
+      "owner_role":"Quality Engineer","product_family":"NORD MAXXDRIVE","linked_entity":"GEARSET-01","linked_rules":["DEMO-R02"],
+      "linked_documents":["G1050","B1050","DRAW-042","INSP-042"],"evidence_topics":["Gear ratio","Measured value","Human review"],
+      "ai_prompt":"INSP-01 の減速比判定について、DEMO-R02 と根拠文書を使って説明してください。"
+    },
+    {
+      "asset_id":"INSP-02","label":"Final QC Station","zone_id":"inspection","status":"in_review","x":78,"y":51,
+      "owner_role":"Final Quality","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":["DEMO-R01","DEMO-R03"],
+      "linked_documents":["G1050","INSP-042","ACC-042"],"evidence_topics":["Final inspection","Revision consistency","Clearance"],
+      "ai_prompt":"INSP-02 の最終検査で未確認の項目と、人が確認すべき根拠を整理してください。"
+    },
+    {
+      "asset_id":"MNT-01","label":"Maintenance Workbench","zone_id":"maintenance","status":"confirmed","x":26,"y":81,
+      "owner_role":"Maintenance Engineer","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":[],
+      "linked_documents":["B1050","PL1050"],"evidence_topics":["Maintenance interval","Inspection cadence"],
+      "ai_prompt":"MNT-01 の保全作業で参照すべき公開資料と、点検間隔の確認方法を説明してください。"
+    },
+    {
+      "asset_id":"SHP-01","label":"Outbound Review Desk","zone_id":"shipping","status":"confirmed","x":72,"y":81,
+      "owner_role":"Delivery Reviewer","product_family":"NORD MAXXDRIVE","linked_entity":"GBX-042","linked_rules":["DEMO-R01","DEMO-R02","DEMO-R03"],
+      "linked_documents":["ACC-042","INSP-042","G1050"],"evidence_topics":["Final evidence pack","Human confirmation"],
+      "ai_prompt":"SHP-01 の出荷前レビューで、人が最終確認すべき項目を根拠ID付きで整理してください。"
+    }
+  ],
+  "timeline": [
+    {"time":"14:03","event":"Drawing linked","detail":"DRAW-042 linked to assembly review"},
+    {"time":"14:12","event":"Inspection uploaded","detail":"INSP-042 added to evidence chain"},
+    {"time":"14:14","event":"Rule triggered","detail":"DEMO-R02 requires review"},
+    {"time":"14:16","event":"Evidence located","detail":"Ratio evidence mapped to source position"},
+    {"time":"14:20","event":"Human review requested","detail":"INSP-01 escalated for confirmation"}
+  ]
+}
