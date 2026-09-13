@@ -34,6 +34,18 @@ class DemoReviewController
             throw new RuntimeException('デモ入力文書が見つかりません。');
         }
 
-        return response()->json($reviewService->review($documents));
+        $review = $reviewService->review($documents);
+        $sourceRegistry = base_path('data/public_sources/nord_maxxdrive_sources.json');
+
+        if (is_file($sourceRegistry)) {
+            $registry = json_decode(file_get_contents($sourceRegistry), true, 512, JSON_THROW_ON_ERROR);
+            $review['public_sources'] = $registry['sources'] ?? [];
+            $review['public_source_boundary'] = $registry['boundary_note'] ?? null;
+        } else {
+            $review['public_sources'] = [];
+            $review['public_source_boundary'] = null;
+        }
+
+        return response()->json($review);
     }
 }
