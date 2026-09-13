@@ -119,6 +119,11 @@ if (officialModalContent) {
     officialPreviewObserver.observe(officialModalContent, {childList: true, subtree: true});
 }
 
+const twin3dStyle = document.createElement('link');
+twin3dStyle.rel = 'stylesheet';
+twin3dStyle.href = '/css/digital-twin-3d.css?v=20260913-1';
+if (!document.querySelector('link[href*="digital-twin-3d.css"]')) document.head.appendChild(twin3dStyle);
+
 import('/js/digital-twin.js?v=20260913-1')
     .then(() => import('/js/digital-twin-3d.js?v=20260913-1'))
     .catch(error => console.error('[digital-twin-loader]', error));
