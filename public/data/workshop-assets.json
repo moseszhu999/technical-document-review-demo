@@ -44,7 +44,7 @@
       "ai_prompt":"ASM-02 のベアリングすきま判定について、根拠と人手確認ポイントを教えてください。"
     },
     {
-      "asset_id":"INSP-01","label":"Ratio Inspection Bench","zone_id":"inspection","status":"review_required","x":51,"y":51,
+      "asset_id":"INSP-01","label":"Ratio Inspection Bench","zone_id":"inspection","status":"review_required","x":51,"y":51,"evidence_gap":true,
       "owner_role":"Quality Engineer","product_family":"NORD MAXXDRIVE","linked_entity":"GEARSET-01","linked_rules":["DEMO-R02"],
       "linked_documents":["G1050","B1050","DRAW-042","INSP-042"],"evidence_topics":["Gear ratio","Measured value","Human review"],
       "ai_prompt":"INSP-01 の減速比判定について、DEMO-R02 と根拠文書を使って説明してください。"
