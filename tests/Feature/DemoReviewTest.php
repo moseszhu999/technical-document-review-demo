@@ -24,7 +24,10 @@ class DemoReviewTest extends TestCase
             ->assertJsonPath('public_sources.0.document_code', 'B1050')
             ->assertJsonPath('public_sources.1.document_code', 'G1050')
             ->assertJsonPath('public_sources.2.document_code', 'PL1050')
-            ->assertJsonPath('public_sources.0.publisher', 'NORD DRIVESYSTEMS');
+            ->assertJsonPath('public_sources.0.publisher', 'NORD DRIVESYSTEMS')
+            ->assertJsonPath('public_sources.0.direct_pdf_url', 'https://media.nord.com/res/Document/143919.pdf')
+            ->assertJsonPath('public_sources.1.direct_pdf_url', 'https://media.nord.com/res/Document/248322.pdf')
+            ->assertJsonPath('public_sources.2.direct_pdf_url', 'https://media.nord.com/res/Document/58611.pdf');
 
         $this->assertCount(4, $response->json('evidence_chain'));
         $this->assertCount(2, $response->json('rule_results.0.evidence'));
