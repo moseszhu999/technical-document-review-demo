@@ -26,5 +26,6 @@
 <script src="/js/chat-connection-status.js?v=20260912-3"></script>
 <script type="module" src="/js/gearbox-demo.js"></script>
 <script type="module" src="/js/document-preview.js"></script>
+<script type="module" src="/js/official-source-previews.js?v=20260913-1"></script>
 </body>
 </html>
