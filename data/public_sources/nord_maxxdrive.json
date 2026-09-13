@@ -1,0 +1,63 @@
+{
+  "source_pack_id": "NORD-MAXXDRIVE-PUBLIC",
+  "manufacturer": "NORD DRIVESYSTEMS",
+  "product_family": "MAXXDRIVE® Industrial Gear Units",
+  "note": "Official public NORD documentation references used to make this demo visually and contextually realistic. Full copyrighted PDFs are not redistributed by this repository; the UI links to NORD's official documentation pages.",
+  "documents": [
+    {
+      "document_id": "B1050",
+      "document_type": "Manual",
+      "title": "Manual with installation instructions – Industrial gear units",
+      "scope": "MAXXDRIVE® XC Parallel, XC Right-Angle, and XD Parallel Gear Units",
+      "publisher": "NORD DRIVESYSTEMS",
+      "language": "English available",
+      "official_url": "https://www.nord.com/en/services/documentation/manuals/details/b1050.jsp",
+      "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/257316.webp",
+      "review_role": "Installation, commissioning, safety and maintenance reference"
+    },
+    {
+      "document_id": "G1050",
+      "document_type": "Catalogue",
+      "title": "Catalogue – MAXXDRIVE® industrial gear units 50 Hz Metric, 60 Hz Imperial",
+      "scope": "MAXXDRIVE® industrial gear-unit selection and technical data",
+      "publisher": "NORD DRIVESYSTEMS",
+      "language": "English / Japanese / Chinese and other editions available",
+      "official_url": "https://www.nord.com/en/services/documentation/catalogues/details/g1050.jsp",
+      "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/260807.webp",
+      "review_role": "Selection data, dimensions, ratios and configuration reference"
+    },
+    {
+      "document_id": "PL1050",
+      "document_type": "SparePartsList",
+      "title": "Spare parts list – MAXXDRIVE® XC industrial gear units – Standard + options",
+      "scope": "MAXXDRIVE® XC standard and optional components",
+      "publisher": "NORD DRIVESYSTEMS",
+      "language": "English / German / French",
+      "official_url": "https://www.nord.com/en/services/documentation/spare-parts/details/pl-1050.jsp",
+      "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/262352.webp",
+      "review_role": "Exploded-parts and component-reference source"
+    },
+    {
+      "document_id": "F1050",
+      "document_type": "Brochure",
+      "title": "MAXXDRIVE® Industrial Gear Units",
+      "scope": "MAXXDRIVE® product-family overview",
+      "publisher": "NORD DRIVESYSTEMS",
+      "language": "English / German / French / Chinese and other editions available",
+      "official_url": "https://www.nord.com/us/services/documentation/flyers-brochures/details/f1050.jsp",
+      "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/258511.webp",
+      "review_role": "Product-family overview and engineering context"
+    },
+    {
+      "document_id": "F1060",
+      "document_type": "ApplicationBrochure",
+      "title": "MAXXDRIVE® industrial gear units for mixing and agitation processes",
+      "scope": "MAXXDRIVE® application guidance for mixing and agitation",
+      "publisher": "NORD DRIVESYSTEMS",
+      "language": "English and other editions available",
+      "official_url": "https://www.nord.com/en/services/documentation/flyers-brochures/details/f1060.jsp",
+      "thumbnail_url": "https://media.nord.com/res/605x377-JPG/276145.jpg",
+      "review_role": "Application-specific operating context"
+    }
+  ]
+}
