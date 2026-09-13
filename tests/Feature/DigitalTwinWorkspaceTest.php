@@ -37,6 +37,24 @@ class DigitalTwinWorkspaceTest extends TestCase
         $this->assertStringContainsString('data-twin-asset', $script);
         $this->assertStringContainsString('.twin-map', $style);
         $this->assertStringContainsString("import('/js/digital-twin.js?v=20260913-1')", $loader);
+        $this->assertStringContainsString("import('/js/digital-twin-3d.js?v=20260913-1')", $loader);
+    }
+
+    public function test_webgl_workshop_twin_has_real_3d_scene_and_asset_interaction(): void
+    {
+        $script = (string) file_get_contents(public_path('js/digital-twin-3d.js'));
+        $style = (string) file_get_contents(public_path('css/digital-twin-3d.css'));
+
+        $this->assertStringContainsString("import * as THREE from 'three'", $script);
+        $this->assertStringContainsString('OrbitControls', $script);
+        $this->assertStringContainsString('new THREE.WebGLRenderer', $script);
+        $this->assertStringContainsString('new THREE.PerspectiveCamera', $script);
+        $this->assertStringContainsString('new THREE.Raycaster', $script);
+        $this->assertStringContainsString('triggerSelection', $script);
+        $this->assertStringContainsString('LIVE 3D TWIN', $script);
+        $this->assertStringContainsString('#twin-3d-canvas', $style);
+        $this->assertStringContainsString('.twin-3d-asset-label', $style);
+        $this->assertStringContainsString('.twin-3d-stage>.twin-map{display:none!important}', $style);
     }
 
     public function test_ai_grounding_includes_digital_twin_registry(): void
