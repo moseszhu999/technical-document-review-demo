@@ -6,7 +6,8 @@ const officialSourceReviewPromise = fetch('/api/demo/review').then(response => {
 function safeOfficialPdfUrl(value) {
     try {
         const url = new URL(String(value ?? ''));
-        return url.protocol === 'https:' && url.hostname === 'www.nord.com' && url.pathname.toLowerCase().endsWith('.pdf') ? url.href : '';
+        const allowedHosts = new Set(['media.nord.com', 'www.nord.com']);
+        return url.protocol === 'https:' && allowedHosts.has(url.hostname) && url.pathname.toLowerCase().endsWith('.pdf') ? url.href : '';
     } catch {
         return '';
     }
@@ -33,6 +34,7 @@ function ensurePreviewStyles() {
         .official-preview-caption{display:grid;gap:4px;margin-bottom:10px}.official-preview-caption strong{font-size:12px;color:#eef3f9}.official-preview-caption span{font-size:10px;color:#8390a4;line-height:1.5}
         .official-pdf-shell{position:relative;border:1px solid rgba(255,255,255,.11);border-radius:11px;overflow:hidden;background:#111826}.official-pdf-frame{display:block;width:100%;height:min(62vh,680px);min-height:520px;border:0;background:#e6e9ee}
         .official-preview-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);background:rgba(4,8,14,.92)}.official-preview-actions span{font-size:9px;color:#69788e}.official-preview-open{color:#45d8ff;text-decoration:none;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}.official-preview-open:hover{color:#fff}
+        .official-preview-source{display:inline-flex;align-items:center;gap:6px;margin-top:6px;color:#6f7f94;font-size:9px}.official-preview-source:before{content:'●';color:#45e0a8;font-size:7px}
         @media(max-width:720px){.official-pdf-frame{min-height:420px;height:55vh}.official-key-preview-head,.official-preview-actions{flex-direction:column;align-items:flex-start}}
     `;
     document.head.appendChild(style);
@@ -84,7 +86,7 @@ async function enhanceOfficialSourceModal() {
     section.className = 'official-key-previews';
     section.innerHTML = `
         <div class="official-key-preview-head">
-            <div><strong>公式PDF・実ページプレビュー</strong><div class="official-preview-caption"><span>NORD公式サーバー上のPDFを直接表示します。リポジトリにはPDF本体を複製していません。</span></div></div>
+            <div><strong>公式PDF・実ページプレビュー</strong><div class="official-preview-caption"><span>NORD公式サーバー上のPDFを直接表示します。リポジトリにはPDF本体を複製していません。</span><span class="official-preview-source">media.nord.com の検証済み公開PDFを参照</span></div></div>
             <span>REAL PUBLIC SOURCE</span>
         </div>
         ${source.preview_note ? `<p class="official-preview-note">${escapePreviewHtml(source.preview_note)}</p>` : ''}
@@ -96,7 +98,7 @@ async function enhanceOfficialSourceModal() {
             <span data-preview-description>${escapePreviewHtml(first.description)}</span>
         </div>
         <div class="official-pdf-shell">
-            <iframe class="official-pdf-frame" src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy" referrerpolicy="no-referrer"></iframe>
+            <iframe class="official-pdf-frame" src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy"></iframe>
             <div class="official-preview-actions">
                 <span data-preview-page>PDF page ${escapePreviewHtml(first.page)}</span>
                 <a class="official-preview-open" href="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" target="_blank" rel="noopener noreferrer">この実ページをNORD PDFで開く ↗</a>
