@@ -119,4 +119,6 @@ if (officialModalContent) {
     officialPreviewObserver.observe(officialModalContent, {childList: true, subtree: true});
 }
 
-import('/js/digital-twin.js?v=20260913-1').catch(error => console.error('[digital-twin-loader]', error));
+import('/js/digital-twin.js?v=20260913-1')
+    .then(() => import('/js/digital-twin-3d.js?v=20260913-1'))
+    .catch(error => console.error('[digital-twin-loader]', error));
