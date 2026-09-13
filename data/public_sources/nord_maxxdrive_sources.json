@@ -15,7 +15,16 @@
       "official_url": "https://www.nord.com/en/services/documentation/manuals/details/b1050.jsp",
       "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/257316.webp",
       "role": "installation, operation and maintenance source",
-      "verified_on": "2026-09-13"
+      "verified_on": "2026-09-13",
+      "direct_pdf_url": "https://www.nord.com/media/documents/bw/b1050_6052902_en_3023_desk.pdf",
+      "preview_note": "Official English B1050 edition 6052902 / 3023 (July 2023).",
+      "key_previews": [
+        {
+          "page": 73,
+          "title": "Inspection and maintenance intervals",
+          "description": "Official B1050 maintenance table covering inspection cadence, operating checks and service references."
+        }
+      ]
     },
     {
       "source_id": "NORD-G1050",
@@ -28,7 +37,21 @@
       "official_url": "https://www.nord.com/en/services/documentation/catalogues/details/g1050.jsp",
       "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/260807.webp",
       "role": "product selection, dimensional and technical catalogue source",
-      "verified_on": "2026-09-13"
+      "verified_on": "2026-09-13",
+      "direct_pdf_url": "https://www.nord.com/media/documents/bw/g1050_global_5060hz_en_2523.pdf",
+      "preview_note": "Official English G1050 MAXXDRIVE catalogue. Key-page previews are loaded from NORD's PDF server.",
+      "key_previews": [
+        {
+          "page": 132,
+          "title": "Parallel-shaft gear unit dimensional overview",
+          "description": "Engineering drawing and dimensional table for solid output shaft, hollow shaft and solid input shaft configurations."
+        },
+        {
+          "page": 163,
+          "title": "VL6 agitator dimensions",
+          "description": "Application-specific dimension table for the VL6 agitator configuration without flange."
+        }
+      ]
     },
     {
       "source_id": "NORD-PL1050",
@@ -41,7 +64,21 @@
       "official_url": "https://www.nord.com/en/services/documentation/spare-parts/details/pl-1050.jsp",
       "thumbnail_url": "https://media.nord.com/res/605x377-WEBP/262350.webp",
       "role": "parts structure and service reference",
-      "verified_on": "2026-09-13"
+      "verified_on": "2026-09-13",
+      "direct_pdf_url": "https://www.nord.com/media/documents/bw/pl1050_de_gb_fr_0621_standard_sk11207_11507_6002799.pdf",
+      "preview_note": "Key-page preview uses the official PL1050 family spare-parts PDF for SK 11207–SK 11507.",
+      "key_previews": [
+        {
+          "page": 4,
+          "title": "Spare parts drawing – SK 11207 / SK 11407",
+          "description": "Official exploded/parts drawing with numbered component callouts."
+        },
+        {
+          "page": 5,
+          "title": "General parts list",
+          "description": "Official component-number list corresponding to the spare-parts drawing."
+        }
+      ]
     },
     {
       "source_id": "NORD-F1050",
