@@ -20,10 +20,12 @@ class OfficialSourcePreviewTest extends TestCase
             ->assertJsonPath('public_sources.2.key_previews.0.page', 4)
             ->assertJsonPath('public_sources.2.key_previews.1.page', 5);
 
-        $this->assertStringStartsWith(
-            'https://www.nord.com/',
-            $response->json('public_sources.2.direct_pdf_url')
-        );
+        foreach ([0, 1, 2] as $sourceIndex) {
+            $this->assertStringStartsWith(
+                'https://media.nord.com/res/Document/',
+                $response->json("public_sources.{$sourceIndex}.direct_pdf_url")
+            );
+        }
     }
 
     public function test_demo_loads_official_source_preview_module(): void
