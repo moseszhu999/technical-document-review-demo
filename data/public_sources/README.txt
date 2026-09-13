@@ -1,0 +1,1 @@
+Official public documentation references used by the demo. Full third-party PDFs are not redistributed here; the UI links to the publisher's official documentation pages.
