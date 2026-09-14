@@ -28,5 +28,6 @@
 <script type="module" src="/js/document-preview.js"></script>
 <script type="module" src="/js/official-source-previews.js?v=20260913-1"></script>
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
+<script src="/js/knowledge-detail.js?v=20260914-1"></script>
 </body>
 </html>
