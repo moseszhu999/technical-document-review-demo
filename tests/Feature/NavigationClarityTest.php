@@ -8,7 +8,7 @@ class NavigationClarityTest extends TestCase
 {
     public function test_demo_uses_one_view_switcher_without_duplicate_six_step_pipeline(): void
     {
-        $response = $this->get('/');
+        $response = $this->get('/demo');
 
         $response->assertOk();
         $html = (string) $response->getContent();
