@@ -1,0 +1,184 @@
+/* Bright enterprise override for the digital-twin workspace.
+ * This file intentionally uses stronger selectors and targeted !important rules
+ * because the digital-twin component styles are injected at runtime.
+ */
+
+#digital-twin-root{
+    --twin-surface:#ffffff;
+    --twin-surface-soft:#f7f9fc;
+    --twin-border:#d8e2ec;
+    --twin-text:#1d2939;
+    --twin-muted:#667085;
+    --twin-blue:#167c9d;
+    --twin-red:#c94859;
+    --twin-green:#17836d;
+    --twin-amber:#9c671c;
+    color:var(--twin-text);
+}
+
+#digital-twin-root .twin-kpi,
+#digital-twin-root .twin-map-panel,
+#digital-twin-root .twin-detail-panel,
+#digital-twin-root .twin-timeline-panel,
+#digital-twin-root .twin-human-panel{
+    color:var(--twin-text)!important;
+    background:linear-gradient(180deg,#ffffff 0%,#f9fbfd 100%)!important;
+    border-color:var(--twin-border)!important;
+    box-shadow:0 12px 30px rgba(48,66,88,.08)!important;
+}
+
+#digital-twin-root .twin-kpi span,
+#digital-twin-root .twin-heading span,
+#digital-twin-root .twin-meta span,
+#digital-twin-root .twin-section-title,
+#digital-twin-root .twin-event span,
+#digital-twin-root .twin-detail-anchor{
+    color:var(--twin-muted)!important;
+}
+
+#digital-twin-root .twin-kpi strong{color:#233044}
+#digital-twin-root .twin-kpi.alert strong{color:var(--twin-red)!important}
+#digital-twin-root .twin-kpi.review strong{color:var(--twin-amber)!important}
+#digital-twin-root .twin-kpi.confirmed strong{color:var(--twin-green)!important}
+
+#digital-twin-root .twin-heading{
+    color:#27364a!important;
+    background:linear-gradient(180deg,#ffffff,#f7f9fc)!important;
+    border-bottom-color:#e0e7ef!important;
+}
+
+#digital-twin-root .twin-detail{background:#ffffff}
+#digital-twin-root .twin-asset-head,
+#digital-twin-root .twin-section{border-color:#e2e8f0!important}
+#digital-twin-root .twin-asset-head h3{color:#1d2939!important}
+#digital-twin-root .twin-asset-code,
+#digital-twin-root .twin-rule code,
+#digital-twin-root .twin-event time{color:#167c9d!important}
+
+#digital-twin-root .twin-meta div,
+#digital-twin-root .twin-chip,
+#digital-twin-root .twin-doc,
+#digital-twin-root .twin-rule,
+#digital-twin-root .twin-human-actions button,
+#digital-twin-root .twin-detail-anchor{
+    background:#f8fafc!important;
+    border-color:#dce5ee!important;
+    color:#4d5b6d!important;
+}
+#digital-twin-root .twin-meta strong{color:#2f3d4f!important}
+#digital-twin-root .twin-doc:hover{background:#ffffff!important;border-color:#9cc8d5!important;color:#172033!important}
+#digital-twin-root .twin-rule.pass b{color:#16836c!important}
+#digital-twin-root .twin-rule b{color:#b63b4b!important}
+
+#digital-twin-root .twin-state.review_required{color:#b83b4c!important;background:#fff1f3!important;border-color:#edbdc5!important}
+#digital-twin-root .twin-state.in_review{color:#93601a!important;background:#fff7e7!important;border-color:#ead5a4!important}
+#digital-twin-root .twin-state.confirmed{color:#116b59!important;background:#eaf7f3!important;border-color:#b8dfd3!important}
+#digital-twin-root .twin-state.available{color:#315ca7!important;background:#eef4ff!important;border-color:#bfd0ee!important}
+
+#digital-twin-root .twin-action{
+    background:#f3f8fb!important;
+    border-color:#add3de!important;
+    color:#31596a!important;
+}
+#digital-twin-root .twin-action.primary{
+    background:#fff2f3!important;
+    border-color:#e8b6bd!important;
+    color:#a93444!important;
+}
+
+#digital-twin-root .twin-timeline,
+#digital-twin-root .twin-human{background:#ffffff}
+#digital-twin-root .twin-event strong,
+#digital-twin-root .twin-human-status{color:#2d3b4e!important}
+#digital-twin-root .twin-human-actions button:first-child{color:#116b59!important;border-color:#b8dfd3!important;background:#eef9f5!important}
+#digital-twin-root .twin-human-actions button:nth-child(2){color:#a93444!important;border-color:#efc2c8!important;background:#fff2f3!important}
+
+/* 2D fallback map */
+#digital-twin-root .twin-map-wrap{
+    background:linear-gradient(180deg,#eef4f8,#e8eff5)!important;
+}
+#digital-twin-root .twin-map{
+    background-color:#f6f9fc!important;
+    background-image:linear-gradient(rgba(45,104,135,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(45,104,135,.08) 1px,transparent 1px)!important;
+    border-color:#c9d9e5!important;
+    box-shadow:inset 0 0 60px rgba(90,115,140,.06)!important;
+}
+#digital-twin-root .twin-zone{
+    background:rgba(222,238,246,.58)!important;
+    border-color:#b7d5e1!important;
+}
+#digital-twin-root .twin-zone:before{border-color:#cedbe5!important}
+#digital-twin-root .twin-zone-label{color:#607286!important}
+#digital-twin-root .twin-asset-label{color:#2f3c4d!important;text-shadow:none!important}
+#digital-twin-root .twin-asset-name{color:#738195!important}
+#digital-twin-root .twin-node{background:#ffffff!important;box-shadow:0 5px 15px rgba(45,62,82,.10)!important}
+#digital-twin-root .twin-legend{
+    background:rgba(255,255,255,.92)!important;
+    border-color:#d7e1ea!important;
+    box-shadow:0 8px 18px rgba(48,65,85,.08)!important;
+}
+#digital-twin-root .twin-legend span{color:#59677a!important}
+
+/* WebGL shell: keep spatial depth, but remove the night-mode look. */
+#digital-twin-root .twin-3d-stage{
+    background:radial-gradient(circle at 50% 32%,#ffffff 0%,#edf3f7 42%,#e3ebf2 100%)!important;
+}
+#digital-twin-root #twin-3d-canvas{
+    opacity:.46!important;
+    filter:brightness(1.16) contrast(.94) saturate(.88)!important;
+}
+#digital-twin-root .twin-3d-stage:after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(235,242,248,.24));
+}
+
+#digital-twin-root .twin-3d-asset-label{
+    color:#35556a!important;
+    background:rgba(255,255,255,.94)!important;
+    border-color:#c6d9e5!important;
+    box-shadow:0 8px 20px rgba(42,62,82,.12)!important;
+    backdrop-filter:blur(10px);
+}
+#digital-twin-root .twin-3d-asset-label strong{color:#26384b!important}
+#digital-twin-root .twin-3d-asset-label span{color:#718096!important}
+#digital-twin-root .twin-3d-asset-label.selected{background:#ffffff!important;box-shadow:0 10px 26px rgba(42,62,82,.16)!important}
+#digital-twin-root .twin-3d-asset-label.review_required{color:#bf4051!important;border-color:#e8aab3!important}
+#digital-twin-root .twin-3d-asset-label.in_review{color:#94601a!important;border-color:#e4c783!important}
+#digital-twin-root .twin-3d-asset-label.confirmed{color:#13705c!important;border-color:#a9d6c9!important}
+#digital-twin-root .twin-3d-asset-label.available{color:#315fa9!important;border-color:#b9cdec!important}
+
+#digital-twin-root .twin-3d-zone-label{
+    color:#39667a!important;
+    background:rgba(246,251,253,.90)!important;
+    border-color:#bdd6e1!important;
+    box-shadow:0 6px 18px rgba(48,68,88,.09)!important;
+}
+#digital-twin-root .twin-3d-hud,
+#digital-twin-root .twin-3d-toolbar{
+    background:rgba(255,255,255,.90)!important;
+    border-color:#d3dfe8!important;
+    box-shadow:0 8px 20px rgba(47,65,84,.10)!important;
+}
+#digital-twin-root .twin-3d-hud strong{color:#2c6072!important}
+#digital-twin-root .twin-3d-hud span:last-child{color:#748296!important}
+#digital-twin-root .twin-3d-toolbar button{color:#66758a!important}
+#digital-twin-root .twin-3d-toolbar button:hover{color:#223246!important;background:#f1f6f9!important}
+#digital-twin-root .twin-3d-toolbar button.active{color:#176d88!important;border-color:#acd1dc!important;background:#edf8fb!important}
+#digital-twin-root .twin-3d-loading{
+    background:radial-gradient(circle at center,#ffffff 0%,#eaf1f6 100%)!important;
+}
+#digital-twin-root .twin-3d-loading strong{color:#3a6878!important}
+#digital-twin-root .twin-3d-loading span{border-color:#c8dbe4!important;border-top-color:#2386a5!important;box-shadow:none!important}
+
+#digital-twin-root .twin-fallback-note{background:#fff8e9!important;border-color:#e8d4a6!important}
+#digital-twin-root .twin-fallback-note strong{color:#8d611d!important}
+#digital-twin-root .twin-fallback-note span{color:#6c7889!important}
+#digital-twin-root .twin-map-panel-3d .twin-heading strong:after{color:#14725d!important;border-color:#acd8cb!important;background:#eef9f5!important}
+
+@media(max-width:760px){
+    #digital-twin-root #twin-3d-canvas{opacity:.52!important}
+}
