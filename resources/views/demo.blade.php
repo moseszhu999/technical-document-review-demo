@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/light-theme.css?v=20260915-1">
     <link rel="stylesheet" href="/css/digital-twin-equipment-selector.css?v=20260915-1">
     <link rel="stylesheet" href="/css/factory-context.css?v=20260915-1">
+    <link rel="stylesheet" href="/css/gearbox-model-v2.css?v=20260915-1">
 </head>
 <body>
 <div class="ambient ambient-a"></div>
@@ -29,6 +30,7 @@
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script src="/js/chat-connection-status.js?v=20260912-3"></script>
 <script type="module" src="/js/gearbox-demo.js"></script>
+<script type="module" src="/js/gearbox-model-v2.js?v=20260915-1"></script>
 <script type="module" src="/js/document-preview.js"></script>
 <script type="module" src="/js/official-source-previews.js?v=20260913-1"></script>
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
