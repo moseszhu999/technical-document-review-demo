@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/document-preview.css">
     <link rel="stylesheet" href="/css/chat-status.css?v=20260912-3">
     <link rel="stylesheet" href="/css/light-theme.css?v=20260915-1">
+    <link rel="stylesheet" href="/css/digital-twin-equipment-selector.css?v=20260915-1">
 </head>
 <body>
 <div class="ambient ambient-a"></div>
@@ -31,5 +32,6 @@
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
 <script src="/js/knowledge-detail.js?v=20260914-1"></script>
 <script src="/js/digital-twin-light-loader.js?v=20260915-1"></script>
+<script src="/js/digital-twin-equipment-selector.js?v=20260915-1"></script>
 </body>
 </html>
