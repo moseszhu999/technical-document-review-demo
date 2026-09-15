@@ -109,6 +109,10 @@ if (stage && legacyCanvas && !document.querySelector('#gearbox-canvas-v2')) {
 
     function gearHelix(radius, width, teeth, material, helix = 0.12) {
         const group = new THREE.Group();
+        group.userData.radius = radius;
+        group.userData.teeth = teeth;
+        group.userData.visualOuterRadius = radius * 0.95;
+
         const core = mesh(new THREE.CylinderGeometry(radius * 0.7, radius * 0.7, width, 64), material, {rotation: [0, 0, Math.PI / 2]});
         group.add(core);
 
@@ -136,6 +140,7 @@ if (stage && legacyCanvas && !document.querySelector('#gearbox-canvas-v2')) {
         const outer = mesh(new THREE.TorusGeometry(radius, 0.16, 20, 64), materials.bearing, {rotation: [0, Math.PI / 2, 0]});
         const inner = mesh(new THREE.TorusGeometry(radius * 0.58, 0.075, 18, 56), materials.steelDark, {rotation: [0, Math.PI / 2, 0]});
         group.add(outer, inner);
+
         for (let i = 0; i < 12; i += 1) {
             const angle = i / 12 * Math.PI * 2;
             const roller = mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.28, 12), materials.steel, {rotation: [0, 0, Math.PI / 2]});
@@ -194,37 +199,52 @@ if (stage && legacyCanvas && !document.querySelector('#gearbox-canvas-v2')) {
     mark(housing, 'GBX-042', 'コンパクト減速機アセンブリ');
     scene.add(housing);
 
-    const inputShaft = mesh(new THREE.CylinderGeometry(0.19, 0.19, 8.5, 32), materials.steel, {position: [0, 0.86, 0.56], rotation: [0, 0, Math.PI / 2]});
-    const outputShaft = mesh(new THREE.CylinderGeometry(0.28, 0.28, 8.75, 32), materials.steelDark, {position: [0, -0.63, -0.08], rotation: [0, 0, Math.PI / 2]});
+    // Keep both gears inside the housing envelope while preserving visible mesh overlap.
+    const inputCenter = new THREE.Vector2(0.82, 0.61);   // y, z
+    const outputCenter = new THREE.Vector2(-0.26, -0.61); // y, z
+
+    const inputShaft = mesh(new THREE.CylinderGeometry(0.19, 0.19, 8.5, 32), materials.steel, {position: [0, inputCenter.x, inputCenter.y], rotation: [0, 0, Math.PI / 2]});
+    const outputShaft = mesh(new THREE.CylinderGeometry(0.28, 0.28, 8.75, 32), materials.steelDark, {position: [0, outputCenter.x, outputCenter.y], rotation: [0, 0, Math.PI / 2]});
     scene.add(inputShaft, outputShaft);
 
-    const inputSeal = mesh(new THREE.TorusGeometry(0.34, 0.08, 14, 42), materials.rubber, {position: [-3.35, 0.86, 0.56], rotation: [0, Math.PI / 2, 0]});
-    const outputSeal = mesh(new THREE.TorusGeometry(0.46, 0.09, 14, 42), materials.rubber, {position: [-3.35, -0.63, -0.08], rotation: [0, Math.PI / 2, 0]});
+    const inputSeal = mesh(new THREE.TorusGeometry(0.34, 0.08, 14, 42), materials.rubber, {position: [-3.35, inputCenter.x, inputCenter.y], rotation: [0, Math.PI / 2, 0]});
+    const outputSeal = mesh(new THREE.TorusGeometry(0.46, 0.09, 14, 42), materials.rubber, {position: [-3.35, outputCenter.x, outputCenter.y], rotation: [0, Math.PI / 2, 0]});
     scene.add(inputSeal, outputSeal);
 
     const gearSet = new THREE.Group();
-    const g1 = gearHelix(1.08, 0.72, 24, materials.gear, 0.13);
-    g1.position.set(-0.45, 0.86, 0.56);
+    const inputGearTeeth = 24;
+    const outputGearTeeth = 32;
+
+    const g1 = gearHelix(0.78, 0.68, inputGearTeeth, materials.gear, 0.13);
+    g1.position.set(-0.1, inputCenter.x, inputCenter.y);
     gearSet.add(g1);
 
-    const g2 = gearHelix(1.48, 0.84, 32, materials.gear2, -0.11);
-    g2.position.set(0.42, -0.63, -0.08);
+    const g2 = gearHelix(1.05, 0.8, outputGearTeeth, materials.gear2, -0.11);
+    g2.position.set(0.12, outputCenter.x, outputCenter.y);
+    g2.rotation.x = Math.PI / outputGearTeeth;
     gearSet.add(g2);
 
     mark(gearSet, 'GEARSET-01', '歯車ペア');
     scene.add(gearSet);
 
-    const outputBearing = bearingAssembly(0.78);
-    outputBearing.position.set(3.34, -0.63, -0.08);
+    const centerDistance = inputCenter.distanceTo(outputCenter);
+    const visualOuterSum = g1.userData.visualOuterRadius + g2.userData.visualOuterRadius;
+    console.assert(centerDistance < visualOuterSum, 'Gear teeth must visually overlap to read as meshed.');
+    console.assert(outputCenter.x - g2.userData.visualOuterRadius >= -1.26, 'Output gear must stay above the lower housing pan.');
+    console.assert(inputCenter.x + g1.userData.visualOuterRadius <= 1.61, 'Input gear must stay below the top housing cap.');
+    console.assert(outputCenter.y - g2.userData.visualOuterRadius >= -1.71, 'Output gear must stay inside the rear housing wall.');
+
+    const outputBearing = bearingAssembly(0.7);
+    outputBearing.position.set(3.34, outputCenter.x, outputCenter.y);
     mark(outputBearing, 'BRG-01', '出力側ベアリング');
     scene.add(outputBearing);
 
-    const supportBearing = bearingAssembly(0.56);
-    supportBearing.position.set(-2.85, 0.86, 0.56);
-    supportBearing.scale.setScalar(0.78);
+    const supportBearing = bearingAssembly(0.52);
+    supportBearing.position.set(-2.85, inputCenter.x, inputCenter.y);
+    supportBearing.scale.setScalar(0.8);
     scene.add(supportBearing);
 
-    const outputFlange = mesh(new THREE.CylinderGeometry(0.96, 0.96, 0.22, 48), materials.housingDark, {position: [3.22, -0.63, -0.08], rotation: [0, 0, Math.PI / 2]});
+    const outputFlange = mesh(new THREE.CylinderGeometry(0.86, 0.86, 0.22, 48), materials.housingDark, {position: [3.22, outputCenter.x, outputCenter.y], rotation: [0, 0, Math.PI / 2]});
     scene.add(outputFlange);
 
     const floor = mesh(new THREE.PlaneGeometry(22, 18), new THREE.MeshStandardMaterial({color: 0xdce4eb, metalness: 0.02, roughness: 0.92}), {position: [0, -2.52, 0], rotation: [-Math.PI / 2, 0, 0], cast: false});
@@ -302,13 +322,16 @@ if (stage && legacyCanvas && !document.querySelector('#gearbox-canvas-v2')) {
     resize();
     applySelection(currentAssetId());
 
+    const inputAngularSpeed = 0.0032;
+    const outputAngularSpeed = -inputAngularSpeed * (inputGearTeeth / outputGearTeeth);
+
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
-        g1.rotation.x += 0.0032;
-        g2.rotation.x -= 0.00245;
-        inputShaft.rotation.x += 0.0032;
-        outputShaft.rotation.x -= 0.00245;
+        g1.rotation.x += inputAngularSpeed;
+        g2.rotation.x += outputAngularSpeed;
+        inputShaft.rotation.x += inputAngularSpeed;
+        outputShaft.rotation.x += outputAngularSpeed;
         renderer.render(scene, camera);
     }
 
