@@ -30,5 +30,6 @@
 <script type="module" src="/js/official-source-previews.js?v=20260913-1"></script>
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
 <script src="/js/knowledge-detail.js?v=20260914-1"></script>
+<script src="/js/digital-twin-light-loader.js?v=20260915-1"></script>
 </body>
 </html>
