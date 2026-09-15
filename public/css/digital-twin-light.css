@@ -119,13 +119,13 @@
 }
 #digital-twin-root .twin-legend span{color:#59677a!important}
 
-/* WebGL shell: keep spatial depth, but remove the night-mode look. */
+/* WebGL shell: daylight, not night mode, while preserving equipment depth. */
 #digital-twin-root .twin-3d-stage{
-    background:radial-gradient(circle at 50% 32%,#ffffff 0%,#edf3f7 42%,#e3ebf2 100%)!important;
+    background:radial-gradient(circle at 50% 30%,#fbfdff 0%,#e9f0f5 46%,#dce6ee 100%)!important;
 }
 #digital-twin-root #twin-3d-canvas{
-    opacity:.46!important;
-    filter:brightness(1.16) contrast(.94) saturate(.88)!important;
+    opacity:.62!important;
+    filter:brightness(1.08) contrast(1.08) saturate(.98)!important;
 }
 #digital-twin-root .twin-3d-stage:after{
     content:"";
@@ -133,19 +133,19 @@
     inset:0;
     z-index:2;
     pointer-events:none;
-    background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(235,242,248,.24));
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(235,242,248,.07));
 }
 
 #digital-twin-root .twin-3d-asset-label{
     color:#35556a!important;
-    background:rgba(255,255,255,.94)!important;
+    background:rgba(255,255,255,.96)!important;
     border-color:#c6d9e5!important;
-    box-shadow:0 8px 20px rgba(42,62,82,.12)!important;
+    box-shadow:0 8px 20px rgba(42,62,82,.14)!important;
     backdrop-filter:blur(10px);
 }
 #digital-twin-root .twin-3d-asset-label strong{color:#26384b!important}
 #digital-twin-root .twin-3d-asset-label span{color:#718096!important}
-#digital-twin-root .twin-3d-asset-label.selected{background:#ffffff!important;box-shadow:0 10px 26px rgba(42,62,82,.16)!important}
+#digital-twin-root .twin-3d-asset-label.selected{background:#ffffff!important;box-shadow:0 10px 26px rgba(42,62,82,.18)!important}
 #digital-twin-root .twin-3d-asset-label.review_required{color:#bf4051!important;border-color:#e8aab3!important}
 #digital-twin-root .twin-3d-asset-label.in_review{color:#94601a!important;border-color:#e4c783!important}
 #digital-twin-root .twin-3d-asset-label.confirmed{color:#13705c!important;border-color:#a9d6c9!important}
@@ -153,15 +153,15 @@
 
 #digital-twin-root .twin-3d-zone-label{
     color:#39667a!important;
-    background:rgba(246,251,253,.90)!important;
+    background:rgba(246,251,253,.94)!important;
     border-color:#bdd6e1!important;
-    box-shadow:0 6px 18px rgba(48,68,88,.09)!important;
+    box-shadow:0 6px 18px rgba(48,68,88,.10)!important;
 }
 #digital-twin-root .twin-3d-hud,
 #digital-twin-root .twin-3d-toolbar{
-    background:rgba(255,255,255,.90)!important;
+    background:rgba(255,255,255,.94)!important;
     border-color:#d3dfe8!important;
-    box-shadow:0 8px 20px rgba(47,65,84,.10)!important;
+    box-shadow:0 8px 20px rgba(47,65,84,.11)!important;
 }
 #digital-twin-root .twin-3d-hud strong{color:#2c6072!important}
 #digital-twin-root .twin-3d-hud span:last-child{color:#748296!important}
@@ -180,5 +180,5 @@
 #digital-twin-root .twin-map-panel-3d .twin-heading strong:after{color:#14725d!important;border-color:#acd8cb!important;background:#eef9f5!important}
 
 @media(max-width:760px){
-    #digital-twin-root #twin-3d-canvas{opacity:.52!important}
+    #digital-twin-root #twin-3d-canvas{opacity:.66!important}
 }
