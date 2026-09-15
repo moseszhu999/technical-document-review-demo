@@ -101,6 +101,25 @@ body{
 .rule-row{background:#fff}.rule-cell{border-color:#e4eaf1}.rule-cell p{color:#5e6a7b}
 .summary-chip{color:#536174;background:#fff}
 
+/* Rule catalog readability: this is an interview-facing review table, not a dense admin grid. */
+#rules-view .section-intro p{font-size:13px;line-height:1.65}
+#rules-view .rule-summary .summary-chip{font-size:12px;padding:9px 11px}
+#rules-view .rule-cell{padding:18px 16px}
+#rules-view .rule-cell label{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif;
+    font-size:12px;
+    letter-spacing:.06em;
+    margin-bottom:9px;
+}
+#rules-view .rule-cell strong{font-size:16px;line-height:1.45}
+#rules-view .rule-cell p{font-size:14px;line-height:1.7}
+#rules-view .input-stack{gap:8px}
+#rules-view .input-stack div{font-size:14px;line-height:1.55}
+#rules-view .input-stack span{display:block;font-size:12px;line-height:1.45;margin-bottom:2px}
+#rules-view .output-code{font-size:15px;line-height:1.5}
+#rules-view .review-mark{display:inline-block;margin-top:4px;font-size:14px;line-height:1.45}
+#rules-view + footer, footer{font-size:12px;line-height:1.6}
+
 .chat-panel,.prompt-panel{background:rgba(255,255,255,.96)}
 .chat-messages{background:linear-gradient(180deg,#fbfcfe,#f6f9fc)}
 .chat-avatar{color:#167c9d;background:#eef8fb;border-color:#b9dce7}
