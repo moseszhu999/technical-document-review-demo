@@ -179,6 +179,57 @@
 #digital-twin-root .twin-fallback-note span{color:#6c7889!important}
 #digital-twin-root .twin-map-panel-3d .twin-heading strong:after{color:#14725d!important;border-color:#acd8cb!important;background:#eef9f5!important}
 
+/* Final interview-demo calibration: a touch darker, with a readable small-text floor. */
+#digital-twin-root .twin-3d-stage{
+    background:radial-gradient(circle at 50% 30%,#f7fafc 0%,#e3ebf1 46%,#d3dee7 100%)!important;
+}
+#digital-twin-root #twin-3d-canvas{
+    opacity:.66!important;
+    filter:brightness(1.02) contrast(1.10) saturate(.99)!important;
+}
+#digital-twin-root .twin-3d-stage:after{
+    background:linear-gradient(180deg,rgba(255,255,255,.015),rgba(230,238,245,.035));
+}
+
+#digital-twin-root .twin-kpi span{font-size:9px!important}
+#digital-twin-root .twin-heading strong{font-size:12px!important}
+#digital-twin-root .twin-heading span{font-size:10px!important}
+#digital-twin-root .twin-zone-label{font-size:9px!important}
+#digital-twin-root .twin-asset-label{font-size:10px!important}
+#digital-twin-root .twin-asset-name{font-size:9px!important}
+#digital-twin-root .twin-legend span{font-size:9px!important}
+#digital-twin-root .twin-asset-code{font-size:12px!important}
+#digital-twin-root .twin-state{font-size:9px!important}
+#digital-twin-root .twin-meta span,
+#digital-twin-root .twin-section-title{font-size:9px!important}
+#digital-twin-root .twin-meta strong{font-size:11px!important}
+#digital-twin-root .twin-chip,
+#digital-twin-root .twin-doc{font-size:10px!important}
+#digital-twin-root .twin-rule{font-size:10px!important}
+#digital-twin-root .twin-rule b{font-size:9px!important}
+#digital-twin-root .twin-action{font-size:10px!important}
+#digital-twin-root .twin-event time{font-size:10px!important}
+#digital-twin-root .twin-event strong{font-size:11px!important}
+#digital-twin-root .twin-event span{font-size:10px!important}
+#digital-twin-root .twin-human-status{font-size:12px!important}
+#digital-twin-root .twin-human-actions button{font-size:9px!important}
+#digital-twin-root .twin-detail-anchor{font-size:10px!important}
+#digital-twin-root .twin-3d-asset-label strong{font-size:10px!important}
+#digital-twin-root .twin-3d-asset-label span{font-size:8px!important}
+#digital-twin-root .twin-3d-zone-label{font-size:9px!important}
+#digital-twin-root .twin-3d-hud strong,
+#digital-twin-root .twin-3d-hud span:last-child{font-size:9px!important}
+#digital-twin-root .twin-3d-toolbar button{font-size:9px!important}
+#digital-twin-root .twin-3d-loading strong{font-size:10px!important}
+#digital-twin-root .twin-fallback-note strong{font-size:11px!important}
+#digital-twin-root .twin-fallback-note span{font-size:10px!important}
+#digital-twin-root .twin-map-panel-3d .twin-heading strong:after{font-size:8px!important}
+
 @media(max-width:760px){
-    #digital-twin-root #twin-3d-canvas{opacity:.66!important}
+    #digital-twin-root #twin-3d-canvas{opacity:.68!important}
+    #digital-twin-root .twin-3d-toolbar button{font-size:8px!important}
+    #digital-twin-root .twin-3d-asset-label strong{font-size:9px!important}
+    #digital-twin-root .twin-3d-asset-label span{font-size:8px!important}
+    #digital-twin-root .twin-3d-zone-label{font-size:8px!important}
+    #digital-twin-root .twin-legend span{font-size:8px!important}
 }
