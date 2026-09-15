@@ -225,11 +225,85 @@
 #digital-twin-root .twin-fallback-note span{font-size:10px!important}
 #digital-twin-root .twin-map-panel-3d .twin-heading strong:after{font-size:8px!important}
 
+/* Readability correction: bright UI needs a materially larger small-text floor.
+ * Normal Japanese UI copy uses the interface sans stack; identifiers stay monospace.
+ */
+.nav-tab{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif!important;
+    font-size:13px!important;
+    letter-spacing:.02em!important;
+    padding:11px 15px!important;
+}
+.panel-heading{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif!important;
+    font-size:13px!important;
+    letter-spacing:.02em!important;
+}
+.panel-heading small{font-size:12px!important}
+
+#digital-twin-root .twin-kpi span{font-size:12px!important;letter-spacing:.03em!important}
+#digital-twin-root .twin-heading,
+#digital-twin-root .twin-kpi span,
+#digital-twin-root .twin-heading span,
+#digital-twin-root .twin-meta span,
+#digital-twin-root .twin-section-title,
+#digital-twin-root .twin-state,
+#digital-twin-root .twin-chip,
+#digital-twin-root .twin-doc,
+#digital-twin-root .twin-rule,
+#digital-twin-root .twin-action,
+#digital-twin-root .twin-event,
+#digital-twin-root .twin-human-status,
+#digital-twin-root .twin-human-actions button,
+#digital-twin-root .twin-detail-anchor,
+#digital-twin-root .twin-3d-zone-label,
+#digital-twin-root .twin-3d-hud,
+#digital-twin-root .twin-3d-toolbar button,
+#digital-twin-root .twin-legend span{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif!important;
+    letter-spacing:.02em!important;
+}
+#digital-twin-root .twin-heading strong{font-size:13px!important}
+#digital-twin-root .twin-heading span{font-size:12px!important}
+#digital-twin-root .twin-zone-label{font-size:11px!important}
+#digital-twin-root .twin-asset-label{font-size:11px!important}
+#digital-twin-root .twin-asset-name{font-size:10px!important}
+#digital-twin-root .twin-legend span{font-size:11px!important}
+#digital-twin-root .twin-asset-code{font-size:13px!important}
+#digital-twin-root .twin-state{font-size:11px!important}
+#digital-twin-root .twin-meta span,
+#digital-twin-root .twin-section-title{font-size:11px!important}
+#digital-twin-root .twin-meta strong{font-size:12px!important}
+#digital-twin-root .twin-chip,
+#digital-twin-root .twin-doc{font-size:12px!important}
+#digital-twin-root .twin-rule{font-size:12px!important}
+#digital-twin-root .twin-rule b{font-size:11px!important}
+#digital-twin-root .twin-action{font-size:12px!important}
+#digital-twin-root .twin-event time{font-size:11px!important}
+#digital-twin-root .twin-event strong{font-size:12px!important}
+#digital-twin-root .twin-event span{font-size:11px!important}
+#digital-twin-root .twin-human-status{font-size:13px!important}
+#digital-twin-root .twin-human-actions button{font-size:11px!important}
+#digital-twin-root .twin-detail-anchor{font-size:11px!important}
+#digital-twin-root .twin-3d-asset-label strong{font-size:12px!important}
+#digital-twin-root .twin-3d-asset-label span{font-size:10px!important}
+#digital-twin-root .twin-3d-zone-label{font-size:11px!important}
+#digital-twin-root .twin-3d-hud strong,
+#digital-twin-root .twin-3d-hud span:last-child{font-size:11px!important}
+#digital-twin-root .twin-3d-toolbar button{font-size:11px!important;padding:8px 10px!important}
+#digital-twin-root .twin-3d-loading strong{font-size:11px!important}
+#digital-twin-root .twin-fallback-note strong{font-size:12px!important}
+#digital-twin-root .twin-fallback-note span{font-size:11px!important}
+#digital-twin-root .twin-map-panel-3d .twin-heading strong:after{font-size:9px!important}
+
 @media(max-width:760px){
     #digital-twin-root #twin-3d-canvas{opacity:.68!important}
-    #digital-twin-root .twin-3d-toolbar button{font-size:8px!important}
-    #digital-twin-root .twin-3d-asset-label strong{font-size:9px!important}
-    #digital-twin-root .twin-3d-asset-label span{font-size:8px!important}
-    #digital-twin-root .twin-3d-zone-label{font-size:8px!important}
-    #digital-twin-root .twin-legend span{font-size:8px!important}
+    #digital-twin-root .twin-kpi span{font-size:11px!important}
+    #digital-twin-root .twin-heading strong{font-size:12px!important}
+    #digital-twin-root .twin-heading span{font-size:11px!important}
+    #digital-twin-root .twin-3d-toolbar button{font-size:10px!important}
+    #digital-twin-root .twin-3d-asset-label strong{font-size:11px!important}
+    #digital-twin-root .twin-3d-asset-label span{font-size:9px!important}
+    #digital-twin-root .twin-3d-zone-label{font-size:10px!important}
+    #digital-twin-root .twin-legend span{font-size:10px!important}
 }
