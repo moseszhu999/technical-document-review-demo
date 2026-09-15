@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/demo.css">
     <link rel="stylesheet" href="/css/document-preview.css">
     <link rel="stylesheet" href="/css/chat-status.css?v=20260912-3">
+    <link rel="stylesheet" href="/css/light-theme.css?v=20260915-1">
 </head>
 <body>
 <div class="ambient ambient-a"></div>
