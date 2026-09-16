@@ -14,7 +14,7 @@ class LightThemeTest extends TestCase
         $html = (string) $response->getContent();
 
         $chatStatus = strpos($html, '/css/chat-status.css');
-        $lightTheme = strpos($html, '/css/light-theme.css?v=20260915-1');
+        $lightTheme = strpos($html, '/css/light-theme.css?v=20260916-1');
 
         $this->assertNotFalse($chatStatus);
         $this->assertNotFalse($lightTheme);

@@ -184,3 +184,5 @@ footer{color:#7b8797}
     #review-view .doc-title,#review-view .rule-title{font-size:15px}
     #review-view .doc-meta,#review-view .rule-text,#review-view .ai-meta{font-size:13px}
 }
+
+.chat-latency-note{color:#3d5168;background:rgba(22,124,157,.08);border-color:rgba(22,124,157,.28)}
