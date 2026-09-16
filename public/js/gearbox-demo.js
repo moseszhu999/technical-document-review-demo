@@ -201,6 +201,18 @@ function escapeHtml(value) {
         .replaceAll("'", '&#039;');
 }
 
+async function fetchJson(url, options = {}) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
+    try {
+        const response = await fetch(url, {...options, signal: controller.signal});
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+    } finally {
+        window.clearTimeout(timeout);
+    }
+}
+
 function fieldLabel(value) {
     return fieldLabels[value] ?? value;
 }
@@ -378,9 +390,7 @@ function addChatMessage(role, text, sources = []) {
 
 async function askAssistant(message) {
     addChatMessage('user', message);
-    const response = await fetch('/api/demo/chat', {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({message})});
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
+    const data = await fetchJson('/api/demo/chat', {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({message})});
     addChatMessage('assistant', data.answer, data.sources ?? []);
 }
 
@@ -409,9 +419,9 @@ document.querySelectorAll('.prompt-button').forEach(button => button.addEventLis
 }));
 
 Promise.all([
-    fetch('/api/demo/review').then(response => response.json()),
-    fetch('/api/demo/knowledge').then(response => response.json()),
-    fetch('/api/demo/rules').then(response => response.json())
+    fetchJson('/api/demo/review', {headers:{'Accept':'application/json'}}),
+    fetchJson('/api/demo/knowledge', {headers:{'Accept':'application/json'}}),
+    fetchJson('/api/demo/rules', {headers:{'Accept':'application/json'}})
 ]).then(([review, knowledge, rules]) => {
     reviewData = review;
     knowledgeData = knowledge;
@@ -424,5 +434,10 @@ Promise.all([
 }).catch(error => {
     document.querySelector('#review-status').textContent = 'APIの読み込みに失敗しました';
     document.querySelector('#documents').innerHTML = '<div class="loading">レビュー情報を読み込めませんでした。</div>';
+    document.querySelector('#rules').innerHTML = '<div class="empty-state">ルール情報を読み込めませんでした。</div>';
+    document.querySelector('#evidence').innerHTML = '<div class="empty-state">エビデンス情報を読み込めませんでした。</div>';
+    document.querySelector('#ai-candidates').innerHTML = '<div class="empty-state">AI候補を読み込めませんでした。</div>';
+    document.querySelector('#knowledge-list').innerHTML = '<div class="empty-state">ナレッジを読み込めませんでした。</div>';
+    document.querySelector('#rule-catalog').innerHTML = '<div class="empty-state">ルールカタログを読み込めませんでした。</div>';
     console.error(error);
 });
