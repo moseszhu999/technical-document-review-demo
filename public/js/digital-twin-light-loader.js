@@ -1,4 +1,7 @@
 (() => {
+    import('/js/digital-twin-structure-visibility.js?v=20260916-1')
+        .catch(error => console.error('[digital-twin-structure-visibility]', error));
+
     const id = 'digital-twin-light-theme';
     let link = document.getElementById(id);
 
