@@ -341,6 +341,10 @@ function closeDocument() {
 
 document.querySelector('#modal-close').addEventListener('click', closeDocument);
 document.querySelector('.modal-backdrop').addEventListener('click', closeDocument);
+document.addEventListener('keydown', event => {
+    const modal = document.querySelector('#document-modal');
+    if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeDocument();
+});
 
 function activateView(viewId) {
     document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === viewId));
@@ -352,11 +356,22 @@ document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click
 document.querySelector('#open-chat').addEventListener('click', () => activateView('chat-view'));
 document.querySelector('#knowledge-search').addEventListener('input', event => renderKnowledge(event.target.value));
 
+function renderChatText(role, text) {
+    const escaped = escapeHtml(text).replace(/\r\n?/g, '\n');
+    if (role !== 'assistant') return escaped.replace(/\n/g, '<br>');
+
+    return escaped
+        .replace(/^###\s+(.+)$/gm, '<strong class="chat-heading">$1</strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^-\s+(.+)$/gm, '<span class="chat-list-item">• $1</span>')
+        .replace(/\n/g, '<br>');
+}
+
 function addChatMessage(role, text, sources = []) {
     const messages = document.querySelector('#chat-messages');
     const node = document.createElement('div');
     node.className = `chat-message ${role}`;
-    node.innerHTML = `<div class="chat-avatar">${role === 'user' ? '自分' : 'AI'}</div><div><div class="chat-bubble">${escapeHtml(text)}</div>${sources.length ? `<div class="chat-sources">${sources.map(escapeHtml).join(' · ')}</div>` : ''}</div>`;
+    node.innerHTML = `<div class="chat-avatar">${role === 'user' ? '自分' : 'AI'}</div><div><div class="chat-bubble">${renderChatText(role, text)}</div>${sources.length ? `<div class="chat-sources">${sources.map(escapeHtml).join(' · ')}</div>` : ''}</div>`;
     messages.appendChild(node);
     messages.scrollTop = messages.scrollHeight;
 }

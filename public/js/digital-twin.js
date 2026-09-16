@@ -11,6 +11,39 @@ const twinStatusLabels = {
     idle: 'NO RECENT ACTIVITY',
 };
 
+const HUMAN_STATUS_KEY = 'mfg-demo-human-status-v1';
+
+function humanStatusText(action, time) {
+    if (action === 'confirmed') return `Confirmed · ${time}`;
+    if (action === 'escalated') return `Escalated · ${time}`;
+    return `Pending Evidence · ${time}`;
+}
+
+function readHumanStatus() {
+    try {
+        const value = JSON.parse(sessionStorage.getItem(HUMAN_STATUS_KEY) ?? 'null');
+        return value?.action && value?.time ? value : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeHumanStatus(action) {
+    const time = new Intl.DateTimeFormat('ja-JP', {hour:'2-digit', minute:'2-digit'}).format(new Date());
+    try {
+        sessionStorage.setItem(HUMAN_STATUS_KEY, JSON.stringify({action, time}));
+    } catch {
+        // The demo remains usable if browser storage is unavailable.
+    }
+    return time;
+}
+
+function restoreHumanStatus() {
+    const status = document.querySelector('#twin-human-status');
+    const saved = readHumanStatus();
+    if (status && saved) status.textContent = humanStatusText(saved.action, saved.time);
+}
+
 function twinEscape(value) {
     return String(value ?? '')
         .replaceAll('&', '&amp;')
@@ -58,6 +91,7 @@ function buildTwinRoot(registry) {
                 <div class="twin-human">
                     <span class="twin-section-title">Decision</span>
                     <div class="twin-human-status" id="twin-human-status">Pending Evidence</div>
+                    <div class="twin-human-note">当前浏览器会话内的公开演示状态</div>
                     <div class="twin-human-actions">
                         <button type="button" data-human-action="confirmed">CONFIRM</button>
                         <button type="button" data-human-action="escalated">ESCALATE</button>
@@ -200,6 +234,7 @@ function openLinkedDocument(review, button) {
 
 function installTwinInteractions(registry, review, initialAsset) {
     let selected = initialAsset;
+    restoreHumanStatus();
     const selectAsset = assetId => {
         const asset = (registry.assets ?? []).find(item => item.asset_id === assetId);
         if (!asset) return;
@@ -223,8 +258,8 @@ function installTwinInteractions(registry, review, initialAsset) {
         if (!action) return;
         const status = document.querySelector('#twin-human-status');
         if (!status) return;
-        const now = new Intl.DateTimeFormat('ja-JP', {hour:'2-digit', minute:'2-digit'}).format(new Date());
-        status.textContent = action === 'confirmed' ? `Confirmed · ${now}` : action === 'escalated' ? `Escalated · ${now}` : `Pending Evidence · ${now}`;
+        const now = writeHumanStatus(action);
+        status.textContent = humanStatusText(action, now);
     });
 }
 

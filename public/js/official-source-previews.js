@@ -32,8 +32,9 @@ function ensurePreviewStyles() {
         .official-preview-note{margin:0 0 12px;color:#8997aa;font-size:10px;line-height:1.6}
         .official-preview-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.official-preview-tab{border:1px solid rgba(255,255,255,.11);background:#0b1220;color:#98a5b8;border-radius:9px;padding:8px 10px;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}.official-preview-tab:hover{border-color:rgba(69,216,255,.45);color:#fff}.official-preview-tab.active{border-color:rgba(69,216,255,.65);color:#fff;background:rgba(69,216,255,.11)}
         .official-preview-caption{display:grid;gap:4px;margin-bottom:10px}.official-preview-caption strong{font-size:12px;color:#eef3f9}.official-preview-caption span{font-size:10px;color:#8390a4;line-height:1.5}
-        .official-pdf-shell{position:relative;border:1px solid rgba(255,255,255,.11);border-radius:11px;overflow:hidden;background:#111826}.official-pdf-frame{display:block;width:100%;height:min(62vh,680px);min-height:520px;border:0;background:#e6e9ee}
-        .official-preview-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);background:rgba(4,8,14,.92)}.official-preview-actions span{font-size:9px;color:#69788e}.official-preview-open{color:#45d8ff;text-decoration:none;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}.official-preview-open:hover{color:#fff}
+        .official-pdf-shell{position:relative;border:1px solid rgba(255,255,255,.11);border-radius:11px;overflow:hidden;background:#f8fafc}.official-pdf-frame{display:block;width:100%;height:min(62vh,680px);min-height:520px;border:0;background:#e6e9ee}
+        .official-pdf-fallback{min-height:260px;display:grid;place-items:center;gap:10px;padding:32px;text-align:center;background:linear-gradient(145deg,#ffffff,#f2f6fa);color:#435267}.official-pdf-fallback strong{font-size:14px;color:#25374a}.official-pdf-fallback span{max-width:520px;font-size:11px;line-height:1.7;color:#6a7889}.official-preview-inline{border:1px solid #b9dce7;border-radius:9px;padding:9px 12px;background:#eef8fb;color:#176d88;font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}.official-preview-inline:hover{background:#e2f3f8}
+        .official-preview-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #dfe6ee;background:#f8fafc}.official-preview-actions span{font-size:9px;color:#69788e}.official-preview-open{color:#167c9d;text-decoration:none;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}.official-preview-open:hover{color:#123f52}
         .official-preview-source{display:inline-flex;align-items:center;gap:6px;margin-top:6px;color:#6f7f94;font-size:9px}.official-preview-source:before{content:'●';color:#45e0a8;font-size:7px}
         @media(max-width:720px){.official-pdf-frame{min-height:420px;height:55vh}.official-key-preview-head,.official-preview-actions{flex-direction:column;align-items:flex-start}}
     `;
@@ -46,11 +47,20 @@ function buildPdfPageUrl(pdfUrl, page) {
 
 function installPreviewInteractions(section, source, pdfUrl) {
     const frame = section.querySelector('.official-pdf-frame');
+    const fallback = section.querySelector('.official-pdf-fallback');
+    const inlineButton = section.querySelector('.official-preview-inline');
     const title = section.querySelector('[data-preview-title]');
     const description = section.querySelector('[data-preview-description]');
     const pageLabel = section.querySelector('[data-preview-page]');
     const openLink = section.querySelector('.official-preview-open');
     const previews = source.key_previews ?? [];
+
+    inlineButton?.addEventListener('click', () => {
+        if (!frame) return;
+        frame.hidden = false;
+        if (fallback) fallback.hidden = true;
+        inlineButton.hidden = true;
+    });
 
     section.querySelectorAll('.official-preview-tab').forEach((button, index) => {
         button.addEventListener('click', () => {
@@ -86,7 +96,7 @@ async function enhanceOfficialSourceModal() {
     section.className = 'official-key-previews';
     section.innerHTML = `
         <div class="official-key-preview-head">
-            <div><strong>公式PDF・実ページプレビュー</strong><div class="official-preview-caption"><span>NORD公式サーバー上のPDFを直接表示します。リポジトリにはPDF本体を複製していません。</span><span class="official-preview-source">media.nord.com の検証済み公開PDFを参照</span></div></div>
+            <div><strong>公式PDF・実ページ入口</strong><div class="official-preview-caption"><span>NORD公式サーバー上のPDFページを参照できます。内蔵ビューアーはブラウザーによって表示方式が異なるため、公式リンクを優先します。</span><span class="official-preview-source">media.nord.com の検証済み公開PDFを参照</span></div></div>
             <span>REAL PUBLIC SOURCE</span>
         </div>
         ${source.preview_note ? `<p class="official-preview-note">${escapePreviewHtml(source.preview_note)}</p>` : ''}
@@ -98,7 +108,12 @@ async function enhanceOfficialSourceModal() {
             <span data-preview-description>${escapePreviewHtml(first.description)}</span>
         </div>
         <div class="official-pdf-shell">
-            <iframe class="official-pdf-frame" src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy"></iframe>
+            <div class="official-pdf-fallback">
+                <strong>内嵌 PDF 预览可能受浏览器限制</strong>
+                <span>当前先提供已验证的官方页面入口，避免在不支持 PDF 内嵌的浏览器中显示黑色空白区域。</span>
+                <button type="button" class="official-preview-inline">尝试在页面内预览</button>
+            </div>
+            <iframe class="official-pdf-frame" hidden src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy"></iframe>
             <div class="official-preview-actions">
                 <span data-preview-page>PDF page ${escapePreviewHtml(first.page)}</span>
                 <a class="official-preview-open" href="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" target="_blank" rel="noopener noreferrer">この実ページをNORD PDFで開く ↗</a>
