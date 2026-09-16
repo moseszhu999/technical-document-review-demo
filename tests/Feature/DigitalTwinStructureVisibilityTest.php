@@ -11,16 +11,22 @@ class DigitalTwinStructureVisibilityTest extends TestCase
         $script = (string) file_get_contents(public_path('js/digital-twin-structure-visibility.js'));
 
         $this->assertStringContainsString("button.textContent = 'STRUCTURE'", $script);
+        $this->assertStringContainsString('THREE.Group.prototype.add', $script);
         $this->assertStringContainsString('isColumn', $script);
         $this->assertStringContainsString('isOverheadBeam', $script);
         $this->assertStringContainsString("[data-scene-action=\"roof\"]", $script);
         $this->assertStringContainsString('mesh.visible = structureVisible', $script);
     }
 
-    public function test_light_loader_imports_structure_visibility_extension(): void
+    public function test_structure_visibility_module_loads_before_digital_twin_scene(): void
     {
-        $loader = (string) file_get_contents(public_path('js/digital-twin-light-loader.js'));
+        $view = (string) file_get_contents(resource_path('views/demo.blade.php'));
 
-        $this->assertStringContainsString("import('/js/digital-twin-structure-visibility.js?v=20260916-1')", $loader);
+        $structure = strpos($view, '/js/digital-twin-structure-visibility.js?v=20260916-1');
+        $twinLoader = strpos($view, '/js/official-source-previews.js?v=20260913-1');
+
+        $this->assertNotFalse($structure);
+        $this->assertNotFalse($twinLoader);
+        $this->assertLessThan($twinLoader, $structure);
     }
 }
