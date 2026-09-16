@@ -158,6 +158,16 @@ body{
 .modal-meta{font-size:12px}
 .source-card-link,.evidence-link:after{color:#bd4453}
 
+/* Review cards should remain readable when the page is viewed without zoom. */
+#review-view .doc-type,#review-view .rule-id,#review-view .ai-task{font-size:11px}
+#review-view .doc-title,#review-view .rule-title{font-size:14px;line-height:1.45}
+#review-view .doc-meta,#review-view .rule-text,#review-view .ai-meta{font-size:12px;line-height:1.65}
+#review-view .evidence-source{font-size:11px}
+#review-view .evidence-locator{font-size:11px;line-height:1.65}
+#review-view .legend-note{font-size:11px;line-height:1.6}
+.public-source-card .doc-title{font-size:14px;line-height:1.45}
+.public-source-card .doc-meta{font-size:11px;line-height:1.6}
+
 .empty-state{color:#778397;background:#fafcfe;border-color:#cfd9e4}.loading{color:#778397}
 footer{color:#7b8797}
 
@@ -167,4 +177,10 @@ footer{color:#7b8797}
 @media(max-width:700px){
     .workspace{padding:14px}
     .panel,.knowledge-card,.rule-row{box-shadow:0 8px 24px rgba(35,55,80,.07)}
+    .hero p{font-size:14px;line-height:1.65}
+    .panel-heading{padding:15px 14px;font-size:13px}
+    .panel-heading small{font-size:11px}
+    #review-view .doc-card{padding:14px}
+    #review-view .doc-title,#review-view .rule-title{font-size:15px}
+    #review-view .doc-meta,#review-view .rule-text,#review-view .ai-meta{font-size:13px}
 }
