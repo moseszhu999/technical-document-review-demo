@@ -388,12 +388,100 @@ function addChatMessage(role, text, sources = []) {
     messages.scrollTop = messages.scrollHeight;
 }
 
-async function askAssistant(message) {
-    addChatMessage('user', message);
-    const data = await fetchJson('/api/demo/chat', {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({message})});
-    addChatMessage('assistant', data.answer, data.sources ?? []);
+function createStreamingMessage() {
+    const messages = document.querySelector('#chat-messages');
+    const node = document.createElement('div');
+    node.className = 'chat-message assistant';
+    node.innerHTML = `<div class="chat-avatar">AI</div><div><div class="chat-phase"><span class="chat-phase-label">ルールとエビデンスを照合中</span><span class="stream-cursor"></span></div><div class="chat-bubble chat-bubble-streaming" hidden></div><div class="chat-sources" hidden></div></div>`;
+    messages.appendChild(node);
+    messages.scrollTop = messages.scrollHeight;
+    return {
+        node,
+        phase: node.querySelector('.chat-phase'),
+        bubble: node.querySelector('.chat-bubble'),
+        sources: node.querySelector('.chat-sources'),
+    };
 }
 
+async function askAssistant(message) {
+    addChatMessage('user', message);
+    const ui = createStreamingMessage();
+    const messagesEl = document.querySelector('#chat-messages');
+
+    try {
+        const response = await fetch('/api/demo/chat/stream', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Accept': 'text/event-stream'},
+            body: JSON.stringify({message}),
+        });
+
+        if (!response.ok || !response.body) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+        let answer = '';
+
+        const handleEvent = (event, data) => {
+            if (event === 'meta') {
+                window.dispatchEvent(new CustomEvent('ark:chat-status', {detail: {mode: data.mode, warning: data.warning}}));
+            } else if (event === 'phase') {
+                ui.phase.hidden = false;
+            } else if (event === 'delta') {
+                ui.phase.hidden = true;
+                ui.bubble.hidden = false;
+                answer += data.text ?? '';
+                ui.bubble.innerHTML = `${renderChatText('assistant', answer)}<span class="stream-cursor"></span>`;
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            } else if (event === 'sources') {
+                const sources = data.sources ?? [];
+                if (sources.length) {
+                    ui.sources.hidden = false;
+                    ui.sources.textContent = sources.join(' · ');
+                }
+            } else if (event === 'error') {
+                throw new Error(data.message || 'AI ストリームエラー');
+            }
+        };
+
+        for (;;) {
+            const {value, done} = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, {stream: true});
+
+            let separator;
+            while ((separator = buffer.indexOf(String.fromCharCode(10, 10))) !== -1) {
+                const block = buffer.slice(0, separator);
+                buffer = buffer.slice(separator + 2);
+
+                let event = 'message';
+                const dataLines = [];
+                block.split(String.fromCharCode(10)).forEach(line => {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('event:')) {
+                        event = trimmed.slice(6).trim();
+                    } else if (trimmed.startsWith('data:')) {
+                        dataLines.push(trimmed.slice(5).trim());
+                    }
+                });
+
+                if (!dataLines.length) continue;
+
+                const parsed = JSON.parse(dataLines.join(String.fromCharCode(10)));
+                handleEvent(event, parsed);
+            }
+        }
+
+        ui.phase.remove();
+        if (answer === '') throw new Error('空のストリーム応答');
+        ui.bubble.innerHTML = renderChatText('assistant', answer);
+    } catch (error) {
+        ui.node.remove();
+        throw error;
+    }
+}
 document.querySelector('#chat-form').addEventListener('submit', async event => {
     event.preventDefault();
     const input = document.querySelector('#chat-input');

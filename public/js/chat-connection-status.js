@@ -75,13 +75,37 @@ function stopChatLoading() {
     }
 }
 
+function renderStatus(mode, warning) {
+    if (!status) return;
+
+    status.classList.remove('is-fallback', 'is-connected');
+
+    if (mode === 'grounded_fallback') {
+        status.textContent = warning || 'AI接続失敗・固定デモ回答に切替';
+        status.classList.add('is-fallback');
+        status.hidden = false;
+        return;
+    }
+
+    if (mode === 'ark_grounded') {
+        status.textContent = 'AI接続中・火山方舟 Agent Plan';
+        status.classList.add('is-connected');
+        status.hidden = false;
+    }
+}
+
+window.addEventListener('ark:chat-status', event => {
+    renderStatus(event.detail?.mode, event.detail?.warning);
+});
+
 if (status) {
     const originalFetch = window.fetch.bind(window);
 
     window.fetch = async (...args) => {
         const request = args[0];
         const url = typeof request === 'string' ? request : request?.url ?? '';
-        const isChatRequest = url.includes('/api/demo/chat');
+        const isStreamChatRequest = url.includes('/api/demo/chat/stream');
+        const isChatRequest = url.includes('/api/demo/chat') && !isStreamChatRequest;
 
         if (isChatRequest) startChatLoading();
 
@@ -101,23 +125,7 @@ if (status) {
 
         if (isChatRequest) {
             response.clone().json().then(data => {
-                status.classList.remove('is-fallback', 'is-connected');
-
-                if (data.mode === 'grounded_fallback') {
-                    status.textContent = 'AI接続失敗・固定デモ回答に切替';
-                    status.classList.add('is-fallback');
-                    status.hidden = false;
-                    return;
-                }
-
-                if (data.mode === 'ark_grounded') {
-                    status.textContent = 'AI接続中・火山方舟 Agent Plan';
-                    status.classList.add('is-connected');
-                    status.hidden = false;
-                    return;
-                }
-
-                status.hidden = true;
+                renderStatus(data.mode, data.warning);
             }).catch(() => {
                 status.textContent = 'AI接続状態を確認できません';
                 status.classList.remove('is-connected');

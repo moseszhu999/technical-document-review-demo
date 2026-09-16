@@ -1,0 +1,31 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+# Render ダッシュボードで ARK_API_KEY（Secret）を設定してください。
+services:
+  - type: web
+    name: technical-document-review-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: CACHE_STORE
+        value: array
+      - key: SESSION_DRIVER
+        value: array
+      # Volcengine Ark（Agent Plan / サブスクリプション）
+      - key: ARK_API_KEY
+        sync: false
+      - key: ARK_MODEL
+        value: ark-code-latest
+      - key: ARK_BASE_URL
+        value: https://ark.cn-beijing.volces.com/api/plan/v3
+      - key: ARK_TIMEOUT
+        value: "60"
