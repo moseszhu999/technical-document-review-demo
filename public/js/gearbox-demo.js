@@ -203,7 +203,7 @@ function escapeHtml(value) {
 
 async function fetchJson(url, options = {}) {
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 10000);
+    const timeout = window.setTimeout(() => controller.abort(), 60000);
     try {
         const response = await fetch(url, {...options, signal: controller.signal});
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
