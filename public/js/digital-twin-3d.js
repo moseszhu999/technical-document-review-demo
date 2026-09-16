@@ -85,7 +85,7 @@ async function mount3dTwin() {
             <button type="button" data-scene-action="roof">ROOF</button>
             <button type="button" data-scene-action="orbit">AUTO ORBIT</button>
         </div>
-        <div class="twin-3d-loading" id="twin-3d-loading"><span></span><strong>3D FACTORY INITIALIZING</strong></div>
+        <div class="twin-3d-loading" id="twin-3d-loading"><span></span><strong>3D車間を読み込み中</strong></div>
     `);
 
     const canvas = stage.querySelector('#twin-3d-canvas');

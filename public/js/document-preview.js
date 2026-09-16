@@ -108,9 +108,11 @@ function renderBlock(block, pageNumber, locator) {
 function renderPages(doc, focusLocator) {
     const content = doc.document_content;
     if (!content?.pages?.length) return '';
+    const pageNumbers = content.pages.map(page => Number(page.page)).filter(Number.isFinite);
+    const lastPage = pageNumbers.length ? Math.max(...pageNumbers) : content.pages.length;
 
     return `<div class="document-preview-shell">
-        <div class="document-cover-strip"><div><strong>${escapeHtml(content.title ?? documentLabels[doc.document_type] ?? '文書')}</strong><span>${escapeHtml(content.subtitle ?? '')}</span></div><span>${content.pages.length} ページ構成</span></div>
+        <div class="document-cover-strip"><div><strong>${escapeHtml(content.title ?? documentLabels[doc.document_type] ?? '文書')}</strong><span>${escapeHtml(content.subtitle ?? '')}</span></div><span>収録 ${content.pages.length} ページ · 最終ページ ${lastPage}</span></div>
         ${focusLocator ? `<div class="evidence-focus-banner">エビデンス位置を表示中：${escapeHtml(locatorText(focusLocator))}</div>` : ''}
         ${content.pages.map(page => `<article class="document-page" data-page="${escapeHtml(page.page)}">
             <div class="document-page-header"><span>${escapeHtml(content.title ?? '')}</span><strong>PAGE ${escapeHtml(page.page)}</strong></div>
@@ -141,6 +143,7 @@ function showModal(doc, focusLocator = null) {
 
     modal.classList.remove('hidden');
     modal.setAttribute('aria-hidden', 'false');
+    modal.querySelector('#modal-close')?.focus();
 
     if (focusLocator) {
         requestAnimationFrame(() => {
@@ -191,6 +194,7 @@ function showPublicSourceModal(source, boundaryNote = '') {
 
     modal.classList.remove('hidden');
     modal.setAttribute('aria-hidden', 'false');
+    modal.querySelector('#modal-close')?.focus();
     modal.querySelector('.modal-card')?.scrollTo({top: 0});
 }
 
@@ -276,7 +280,9 @@ reviewPromise.then(review => {
 }).catch(console.error);
 
 const evidencePanel = document.querySelector('#evidence');
-evidencePanel?.addEventListener('click', async event => {
+async function activateEvidenceCard(event) {
+    if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.type === 'keydown') event.preventDefault();
     const card = event.target.closest('.evidence-card');
     if (!card) return;
     const cards = [...evidencePanel.querySelectorAll('.evidence-card')];
@@ -292,7 +298,10 @@ evidencePanel?.addEventListener('click', async event => {
     } catch (error) {
         console.error(error);
     }
-});
+}
+
+evidencePanel?.addEventListener('click', activateEvidenceCard);
+evidencePanel?.addEventListener('keydown', activateEvidenceCard);
 
 const observer = new MutationObserver(() => {
     document.querySelectorAll('#evidence .evidence-card').forEach(card => {

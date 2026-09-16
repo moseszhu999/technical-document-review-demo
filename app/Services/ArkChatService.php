@@ -15,7 +15,7 @@ class ArkChatService
         $apiKeySource = (string) config('services.ark.api_key_source', 'unknown');
         $baseUrl = rtrim($this->normalizeEnvValue((string) config('services.ark.base_url')), '/');
         $model = $this->normalizeEnvValue((string) config('services.ark.model'));
-        $timeout = (int) config('services.ark.timeout', 25);
+        $timeout = (int) config('services.ark.timeout', 12);
 
         if ($apiKey === '') {
             throw new RuntimeException('Ark API key is not configured.');

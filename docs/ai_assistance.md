@@ -40,7 +40,7 @@ Render 等のサーバー環境では次を設定します。
 ARK_API_KEY=<Ark API Key>
 ARK_MODEL=doubao-seed-2.1-pro
 ARK_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
-ARK_TIMEOUT=25
+ARK_TIMEOUT=12
 ```
 
 `ARK_API_KEY` は値だけを設定します。`Bearer `、引用符、余分な空白を付けないのが推奨です。実装側でも一般的な貼り付けミスは正規化します。

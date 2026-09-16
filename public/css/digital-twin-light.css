@@ -90,6 +90,7 @@
 #digital-twin-root .twin-human{background:#ffffff}
 #digital-twin-root .twin-event strong,
 #digital-twin-root .twin-human-status{color:#2d3b4e!important}
+#digital-twin-root .twin-human-note{margin:-6px 0 12px;color:#7b8797;font-size:10px;line-height:1.5}
 #digital-twin-root .twin-human-actions button:first-child{color:#116b59!important;border-color:#b8dfd3!important;background:#eef9f5!important}
 #digital-twin-root .twin-human-actions button:nth-child(2){color:#a93444!important;border-color:#efc2c8!important;background:#fff2f3!important}
 
