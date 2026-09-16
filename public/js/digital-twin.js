@@ -293,4 +293,15 @@ async function bootDigitalTwin() {
     installTwinInteractions(registry, review, initialAsset);
 }
 
-bootDigitalTwin().catch(error => console.error('[digital-twin]', error));
+bootDigitalTwin().catch(error => {
+    const reviewView = document.querySelector('#review-view');
+    const detailGrid = reviewView?.querySelector('.grid');
+    if (reviewView && !reviewView.querySelector('.twin-load-error')) {
+        const notice = document.createElement('div');
+        notice.className = 'twin-load-error';
+        notice.setAttribute('role', 'alert');
+        notice.innerHTML = '<strong>デジタルツインを読み込めませんでした。</strong><span>文書レビューとエビデンス機能は引き続き利用できます。ネットワーク状態を確認して再読み込みしてください。</span>';
+        if (detailGrid) detailGrid.before(notice); else reviewView.prepend(notice);
+    }
+    console.error('[digital-twin]', error);
+});

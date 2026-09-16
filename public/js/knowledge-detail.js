@@ -81,14 +81,14 @@
             .knowledge-detail-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
             .knowledge-detail-badge{border:1px solid rgba(69,216,255,.23);border-radius:999px;padding:5px 8px;color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
             .knowledge-detail-head h2{font-size:27px;margin:6px 0 8px;letter-spacing:-.02em}
-            .knowledge-detail-head p{margin:0;color:#aeb8c8;font-size:12px;line-height:1.75}
+            .knowledge-detail-head p{margin:0;color:#aeb8c8;font-size:14px;line-height:1.75}
             .knowledge-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
             .knowledge-detail-section{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:16px;padding:15px}
             .knowledge-detail-section.full{grid-column:1/-1}
-            .knowledge-detail-section h3{margin:0 0 10px;color:#e8edf4;font-size:12px;letter-spacing:.04em}
-            .knowledge-detail-section p{margin:0;color:#aeb8c8;font-size:11px;line-height:1.7}
+            .knowledge-detail-section h3{margin:0 0 10px;color:#e8edf4;font-size:14px;letter-spacing:.04em}
+            .knowledge-detail-section p{margin:0;color:#aeb8c8;font-size:13px;line-height:1.7}
             .knowledge-steps{display:grid;gap:8px;counter-reset:kstep}
-            .knowledge-step{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;color:#cbd3de;font-size:11px;line-height:1.55}
+            .knowledge-step{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;color:#cbd3de;font-size:13px;line-height:1.6}
             .knowledge-step:before{counter-increment:kstep;content:counter(kstep);width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:rgba(69,216,255,.1);border:1px solid rgba(69,216,255,.22);color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
             .knowledge-rule-stack,.knowledge-evidence-stack{display:grid;gap:9px}
             .knowledge-rule-item,.knowledge-evidence-item{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:11px;background:rgba(4,8,14,.24)}
@@ -96,16 +96,19 @@
             .knowledge-rule-top code{color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
             .knowledge-rule-status{border-radius:999px;padding:4px 7px;font:800 8px ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,204,102,.09);color:#ffcc66}
             .knowledge-rule-status.pass{background:rgba(69,224,168,.1);color:#45e0a8}
-            .knowledge-rule-item strong,.knowledge-evidence-item strong{display:block;color:#e8edf4;font-size:11px;margin-bottom:5px}
+            .knowledge-rule-item strong,.knowledge-evidence-item strong{display:block;color:#e8edf4;font-size:13px;margin-bottom:5px}
             .knowledge-rule-inputs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-            .knowledge-rule-inputs span{border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:5px 7px;color:#8795a9;font-size:9px}
-            .knowledge-evidence-source{color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:5px}
-            .knowledge-evidence-item p{font-size:10px}
-            .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}.knowledge-keywords span{border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 8px;color:#8d99ad;font-size:9px}
+            .knowledge-rule-inputs span{border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:5px 7px;color:#8795a9;font-size:11px}
+            .knowledge-evidence-source{color:#45d8ff;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:5px}
+            .knowledge-evidence-item p{font-size:12px}
+            .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}.knowledge-keywords span{border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 8px;color:#8d99ad;font-size:11px}
             .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
-            .knowledge-detail-actions button{border:1px solid rgba(69,216,255,.24);background:rgba(69,216,255,.06);color:#dbe7ef;border-radius:10px;padding:10px 12px;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
+            .knowledge-detail-actions button{border:1px solid rgba(69,216,255,.24);background:rgba(69,216,255,.06);color:#dbe7ef;border-radius:10px;padding:10px 12px;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
             .knowledge-detail-actions button.primary{border-color:rgba(255,77,95,.42);background:rgba(255,77,95,.11);color:#fff}
-            .knowledge-boundary{margin-top:15px;padding:10px 12px;border-left:2px solid #ff4d5f;background:rgba(255,77,95,.04);color:#78879b;font-size:9px;line-height:1.65}
+            .knowledge-boundary{margin-top:15px;padding:10px 12px;border-left:2px solid #ff4d5f;background:rgba(255,77,95,.04);color:#78879b;font-size:12px;line-height:1.75}
+            .knowledge-load-error{padding:22px;border:1px solid rgba(255,77,95,.35);border-radius:14px;background:rgba(255,77,95,.07);color:#ffd8dd}
+            .knowledge-load-error strong{display:block;font-size:15px;margin-bottom:8px}
+            .knowledge-load-error p{margin:0;font-size:13px;line-height:1.7}
             .knowledge-focus{outline:2px solid rgba(69,216,255,.55);box-shadow:0 0 28px rgba(69,216,255,.08)}
             @media(max-width:760px){.knowledge-detail-grid{grid-template-columns:1fr}.knowledge-detail-section.full{grid-column:auto}.knowledge-detail-card{padding:20px}}
         `;
@@ -125,11 +128,34 @@
         `);
     }
 
+    async function fetchJson(url, options = {}) {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 10000);
+        try {
+            const response = await fetch(url, {...options, signal: controller.signal});
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } finally {
+            window.clearTimeout(timeout);
+        }
+    }
+
     const dataPromise = Promise.all([
-        fetch('/api/demo/knowledge', {headers:{'Accept':'application/json'}}).then(r => r.json()),
-        fetch('/api/demo/review', {headers:{'Accept':'application/json'}}).then(r => r.json()),
-        fetch('/api/demo/rules', {headers:{'Accept':'application/json'}}).then(r => r.json()),
+        fetchJson('/api/demo/knowledge', {headers:{'Accept':'application/json'}}),
+        fetchJson('/api/demo/review', {headers:{'Accept':'application/json'}}),
+        fetchJson('/api/demo/rules', {headers:{'Accept':'application/json'}}),
     ]);
+
+    function showKnowledgeError(error) {
+        const content = document.querySelector('#knowledge-detail-content');
+        const modal = document.querySelector('#knowledge-detail-modal');
+        if (!content || !modal) return;
+        content.innerHTML = '<div class="knowledge-load-error" role="alert"><strong>ナレッジ詳細を読み込めませんでした。</strong><p>ネットワーク状態を確認して、もう一度お試しください。</p></div>';
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.querySelector('.knowledge-detail-close')?.focus();
+        console.error(error);
+    }
 
     function renderRule(ruleId, ruleCatalog, review) {
         const rule = (ruleCatalog.rules ?? []).find(item => item.rule_id === ruleId);
@@ -269,14 +295,14 @@
         new MutationObserver(decorateKnowledgeCards).observe(list, {childList:true, subtree:true});
         list.addEventListener('click', event => {
             const card = event.target.closest('.knowledge-card[data-knowledge-detail]');
-            if (card) openKnowledge(card.dataset.knowledgeDetail).catch(console.error);
+            if (card) openKnowledge(card.dataset.knowledgeDetail).catch(showKnowledgeError);
         });
         list.addEventListener('keydown', event => {
             if (event.key !== 'Enter' && event.key !== ' ') return;
             const card = event.target.closest('.knowledge-card[data-knowledge-detail]');
             if (!card) return;
             event.preventDefault();
-            openKnowledge(card.dataset.knowledgeDetail).catch(console.error);
+            openKnowledge(card.dataset.knowledgeDetail).catch(showKnowledgeError);
         });
         document.querySelector('#knowledge-detail-modal')?.addEventListener('click', event => {
             if (event.target.closest('[data-knowledge-close]')) closeKnowledge();

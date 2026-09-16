@@ -25,9 +25,9 @@ class KnowledgeDetailInteractionTest extends TestCase
         $this->assertStringContainsString('ルールカタログで確認', $script);
         $this->assertStringContainsString('レビュー画面で根拠を確認', $script);
         $this->assertStringContainsString('このナレッジをAIに質問', $script);
-        $this->assertStringContainsString("fetch('/api/demo/knowledge'", $script);
-        $this->assertStringContainsString("fetch('/api/demo/review'", $script);
-        $this->assertStringContainsString("fetch('/api/demo/rules'", $script);
+        $this->assertStringContainsString("fetchJson('/api/demo/knowledge'", $script);
+        $this->assertStringContainsString("fetchJson('/api/demo/review'", $script);
+        $this->assertStringContainsString("fetchJson('/api/demo/rules'", $script);
     }
 
     public function test_each_demo_knowledge_entry_has_explicit_review_steps(): void

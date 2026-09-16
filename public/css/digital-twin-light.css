@@ -297,6 +297,18 @@
 #digital-twin-root .twin-fallback-note span{font-size:11px!important}
 #digital-twin-root .twin-map-panel-3d .twin-heading strong:after{font-size:9px!important}
 
+.twin-load-error{
+    margin:0 0 16px;
+    padding:16px 18px;
+    border:1px solid #efc4ca;
+    border-radius:14px;
+    background:#fff2f3;
+    color:#8f2f3d;
+    font-size:13px;
+    line-height:1.7;
+}
+.twin-load-error strong{display:block;margin-bottom:4px;font-size:15px}
+
 @media(max-width:760px){
     #digital-twin-root #twin-3d-canvas{opacity:.68!important}
     #digital-twin-root .twin-kpi span{font-size:11px!important}
