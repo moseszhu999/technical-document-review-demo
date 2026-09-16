@@ -1,6 +1,6 @@
 # Technical Document Review Demo
 
-PHP / Laravel を使った、製造業向け技術文書レビューの小さな公開サンプルです。
+PHP / Laravel を使った、製造業向け技術文書レビューの公開サンプルです。
 
 題材は架空の小型ギヤボックスです。設計図、検査記録、作業指示、受入記録を同一ケースとして整理し、公開用に簡略化したルールで確認し、Finding と Evidence を Human Review へ渡します。
 
@@ -10,7 +10,7 @@ PHP / Laravel を使った、製造業向け技術文書レビューの小さな
 
 ## Demo Architecture
 
-本デモでは、製造現場に存在する技術情報を、レビュー可能な形で統合します。
+本デモでは、製造現場に存在する技術情報を、設備・工程単位でレビュー可能な形に統合します。
 
 ```text
 技術文書
@@ -32,9 +32,29 @@ AIは判断を支援しますが、最終的な確認・承認は人が実施す
 
 本デモにおける3D Digital Twinは、単なる設備表示ではありません。
 
-設備・工程・文書・ルール・証跡情報を関連付けるレビューインターフェースです。
+設備・工程・文書・ルール・証跡情報を関連付ける、エンジニア向けレビューインターフェースです。
 
-3D空間を入口として、対象設備に関連する技術情報、検査ルール、Evidence、AI支援結果を確認できます。
+3D空間を入口として、対象設備から関連する技術情報、検査ルール、Evidence、AI支援結果を確認できます。
+
+## Engineering Review Flow
+
+```text
+Factory View
+      ↓
+Equipment Selection
+      ↓
+Process Context
+      ↓
+Document Reference
+      ↓
+Rule Evaluation
+      ↓
+Evidence Confirmation
+      ↓
+AI Review Support
+      ↓
+Human Confirmation
+```
 
 ## Demo UI
 
@@ -46,7 +66,7 @@ http://localhost:8000/demo
 
 画面では、ギヤボックスを簡易 3D 表示し、部品・設備に関連するルール、Evidence、AI 支援候補を確認できます。
 
-3D は CAD 精度を目的としたモデルではなく、文書・部品・ルール・Evidence の紐付けを説明するためのインタラクティブな可視化です。
+3D は CAD 精度を目的としたモデルではなく、文書・設備・工程・ルール・Evidence の関連付けを説明するためのインタラクティブな可視化です。
 
 ## AI の使い方
 
