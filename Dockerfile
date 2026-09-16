@@ -1,8 +1,9 @@
 FROM php:8.3-cli
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libonig-dev \
-    && docker-php-ext-install mbstring \
+    && apt-get install -y --no-install-recommends git unzip libonig-dev libcurl4-openssl-dev ca-certificates \
+    && docker-php-ext-install mbstring curl \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
