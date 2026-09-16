@@ -30,6 +30,8 @@ AI / OCR / LLM が有効な場所は、たとえば次です。
 - `data/rules/public_demo_rules.json`
 - `data/ai/assist_candidates.json`
 
+回答は SSE（Server-Sent Events）でストリーミング配信します。`POST /api/demo/chat/stream` が `phase`（思考中）→ `delta`（本文を逐次）→ `sources`（根拠ID）→ `done` を順に返し、推論型モデルの長い待ち時間でも途中から表示されます。JSON 形式の `POST /api/demo/chat` も後方互換として残しています。
+
 外部 AI 接続に失敗した場合は、画面に `AI接続失敗・固定デモ回答に切替` と表示し、同じ公開データだけを使う固定フォールバック回答へ切り替えます。フォールバックを実 AI の回答として見せないことを優先します。
 
 ## Ark 接続設定
@@ -38,12 +40,14 @@ Render 等のサーバー環境では次を設定します。
 
 ```text
 ARK_API_KEY=<Ark API Key>
-ARK_MODEL=doubao-seed-2.1-pro
-ARK_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
-ARK_TIMEOUT=12
+ARK_MODEL=ark-code-latest
+ARK_BASE_URL=https://ark.cn-beijing.volces.com/api/plan/v3
+ARK_TIMEOUT=60
 ```
 
 `ARK_API_KEY` は値だけを設定します。`Bearer `、引用符、余分な空白を付けないのが推奨です。実装側でも一般的な貼り付けミスは正規化します。
+
+この公開デモは Agent Plan（サブスクリプション）のキーと `/api/plan/v3` エンドポイント、モデル `ark-code-latest` で動作確認しています。従量課金の個別モデル ID を使う場合は `/api/v3` とそのモデル ID を指定します。キーの種別とエンドポイントが一致していないと 401/404 になります。
 
 HTTP 401 が返る場合は、Laravel やブラウザ側ではなく Ark の認証段階で拒否されています。Ark 側で API Key が有効か、対象アカウントでモデル利用が有効かを確認し、必要なら API Key を再発行してください。HTTP 403 の場合はモデル利用権限を確認します。
 

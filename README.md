@@ -20,7 +20,7 @@
 
 ![AIレビュー支援](docs/screenshots/ai-chat.png)
 
-*AI は根拠ID付きで回答する支援レイヤー。推論型モデルのため初回回答に30〜60秒かかる旨を明示*
+*AI は根拠ID付きで回答する支援レイヤー。思考フェーズを経て SSE で回答を逐次表示*
 
 ---
 
@@ -61,11 +61,11 @@ flowchart TD
     S --> API[GET /api/demo/review]
     S --> UI[Blade + 3D Digital Twin]
 
-    Q[質問] --> CHAT[POST /api/demo/chat]
+    Q[質問] --> CHAT[POST /api/demo/chat/stream · SSE]
     S -. grounding context .-> CHAT
     CHAT --> ARK[ArkChatService<br/>Volcengine Ark]
     ARK -- 失敗/未設定 --> FB[決定論的な固定デモ回答]
-    ARK -- 成功 --> ANS[根拠ID付き回答]
+    ARK -- 成功 --> ANS[phase / delta / sources を逐次配信]
 ```
 
 ### 判定フロー
@@ -93,8 +93,10 @@ Document
 | `app/Services/RuleCatalog.php` | ルールをデータ（JSON）として提供。ルール追加 = コード変更なし |
 | `app/Services/EvidenceChainBuilder.php` | 設計図→指示→検査→受入の順序で証跡を構築 |
 | `app/Services/DocumentReviewService.php` | 上記をDIで統合するオーケストレータ |
-| `app/Services/ArkChatService.php` | 実LLMクライアント。キーはサーバー側のみ、接地文脈を付与 |
-| `app/Http/Controllers/DemoChatController.php` | AI失敗時の固定デモ回答フォールバック |
+| `app/Services/ArkChatService.php` | 実LLMクライアント（非ストリーム/ストリーム両対応）。キーはサーバー側のみ、接地文脈を付与 |
+| pp/Http/Controllers/DemoChatController.php | JSON 版チャット。AI失敗時は固定デモ回答へフォールバック |
+| pp/Http/Controllers/DemoChatStreamController.php | SSE 版チャット。phase / delta / sources / done を逐次配信し、失敗時も固定回答をストリーム配信 |
+| pp/Services/DemoFallbackResponder.php | キーワード連動の根拠ID付き固定回答を JSON / SSE で共用 |
 
 ### ルールエンジン
 
@@ -114,7 +116,7 @@ Document
 - **キーの扱い**: API キーはサーバー側の環境変数からのみ読み込み、クライアントへは一切送出しません（送信しないことを確認するテストあり）。
 - **失敗時の挙動**: LLM 未設定・接続失敗・タイムアウト時は、`DemoChatController` が**根拠ID付きの固定デモ回答**へフォールバックします。オフラインでもデモが破綻しません。
 - **抽出候補はフィクスチャ**: `data/ai/assist_candidates.json` は `mode: fixture` の模擬出力です。これは実モデル出力ではなく、「AI候補が入ってきた後にルールと証跡がどう挟まるか」を示すための境界（シーム）です。実運用ではこのファイルを実抽出サービスに置き換えます。
-- **待ち時間の明示**: 接続する推論型モデルは初回回答に30〜60秒を要するため、UIにその旨を表示し、バックエンド/フロント/PHP の各タイムアウトを60秒に統一しています。
+- **ストリーミング応答**: 推論型モデルは思考に時間を要するため、チャットは SSE 専用エンドポイント `POST /api/demo/chat/stream` を使い、`phase`（思考中）→ `delta`（本文を逐次）→ `sources`（根拠ID）→ `done` の順で配信します。思考段階から応答が始まるため無言で待たせず、未設定・失敗時は同じ固定デモ回答をストリーム配信します。後方互換として非ストリームの `POST /api/demo/chat` も残しています。
 
 ---
 
@@ -152,7 +154,8 @@ ARK_TIMEOUT=60
 GET  /api/demo/review     # 文書・ルール判定・ファインディング・証跡・AI候補
 GET  /api/demo/knowledge  # ナレッジベース
 GET  /api/demo/rules      # ルールカタログ
-POST /api/demo/chat       # AIレビュー支援（未設定時は固定デモ回答）
+POST /api/demo/chat        # AIレビュー支援（JSON・後方互換、未設定時は固定回答）
+POST /api/demo/chat/stream # AIレビュー支援（SSEストリーミング）
 ```
 
 ### テスト
@@ -171,7 +174,7 @@ composer test
 
 - **RAG 化**: 現状は全データをプロンプトへ添付しています。文書が増えた場合のチャンク化・検索・参照IDの整合を導入
 - **抽出の実体化**: `assist_candidates.json` を実際の抽出サービスへ置換、人による承認状態の永続化
-- **ストリーミング**: 推論型モデルの待ち時間を SSE で逐次表示
+- **ストリーム制御**: クライアントからの中断（Abort）、接続断時の再接続、再開サポート（現状は片方向・再接続なし）
 - **ルールの版管理**: ルールカタログのバージョニング、有効期間、監査ログ
 - **ストレージ/キャッシュ**: JSON ファイル再読込を DB・キャッシュへ
 - **非同期化**: 抽出・判定のジョブキュー化と再計算

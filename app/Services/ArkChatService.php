@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Generator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -12,13 +13,108 @@ class ArkChatService
     /** @return array{answer:string,sources:array<int,string>,model:string} */
     public function answer(string $message): array
     {
+        $settings = $this->connectionSettings();
+
+        $response = $this->sendCompletionRequest($settings, $message, false);
+
+        if (! $response->successful()) {
+            $this->logFailedRequest($response, $settings);
+            throw new RuntimeException('Ark API request failed with status ' . $response->status());
+        }
+
+        $answer = trim((string) $response->json('choices.0.message.content'));
+
+        if ($answer === '') {
+            throw new RuntimeException('Ark API returned an empty answer.');
+        }
+
+        return [
+            'answer' => $answer,
+            'sources' => $this->extractSources($answer),
+            'model' => $settings['model'],
+        ];
+    }
+
+    /**
+     * SSE 用のストリーミング回答です。
+     *
+     * @return Generator<int, array<string, mixed>>
+     */
+    public function streamAnswer(string $message): Generator
+    {
+        $settings = $this->connectionSettings();
+
+        $response = $this->sendCompletionRequest($settings, $message, true);
+
+        if (! $response->successful()) {
+            $this->logFailedRequest($response, $settings);
+            throw new RuntimeException('Ark API request failed with status ' . $response->status());
+        }
+
+        $stream = $response->getBody();
+        $buffer = '';
+        $answer = '';
+        $reasoningAnnounced = false;
+
+        while (! $stream->eof()) {
+            $buffer .= (string) $stream->read(512);
+            $newlinePos = strpos($buffer, "\n");
+
+            while ($newlinePos !== false) {
+                $line = trim(substr($buffer, 0, $newlinePos));
+                $buffer = substr($buffer, $newlinePos + 1);
+                $newlinePos = strpos($buffer, "\n");
+
+                if ($line === '' || ! str_starts_with($line, 'data:')) {
+                    continue;
+                }
+
+                $payload = trim(substr($line, 5));
+
+                if ($payload === '[DONE]') {
+                    continue;
+                }
+
+                $decoded = json_decode($payload, true);
+
+                if (! is_array($decoded)) {
+                    continue;
+                }
+
+                $delta = $decoded['choices'][0]['delta'] ?? [];
+
+                if (($delta['reasoning_content'] ?? '') !== '' && ! $reasoningAnnounced) {
+                    $reasoningAnnounced = true;
+                    yield ['type' => 'phase', 'phase' => 'reasoning'];
+                }
+
+                $content = (string) ($delta['content'] ?? '');
+
+                if ($content !== '') {
+                    $answer .= $content;
+                    yield ['type' => 'delta', 'text' => $content];
+                }
+            }
+        }
+
+        $answer = trim($answer);
+
+        if ($answer === '') {
+            throw new RuntimeException('Ark API returned an empty answer.');
+        }
+
+        yield ['type' => 'sources', 'sources' => $this->extractSources($answer)];
+    }
+
+    /** @return array{api_key:string,api_key_source:string,base_url:string,model:string,timeout:int,connect_timeout:int} */
+    private function connectionSettings(): array
+    {
         $apiKey = $this->normalizeApiKey((string) config('services.ark.api_key'));
         $apiKeySource = (string) config('services.ark.api_key_source', 'unknown');
         $baseUrl = rtrim($this->normalizeEnvValue((string) config('services.ark.base_url')), '/');
         $model = $this->normalizeEnvValue((string) config('services.ark.model'));
         $timeout = min(max((int) config('services.ark.timeout', 12), 4), 60);
         $connectTimeout = min(4, $timeout);
-        @set_time_limit($timeout + 30);
 
         if ($apiKey === '') {
             throw new RuntimeException('Ark API key is not configured.');
@@ -32,59 +128,86 @@ class ArkChatService
             throw new RuntimeException('ARK_MODEL is not configured.');
         }
 
+        @set_time_limit($timeout + 30);
+
+        return [
+            'api_key' => $apiKey,
+            'api_key_source' => $apiKeySource,
+            'base_url' => $baseUrl,
+            'model' => $model,
+            'timeout' => $timeout,
+            'connect_timeout' => $connectTimeout,
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    private function sendCompletionRequest(array $settings, string $message, bool $stream): \Illuminate\Http\Client\Response
+    {
+        $request = Http::withToken($settings['api_key'])
+            ->acceptJson()
+            ->asJson()
+            ->connectTimeout($settings['connect_timeout'])
+            ->timeout($settings['timeout']);
+
+        if ($stream) {
+            $request->withOptions(['stream' => true]);
+        }
+
         try {
-            $response = Http::withToken($apiKey)
-                ->acceptJson()
-                ->asJson()
-                ->connectTimeout($connectTimeout)
-                ->timeout($timeout)
-                ->post($baseUrl . '/chat/completions', [
-                    'model' => $model,
-                    'temperature' => 0.2,
-                    'max_tokens' => 700,
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => $this->systemPrompt(),
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
-                        ],
-                    ],
-                ]);
+            return $request->post(
+                $settings['base_url'] . '/chat/completions',
+                $this->completionPayload($settings['model'], $message, $stream),
+            );
         } catch (Throwable $e) {
             Log::warning('Ark chat connection failed', [
-                'model' => $model,
-                'api_key_source' => $apiKeySource,
+                'model' => $settings['model'],
+                'api_key_source' => $settings['api_key_source'],
                 'error_class' => $e::class,
                 'error_message' => $this->safeErrorField($e->getMessage()),
             ]);
+
             throw $e;
         }
+    }
 
-        if (! $response->successful()) {
-            Log::warning('Ark chat request failed', [
-                'status' => $response->status(),
-                'model' => $model,
-                'api_key_source' => $apiKeySource,
-                'ark_error_code' => $this->safeErrorField($response->json('error.code')),
-                'ark_error_message' => $this->safeErrorField($response->json('error.message')),
-            ]);
-            throw new RuntimeException('Ark API request failed with status ' . $response->status());
-        }
-
-        $answer = trim((string) $response->json('choices.0.message.content'));
-
-        if ($answer === '') {
-            throw new RuntimeException('Ark API returned an empty answer.');
-        }
-
-        return [
-            'answer' => $answer,
-            'sources' => $this->extractSources($answer),
+    /** @return array<string, mixed> */
+    private function completionPayload(string $model, string $message, bool $stream): array
+    {
+        $payload = [
             'model' => $model,
+            'temperature' => 0.2,
+            'max_tokens' => 700,
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => $this->systemPrompt(),
+                ],
+                [
+                    'role' => 'user',
+                    'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
+                ],
+            ],
         ];
+
+        if ($stream) {
+            $payload['stream'] = true;
+        }
+
+        return $payload;
+    }
+
+    /** @param array<string, mixed> $settings */
+    private function logFailedRequest(\Illuminate\Http\Client\Response $response, array $settings): void
+    {
+        Log::warning('Ark chat request failed', [
+            'status' => $response->status(),
+            'model' => $settings['model'],
+            'api_key_source' => $settings['api_key_source'],
+            'ark_error_code' => $this->safeErrorField($response->json('error.code')),
+            'ark_error_message' => $this->safeErrorField($response->json('error.message')),
+        ]);
     }
 
     private function normalizeApiKey(string $value): string

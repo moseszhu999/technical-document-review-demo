@@ -20,7 +20,7 @@
 
 ![AI 审查辅助](docs/screenshots/ai-chat.png)
 
-*AI 是带依据 ID 的辅助层；因使用推理型模型，界面明确提示首条回答约需 30–60 秒*
+*AI 是带依据 ID 的辅助层；经过思考阶段后通过 SSE 逐字输出回答*
 
 ---
 
@@ -61,11 +61,11 @@ flowchart TD
     S --> API[GET /api/demo/review]
     S --> UI[Blade + 3D 数字孪生]
 
-    Q[提问] --> CHAT[POST /api/demo/chat]
+    Q[提问] --> CHAT[POST /api/demo/chat/stream · SSE]
     S -. 接地上下文 .-> CHAT
     CHAT --> ARK[ArkChatService<br/>火山方舟 Ark]
     ARK -- 失败/未配置 --> FB[确定性固定演示回答]
-    ARK -- 成功 --> ANS[带依据 ID 的回答]
+    ARK -- 成功 --> ANS[phase / delta / sources 逐段下发]
 ```
 
 ### 判定流程
@@ -93,8 +93,10 @@ Document（文档）
 | `app/Services/RuleCatalog.php` | 以数据（JSON）形式提供规则，新增规则无需改代码 |
 | `app/Services/EvidenceChainBuilder.php` | 按 设计图→指导→检验→受入 的顺序构建证据链 |
 | `app/Services/DocumentReviewService.php` | 通过依赖注入把上述组件组装起来的编排器 |
-| `app/Services/ArkChatService.php` | 真实 LLM 客户端，密钥仅在服务端、附带接地上下文 |
-| `app/Http/Controllers/DemoChatController.php` | AI 失败时回退到固定演示回答 |
+| `app/Services/ArkChatService.php` | 真实 LLM 客户端（同时支持非流式/流式），密钥仅在服务端、附带接地上下文 |
+| pp/Http/Controllers/DemoChatController.php | JSON 版对话，AI 失败时回退到固定演示回答 |
+| pp/Http/Controllers/DemoChatStreamController.php | SSE 版对话，逐段下发 phase / delta / sources / done，失败时也以流式发送固定回答 |
+| pp/Services/DemoFallbackResponder.php | 关键词匹配的带依据 ID 固定回答，被 JSON / SSE 两个接口共用 |
 
 ### 规则引擎
 
@@ -114,7 +116,7 @@ Document（文档）
 - **密钥处理**：API Key 只从服务端环境变量读取，绝不发送到浏览器（并有专门测试断言不外泄）。
 - **失败兜底**：LLM 未配置、连接失败或超时时，`DemoChatController` 会回退到**带依据 ID 的固定演示回答**，离线也能完整演示。
 - **抽取候选是夹具**：`data/ai/assist_candidates.json` 是 `mode: fixture` 的模拟输出，用来展示「AI 候选进入系统后，规则与证据如何介入」的接缝；生产中替换为真实抽取服务即可，契约不变。
-- **明确的等待时间**：所接的推理型模型首条回答约需 30–60 秒，界面会提示，后端/前端/PHP 各层超时统一设为 60 秒。
+- **流式响应**：推理型模型思考较慢，因此对话走 SSE 专用端点 `POST /api/demo/chat/stream`，按 `phase`（思考中）→ `delta`（正文逐字）→ `sources`（依据 ID）→ `done` 的顺序下发；思考阶段就开始有响应，不会让人干等。未配置或失败时也会以流式返回同一份固定演示回答。同时保留非流式的 `POST /api/demo/chat` 作为向后兼容。
 
 ---
 
@@ -152,7 +154,8 @@ ARK_TIMEOUT=60
 GET  /api/demo/review     # 文档、规则判定、Finding、证据、AI 候选
 GET  /api/demo/knowledge  # 知识库
 GET  /api/demo/rules      # 规则目录
-POST /api/demo/chat       # AI 审查辅助（未配置时为固定演示回答）
+POST /api/demo/chat        # AI 审查辅助（JSON，向后兼容，未配置时为固定回答）
+POST /api/demo/chat/stream # AI 审查辅助（SSE 流式）
 ```
 
 ### 测试
@@ -171,7 +174,7 @@ composer test
 
 - **RAG 化**：当前是把全部数据塞进 prompt；文档增多后需引入切块、检索与引用 ID 对齐。
 - **抽取实体化**：把 `assist_candidates.json` 替换为真实抽取服务，并持久化人工确认状态。
-- **流式输出**：用 SSE 把推理型模型的等待过程逐字呈现。
+- **流式控制**：客户端中断（Abort）、断线重连与断点续传支持（当前为单向、无重连）。
 - **规则版本管理**：规则目录的版本化、有效期与审计日志。
 - **存储/缓存**：把每次重读 JSON 改为数据库与缓存。
 - **异步化**：抽取与判定走任务队列，支持重算。
