@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 
-const originalRender = THREE.WebGLRenderer.prototype.render;
+const originalGroupAdd = THREE.Group.prototype.add;
 const structuralMeshes = new Set();
 let structureVisible = false;
-let scannedScene = null;
 
 function approximately(value, expected, tolerance = 0.03) {
     return Math.abs(Number(value) - expected) <= tolerance;
@@ -25,18 +24,13 @@ function applyStructureVisibility() {
     });
 }
 
-function scanScene(scene) {
-    structuralMeshes.clear();
-    scene.traverse(object => {
-        if (isToggleableStructure(object)) structuralMeshes.add(object);
+THREE.Group.prototype.add = function patchedGroupAdd(...objects) {
+    objects.forEach(object => {
+        if (!isToggleableStructure(object)) return;
+        structuralMeshes.add(object);
+        object.visible = structureVisible;
     });
-    scannedScene = scene;
-    applyStructureVisibility();
-}
-
-THREE.WebGLRenderer.prototype.render = function patchedRender(scene, camera) {
-    if (scene !== scannedScene) scanScene(scene);
-    return originalRender.call(this, scene, camera);
+    return originalGroupAdd.apply(this, objects);
 };
 
 function configureToolbarButton(button) {
@@ -69,5 +63,5 @@ findAndConfigureButton();
 document.addEventListener('click', event => {
     const button = event.target.closest?.('[data-scene-action="roof"]');
     if (!button) return;
-    window.setTimeout(() => syncFromButton(button), 0);
-}, true);
+    syncFromButton(button);
+});
