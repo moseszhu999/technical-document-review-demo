@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Throwable;
 
 class ArkChatService
 {
@@ -15,7 +16,8 @@ class ArkChatService
         $apiKeySource = (string) config('services.ark.api_key_source', 'unknown');
         $baseUrl = rtrim($this->normalizeEnvValue((string) config('services.ark.base_url')), '/');
         $model = $this->normalizeEnvValue((string) config('services.ark.model'));
-        $timeout = (int) config('services.ark.timeout', 12);
+        $timeout = min(max((int) config('services.ark.timeout', 12), 4), 18);
+        $connectTimeout = min(4, $timeout);
 
         if ($apiKey === '') {
             throw new RuntimeException('Ark API key is not configured.');
@@ -29,25 +31,36 @@ class ArkChatService
             throw new RuntimeException('ARK_MODEL is not configured.');
         }
 
-        $response = Http::withToken($apiKey)
-            ->acceptJson()
-            ->asJson()
-            ->timeout($timeout)
-            ->post($baseUrl . '/chat/completions', [
+        try {
+            $response = Http::withToken($apiKey)
+                ->acceptJson()
+                ->asJson()
+                ->connectTimeout($connectTimeout)
+                ->timeout($timeout)
+                ->post($baseUrl . '/chat/completions', [
+                    'model' => $model,
+                    'temperature' => 0.2,
+                    'max_tokens' => 700,
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => $this->systemPrompt(),
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
+                        ],
+                    ],
+                ]);
+        } catch (Throwable $e) {
+            Log::warning('Ark chat connection failed', [
                 'model' => $model,
-                'temperature' => 0.2,
-                'max_tokens' => 700,
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $this->systemPrompt(),
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
-                    ],
-                ],
+                'api_key_source' => $apiKeySource,
+                'error_class' => $e::class,
+                'error_message' => $this->safeErrorField($e->getMessage()),
             ]);
+            throw $e;
+        }
 
         if (! $response->successful()) {
             Log::warning('Ark chat request failed', [
