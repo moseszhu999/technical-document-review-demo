@@ -31,25 +31,29 @@ class ArkChatService
             throw new RuntimeException('ARK_MODEL is not configured.');
         }
 
-        $input = $this->systemPrompt()
-            . "\n\n以下は公開デモ用の架空データです。\n\n"
-            . $this->groundingContext()
-            . "\n\n質問: "
-            . $message;
-
         try {
             $response = Http::withToken($apiKey)
                 ->acceptJson()
                 ->asJson()
                 ->connectTimeout($connectTimeout)
                 ->timeout($timeout)
-                ->post($baseUrl . '/responses', [
+                ->post($baseUrl . '/chat/completions', [
                     'model' => $model,
-                    'input' => $input,
-                    'max_output_tokens' => 700,
+                    'temperature' => 0.2,
+                    'max_tokens' => 700,
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => $this->systemPrompt(),
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
+                        ],
+                    ],
                 ]);
         } catch (Throwable $e) {
-            Log::warning('Ark responses connection failed', [
+            Log::warning('Ark chat connection failed', [
                 'model' => $model,
                 'api_key_source' => $apiKeySource,
                 'error_class' => $e::class,
@@ -59,25 +63,20 @@ class ArkChatService
         }
 
         if (! $response->successful()) {
-            Log::warning('Ark responses request failed', [
+            Log::warning('Ark chat request failed', [
                 'status' => $response->status(),
                 'model' => $model,
                 'api_key_source' => $apiKeySource,
                 'ark_error_code' => $this->safeErrorField($response->json('error.code')),
                 'ark_error_message' => $this->safeErrorField($response->json('error.message')),
             ]);
-            throw new RuntimeException('Ark Responses API request failed with status ' . $response->status());
+            throw new RuntimeException('Ark API request failed with status ' . $response->status());
         }
 
-        $answer = $this->extractAnswer($response->json());
+        $answer = trim((string) $response->json('choices.0.message.content'));
 
         if ($answer === '') {
-            Log::warning('Ark responses returned no output text', [
-                'model' => $model,
-                'api_key_source' => $apiKeySource,
-                'response_status' => $this->safeErrorField($response->json('status')),
-            ]);
-            throw new RuntimeException('Ark Responses API returned an empty answer.');
+            throw new RuntimeException('Ark API returned an empty answer.');
         }
 
         return [
@@ -85,40 +84,6 @@ class ArkChatService
             'sources' => $this->extractSources($answer),
             'model' => $model,
         ];
-    }
-
-    /** @param mixed $payload */
-    private function extractAnswer(mixed $payload): string
-    {
-        if (! is_array($payload)) {
-            return '';
-        }
-
-        $direct = $payload['output_text'] ?? null;
-        if (is_string($direct) && trim($direct) !== '') {
-            return trim($direct);
-        }
-
-        $parts = [];
-        foreach (($payload['output'] ?? []) as $item) {
-            if (! is_array($item) || ($item['type'] ?? null) !== 'message') {
-                continue;
-            }
-
-            foreach (($item['content'] ?? []) as $content) {
-                if (! is_array($content)) {
-                    continue;
-                }
-
-                $type = $content['type'] ?? null;
-                $text = $content['text'] ?? null;
-                if (($type === 'output_text' || $type === 'text') && is_string($text) && trim($text) !== '') {
-                    $parts[] = trim($text);
-                }
-            }
-        }
-
-        return trim(implode("\n", $parts));
     }
 
     private function normalizeApiKey(string $value): string
