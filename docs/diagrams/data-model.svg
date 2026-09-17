@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="924" viewBox="0 0 1480 924" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif">
+<defs>
+  <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#94a3b8"/></marker>
+  <marker id="arRed" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#b63849"/></marker>
+  <marker id="arGreen" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#11755f"/></marker>
+  <marker id="arBlue" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#1d4ed8"/></marker>
+  <marker id="arVio" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#6d28d9"/></marker></defs>
+<rect width="1480" height="924" fill="#ffffff"/>
+<text x="40" y="44" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="26" font-weight="800" letter-spacing="0" fill="#111827">データモデル：JSON入力 → 決定論処理 → レビュー統合 → API / UI</text>
+<text x="40" y="74" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="500" letter-spacing="0" fill="#64748b">DocumentReviewService がDIで統合。AIは候補レイヤーであり、合否判定と最終承認は決定論ルールと人が担う。</text>
+<rect x="902" y="86" width="14" height="14" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="922" y="97" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">決定論処理</text>
+<rect x="1016" y="86" width="14" height="14" rx="4" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5" />
+<text x="1036" y="97" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">AI（候補のみ）</text>
+<rect x="1150" y="86" width="14" height="14" rx="4" fill="#eaf7f3" stroke="#11755f" stroke-width="1.5" />
+<text x="1170" y="97" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">適合</text>
+<rect x="1212" y="86" width="14" height="14" rx="4" fill="#fff1f2" stroke="#f1c2c8" stroke-width="1.5" />
+<text x="1232" y="97" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">要確認</text>
+<rect x="1284" y="86" width="14" height="14" rx="4" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" />
+<text x="1304" y="97" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">人の確認</text>
+<rect x="32" y="108" width="336" height="800" rx="18" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+<rect x="392" y="108" width="478" height="800" rx="18" fill="#f4f9ff" stroke="#e2e8f0" stroke-width="1.5" />
+<rect x="894" y="108" width="554" height="800" rx="18" fill="#fcfdff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="52" y="134" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="800" letter-spacing="0" fill="#64748b">データ入力（JSON）</text>
+<text x="412" y="134" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="800" letter-spacing="0" fill="#1d4ed8">決定論レイヤー（テスト可能・交換可能）</text>
+<text x="914" y="134" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="800" letter-spacing="0" fill="#64748b">統合・出力</text>
+<rect x="52" y="150" width="296" height="118" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="68" y="178" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="800" letter-spacing="0" fill="#111827">data/input/*.json（4文書）</text>
+<text x="68" y="200" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">DRAW-042 組立図 D3 / WI-042 指示 2.1</text>
+<text x="68" y="217" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">INSP-042 検査記録 1.0 / ACC-042 受入 1.0</text>
+<text x="68" y="240" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">case_id = MFG-DEMO-042（同一案件）</text>
+<text x="68" y="259" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#94a3b8">assets[]{asset_id, snapshot{}, locators{}}</text>
+<rect x="52" y="288" width="296" height="64" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="68" y="314" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="700" letter-spacing="0" fill="#1d4ed8">data/rules/public_demo_rules.json</text>
+<text x="68" y="336" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">3ルール（入力・type・parameters・on_fail）</text>
+<rect x="52" y="372" width="296" height="64" rx="12" fill="#fafaf9" stroke="#d6d3d1" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="68" y="398" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="700" letter-spacing="0" fill="#78716c">data/knowledge/*.json</text>
+<text x="68" y="420" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#78716c">ナレッジ（チャット接地で使用）</text>
+<rect x="52" y="456" width="296" height="64" rx="12" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5" />
+<text x="68" y="482" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="700" letter-spacing="0" fill="#6d28d9">data/ai/assist_candidates.json</text>
+<text x="68" y="504" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">AI抽出候補（mode = fixture の模擬出力）</text>
+<rect x="412" y="150" width="438" height="112" rx="14" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+<text x="428" y="178" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="800" letter-spacing="0" fill="#1d4ed8">JsonDocumentNormalizer</text>
+<text x="428" y="197" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#64748b">implements DocumentNormalizer（PDF/OCR等への差し替え境界）</text>
+<text x="428" y="221" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">documents[]{ case_id, document_id, document_type, document_version,</text>
+<text x="428" y="238" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">  document_date, source_document, assets[]{asset_id,snapshot,locators} }</text>
+<rect x="412" y="300" width="208" height="124" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="426" y="326" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="800" letter-spacing="0" fill="#1d4ed8">CrossDocumentComparator</text>
+<text x="426" y="348" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#64748b">比較フィールド</text>
+<text x="426" y="366" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">part_number</text>
+<text x="426" y="382" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">material_grade</text>
+<text x="426" y="398" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">lubricant_grade</text>
+<text x="426" y="416" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="700" letter-spacing="0" fill="#1d4ed8">→ document_findings[]</text>
+<rect x="642" y="300" width="208" height="124" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="656" y="326" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="800" letter-spacing="0" fill="#1d4ed8">RuleEvaluator</text>
+<text x="656" y="344" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#64748b">+ RuleCatalog(JSON)</text>
+<text x="656" y="368" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">all_equal</text>
+<text x="656" y="384" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">relative_tolerance</text>
+<text x="656" y="400" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">numeric_range</text>
+<text x="656" y="418" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="700" letter-spacing="0" fill="#1d4ed8">→ rule_results[]</text>
+<rect x="412" y="448" width="208" height="124" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="426" y="474" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="800" letter-spacing="0" fill="#1d4ed8">EvidenceChainBuilder</text>
+<text x="426" y="498" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#64748b">ORDER（時系列）</text>
+<text x="426" y="518" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">組立図10 → 指示20</text>
+<text x="426" y="534" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">→ 検査30 → 受入40</text>
+<text x="426" y="560" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="700" letter-spacing="0" fill="#1d4ed8">→ evidence_chain[]</text>
+<rect x="642" y="448" width="208" height="124" rx="12" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5" />
+<text x="656" y="474" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="800" letter-spacing="0" fill="#6d28d9">AiCandidateReader</text>
+<text x="656" y="500" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">ai_assist{</text>
+<text x="656" y="516" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">  mode:"fixture"</text>
+<text x="656" y="532" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#111827">  candidates:3 }</text>
+<text x="656" y="558" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10" font-weight="500" letter-spacing="0" fill="#6d28d9">candidate / needs_review（候補のみ）</text>
+<rect x="412" y="612" width="438" height="160" rx="14" fill="#0b1220" stroke="#1e293b" stroke-width="2" />
+<text x="430" y="640" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="800" letter-spacing="0" fill="#93c5fd">DocumentReviewService（オーケストレータ・DI）</text>
+<text x="430" y="668" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#cbd5e1">• case_id 単一性を検証（複数案件なら例外）</text>
+<text x="430" y="694" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#cbd5e1">• entities = assets を asset_id で一意化（3件）</text>
+<text x="430" y="720" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#cbd5e1">• review_required = 文書差異&gt;0 または ルール要確認&gt;0</text>
+<text x="430" y="746" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#cbd5e1">rule_results / document_findings / evidence_chain</text>
+<text x="430" y="762" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#cbd5e1">/ ai_assist / summary を1つのレスポンスへ統合</text>
+<rect x="412" y="794" width="438" height="96" rx="14" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="430" y="822" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="800" letter-spacing="0" fill="#6d28d9">AI接地（チャット）の入力</text>
+<text x="430" y="846" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">ArkChatService::groundingContext() が documents/rules/</text>
+<text x="430" y="862" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">knowledge/ai候補/点位数を添付 → SSE phase/delta/sources/done</text>
+<text x="430" y="880" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#475569">未設定・失敗時は根拠ID付き固定デモ回答へフォールバック</text>
+<line x1="348" y1="209" x2="412" y2="209" stroke="#1d4ed8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<line x1="516" y1="262" x2="516" y2="300" stroke="#1d4ed8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<line x1="746" y1="262" x2="746" y2="300" stroke="#1d4ed8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<path d="M412,246 L400,246 L400,510 L412,510" fill="none" stroke="#1d4ed8" stroke-width="1.8"  marker-end="url(#arBlue)"/>
+<line x1="516" y1="572" x2="516" y2="612" stroke="#1d4ed8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<line x1="746" y1="572" x2="746" y2="612" stroke="#6d28d9" stroke-width="2"  marker-end="url(#arVio)"/>
+<path d="M412,362 L400,362 L400,676 L412,676" fill="none" stroke="#1d4ed8" stroke-width="1.8"  marker-end="url(#arBlue)"/>
+<path d="M850,362 L860,362 L860,700 L850,700" fill="none" stroke="#1d4ed8" stroke-width="1.8"  marker-end="url(#arBlue)"/>
+<path d="M348,320 L378,320 L378,286 L746,286 L746,300" fill="none" stroke="#1d4ed8" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arBlue)"/>
+<path d="M348,488 L378,488 L378,440 L746,440 L746,448" fill="none" stroke="#6d28d9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arVio)"/>
+<path d="M348,404 L382,404 L382,842 L412,842" fill="none" stroke="#a8a29e" stroke-width="1.5" stroke-dasharray="5 4" />
+<rect x="914" y="150" width="514" height="418" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+<rect x="914" y="150" width="514" height="40" rx="14" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="930" y="176" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12.5" font-weight="800" letter-spacing="0" fill="#111827">GET /api/demo/review — レスポンス（実測値）</text>
+<text x="930" y="212" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">case_id</text>
+<text x="1076" y="212" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">"MFG-DEMO-042"</text>
+<text x="930" y="239" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">documents[]</text>
+<text x="1076" y="239" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">4（組立図・指示・検査・受入）</text>
+<text x="930" y="266" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">entities[]</text>
+<text x="1076" y="266" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">3 — GBX-042 / GEARSET-01 / BRG-01</text>
+<text x="930" y="293" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">rule_results[]</text>
+<text x="1076" y="293" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">3 —</text>
+<text x="1076" y="320" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#0f5132">  1 適合（R02）</text>
+<text x="1076" y="347" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#b63849">  2 要確認（R01, R03）</text>
+<text x="930" y="374" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">document_findings[]</text>
+<text x="1076" y="374" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">0（一般属性に文書間差異なし）</text>
+<text x="930" y="401" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">evidence_chain[]</text>
+<text x="1076" y="401" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">4（組立図→指示→検査→受入）</text>
+<text x="930" y="428" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">ai_assist</text>
+<text x="1076" y="428" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#6d28d9">mode:"fixture", candidates:3</text>
+<text x="930" y="455" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">summary.rule_review_count</text>
+<text x="1076" y="455" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#b63849">2</text>
+<text x="930" y="482" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">summary.document_finding_count</text>
+<text x="1076" y="482" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#111827">0</text>
+<text x="930" y="509" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="700" letter-spacing="0" fill="#111827">summary.review_status</text>
+<text x="1076" y="509" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#b63849">"human_review_required"</text>
+<path d="M850,690 L878,690 L878,380 L894,380" fill="none" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="914" y="600" width="240" height="48" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="1034" y="629" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#1d4ed8">DemoReviewController → JSON</text>
+<rect x="1188" y="600" width="240" height="48" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="1308" y="622" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#111827">Blade + gearbox-demo.js</text>
+<text x="1308" y="639" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="500" letter-spacing="0" fill="#64748b">3Dデジタルツイン / 各パネル</text>
+<line x1="1034" y1="568" x2="1034" y2="600" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<line x1="1154" y1="624" x2="1188" y2="624" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="914" y="672" width="514" height="108" rx="14" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" />
+<text x="932" y="700" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="800" letter-spacing="0" fill="#92400e">人（Human Review）</text>
+<text x="932" y="728" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">needs_review / human_review_required を最終確認・承認。</text>
+<text x="932" y="750" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">システムは確信度が高くても自動で最終合格しない。</text>
+<text x="932" y="770" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="700" letter-spacing="0" fill="#92400e">本デモの集計：rule_review_count=2 のため人の確認へ</text>
+<line x1="1034" y1="648" x2="1034" y2="672" stroke="#92400e" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="914" y="800" width="514" height="90" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="930" y="826" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="800" letter-spacing="0" fill="#475569">公開エンドポイント</text>
+<text x="930" y="850" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#475569">GET /api/demo/review · /knowledge · /rules</text>
+<text x="930" y="870" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#475569">POST /api/demo/chat（後方互換） · /chat/stream（SSE）</text>
+</svg>

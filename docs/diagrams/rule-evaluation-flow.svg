@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="996" viewBox="0 0 1480 996" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif">
+<defs>
+  <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#94a3b8"/></marker>
+  <marker id="arRed" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#b63849"/></marker>
+  <marker id="arGreen" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#11755f"/></marker>
+  <marker id="arBlue" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#1d4ed8"/></marker>
+  <marker id="arVio" markerWidth="10" markerHeight="10" refX="8" refY="3.2" orient="auto"><path d="M0,0 L0,6.4 L9,3.2 z" fill="#6d28d9"/></marker></defs>
+<rect width="1480" height="996" fill="#ffffff"/>
+<text x="40" y="44" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="26" font-weight="800" letter-spacing="0" fill="#111827">ルール判定フロー：決定論ルール × フェイルセーフ</text>
+<text x="40" y="74" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="500" letter-spacing="0" fill="#64748b">RuleEvaluator は RuleCatalog(JSON) の全ルールを入力値に対して判定。値が取得できなければ「適合」に倒さず「要確認」へ。最終判断は人。</text>
+<rect x="32" y="92" width="828" height="884" rx="18" fill="#fcfdff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="52" y="118" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12" font-weight="700" letter-spacing="0" fill="#64748b">判定パイプライン（app/Services/RuleEvaluator.php）</text>
+<rect x="876" y="92" width="572" height="884" rx="18" fill="#fcfdff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="896" y="118" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#64748b">公開デモの3ルール（実データ：MFG-DEMO-042）</text>
+<rect x="56" y="132" width="236" height="80" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="72" y="160" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#111827">組立図 AssemblyDrawing</text>
+<text x="72" y="182" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#64748b">DRAW-042（設計値・改訂番号）</text>
+<text x="72" y="202" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#94a3b8">assets[].snapshot</text>
+<rect x="308" y="132" width="236" height="80" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="324" y="160" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#111827">検査記録 InspectionReport</text>
+<text x="324" y="182" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#64748b">INSP-042（実測値・参照改訂）</text>
+<text x="324" y="202" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#94a3b8">assets[].snapshot</text>
+<rect x="560" y="132" width="284" height="80" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="576" y="160" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#1d4ed8">ルール定義 RuleCatalog</text>
+<text x="576" y="182" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#475569">data/rules/public_demo_rules.json</text>
+<text x="576" y="202" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#64748b">3ルール・rule_type で判定分岐</text>
+<rect x="56" y="238" width="488" height="68" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" />
+<text x="72" y="265" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="700" letter-spacing="0" fill="#111827">findObservation：document_type と asset_id が一致する値を取得</text>
+<text x="72" y="288" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#64748b">該当なし・欠落は null。locator(page/table/row) を証跡として付与</text>
+<path d="M174,212 L174,226 L250,226 L250,238" fill="none" stroke="" stroke-width="0"  />
+<line x1="174" y1="212" x2="174" y2="226" stroke="#94a3b8" stroke-width="2"  />
+<line x1="174" y1="226" x2="250" y2="226" stroke="#94a3b8" stroke-width="2"  />
+<line x1="250" y1="226" x2="250" y2="238" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<line x1="426" y1="212" x2="426" y2="226" stroke="#94a3b8" stroke-width="2"  />
+<line x1="426" y1="226" x2="350" y2="226" stroke="#94a3b8" stroke-width="2"  />
+<line x1="350" y1="226" x2="350" y2="238" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="120" y="332" width="360" height="72" rx="36" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" />
+<text x="300" y="362" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#92400e">全入力値が取得できたか？</text>
+<text x="300" y="385" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#64748b">いずれか null なら即「要確認」</text>
+<line x1="300" y1="306" x2="300" y2="332" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="560" y="330" width="280" height="80" rx="12" fill="#fff1f2" stroke="#f1c2c8" stroke-width="1.5" />
+<text x="576" y="358" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="700" letter-spacing="0" fill="#b63849">入力欠測 → needs_review</text>
+<text x="576" y="380" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#475569">「合格」に倒さないフェイルセーフ</text>
+<text x="576" y="399" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#b63849">output_code = on_fail</text>
+<line x1="480" y1="368" x2="560" y2="368" stroke="#b63849" stroke-width="2"  marker-end="url(#arRed)"/>
+<text x="520" y="360" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="700" letter-spacing="0" fill="#b63849">No</text>
+<rect x="56" y="430" width="236" height="104" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="72" y="459" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13" font-weight="700" letter-spacing="0" fill="#1d4ed8">all_equal</text>
+<text x="72" y="486" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">全入力値が完全一致</text>
+<text x="72" y="506" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">uniqueStrict が 1 件</text>
+<rect x="308" y="430" width="236" height="104" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="324" y="459" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13" font-weight="700" letter-spacing="0" fill="#1d4ed8">relative_tolerance</text>
+<text x="324" y="486" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">|実測−設計| / 設計 ×100</text>
+<text x="324" y="506" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">≤ max_relative_error_percent（1.5）</text>
+<rect x="560" y="430" width="284" height="104" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+<text x="576" y="459" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13" font-weight="700" letter-spacing="0" fill="#1d4ed8">numeric_range</text>
+<text x="576" y="486" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">minimum ≤ measured</text>
+<text x="576" y="506" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">measured ≤ maximum</text>
+<line x1="300" y1="404" x2="300" y2="414" stroke="#94a3b8" stroke-width="2"  />
+<line x1="174" y1="414" x2="702" y2="414" stroke="#94a3b8" stroke-width="2"  />
+<line x1="174" y1="414" x2="174" y2="430" stroke="#94a3b8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<line x1="426" y1="414" x2="426" y2="430" stroke="#94a3b8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<line x1="702" y1="414" x2="702" y2="430" stroke="#94a3b8" stroke-width="2"  marker-end="url(#arBlue)"/>
+<text x="308" y="410" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="700" letter-spacing="0" fill="#11755f">Yes</text>
+<path d="M702,212 L702,414" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="4 4" />
+<rect x="150" y="568" width="380" height="70" rx="35" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" />
+<text x="340" y="598" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#92400e">条件を満たす（true）か？</text>
+<text x="340" y="620" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#64748b">false は要確認・ロケータ付きで人へ</text>
+<line x1="174" y1="534" x2="174" y2="550" stroke="#94a3b8" stroke-width="2"  />
+<line x1="426" y1="534" x2="426" y2="550" stroke="#94a3b8" stroke-width="2"  />
+<line x1="702" y1="534" x2="702" y2="550" stroke="#94a3b8" stroke-width="2"  />
+<line x1="174" y1="550" x2="702" y2="550" stroke="#94a3b8" stroke-width="2"  />
+<line x1="340" y1="550" x2="340" y2="568" stroke="#94a3b8" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="96" y="674" width="300" height="104" rx="12" fill="#eaf7f3" stroke="#11755f" stroke-width="1.5" />
+<text x="116" y="702" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#0f5132">status = pass（適合）</text>
+<text x="116" y="728" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#0f5132">output_code = pass</text>
+<text x="116" y="750" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#0f5132">review_required = false</text>
+<text x="116" y="769" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#64748b">自動合格ではなく確認済み候補</text>
+<rect x="468" y="674" width="340" height="104" rx="12" fill="#fff1f2" stroke="#f1c2c8" stroke-width="1.5" />
+<text x="488" y="702" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#b63849">status = needs_review（要確認）</text>
+<text x="488" y="728" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#b63849">output_code = rule.on_fail</text>
+<text x="488" y="750" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#b63849">review_required = true</text>
+<text x="488" y="769" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="500" letter-spacing="0" fill="#475569">証跡と共に担当者の確認へ</text>
+<line x1="340" y1="638" x2="340" y2="652" stroke="#94a3b8" stroke-width="2"  />
+<line x1="340" y1="652" x2="246" y2="652" stroke="#94a3b8" stroke-width="2"  />
+<line x1="246" y1="652" x2="246" y2="674" stroke="#11755f" stroke-width="2"  marker-end="url(#arGreen)"/>
+<line x1="340" y1="652" x2="638" y2="652" stroke="#94a3b8" stroke-width="2"  />
+<line x1="638" y1="652" x2="638" y2="674" stroke="#b63849" stroke-width="2"  marker-end="url(#arRed)"/>
+<text x="262" y="647" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="700" letter-spacing="0" fill="#11755f">true</text>
+<text x="612" y="647" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11" font-weight="700" letter-spacing="0" fill="#b63849">false</text>
+<path d="M700,410 L824,410 L824,726 L808,726" fill="none" stroke="#b63849" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arRed)"/>
+<text x="828" y="500" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="10.5" font-weight="700" letter-spacing="0" fill="#b63849">欠測も合流</text>
+<rect x="56" y="804" width="752" height="72" rx="12" fill="#0b1220" stroke="#1e293b" stroke-width="1.5" />
+<text x="74" y="831" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12.5" font-weight="700" letter-spacing="0" fill="#93c5fd">rule_results[]</text>
+<text x="74" y="855" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#cbd5e1">{ rule_id, status, output_code, inputs[{name,value}],</text>
+<text x="74" y="871" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11.5" font-weight="500" letter-spacing="0" fill="#cbd5e1">  evidence[{document_id, document_version, field, locator}] }</text>
+<line x1="246" y1="778" x2="246" y2="804" stroke="#11755f" stroke-width="2"  marker-end="url(#ar)"/>
+<line x1="638" y1="778" x2="638" y2="804" stroke="#b63849" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="56" y="896" width="752" height="64" rx="12" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" />
+<text x="74" y="922" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12.5" font-weight="700" letter-spacing="0" fill="#92400e">summary.rule_review_count = 2 → review_status = "human_review_required"</text>
+<text x="74" y="945" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">最終的な専門判断・承認は担当者（人）が実施。システムは自動で最終合格しない。</text>
+<line x1="432" y1="876" x2="432" y2="896" stroke="#92400e" stroke-width="2"  marker-end="url(#ar)"/>
+<rect x="896" y="132" width="532" height="196" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="912" y="162" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13.5" font-weight="800" letter-spacing="0" fill="#111827">DEMO-R01</text>
+<rect x="1300" y="144" width="112" height="26" rx="13" fill="#fff1f2" stroke="#f1c2c8" stroke-width="1.5" /><text x="1356" y="161" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="700" letter-spacing="0" fill="#b63849">要確認</text>
+<text x="912" y="186" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#475569">図面改訂番号の整合</text>
+<text x="912" y="206" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#94a3b8">all_equal · GBX-042</text>
+<text x="912" y="232" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  組立図 DRAW-042 → 改訂 D3（p.1 Title block）</text>
+<text x="912" y="256" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  検査記録 INSP-042 → 参照 D2（p.1 Title block）</text>
+<text x="912" y="280" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#b63849">判定  D3 ≠ D2（不一致）</text>
+<text x="912" y="310" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12" font-weight="500" letter-spacing="0" fill="#b63849">output_code = drawing_revision_mismatch</text>
+<text x="912" y="334" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#475569">→ 要確認として組立図と検査記録の両方を証跡に保持</text>
+<rect x="896" y="344" width="532" height="200" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="912" y="374" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13.5" font-weight="800" letter-spacing="0" fill="#111827">DEMO-R02</text>
+<rect x="1300" y="356" width="112" height="26" rx="13" fill="#eaf7f3" stroke="#11755f" stroke-width="1.5" /><text x="1356" y="373" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="700" letter-spacing="0" fill="#0f5132">適合</text>
+<text x="912" y="398" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#475569">減速比の確認</text>
+<text x="912" y="418" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#94a3b8">relative_tolerance · GEARSET-01 · 許容差1.5%</text>
+<text x="912" y="444" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  設計 12.50（組立図 A-02 / row 1）</text>
+<text x="912" y="468" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  実測 12.62（検査記録 I-02 / row 3）</text>
+<text x="912" y="492" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">計算  |12.62 − 12.50| / 12.50 × 100 = 0.96%</text>
+<text x="912" y="522" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#0f5132">判定  0.96% ≤ 1.5%</text>
+<text x="912" y="546" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#475569">output_code = pass（ルール上は適合。ただし人の確認は必須）</text>
+<rect x="896" y="560" width="532" height="200" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="912" y="590" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="13.5" font-weight="800" letter-spacing="0" fill="#111827">DEMO-R03</text>
+<rect x="1300" y="572" width="112" height="26" rx="13" fill="#fff1f2" stroke="#f1c2c8" stroke-width="1.5" /><text x="1356" y="589" text-anchor="middle" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12.5" font-weight="700" letter-spacing="0" fill="#b63849">要確認</text>
+<text x="912" y="614" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="700" letter-spacing="0" fill="#475569">出力側ベアリングすきま</text>
+<text x="912" y="634" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="11" font-weight="500" letter-spacing="0" fill="#94a3b8">numeric_range · BRG-01 · 単位 mm</text>
+<text x="912" y="660" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  下限 0.10 / 上限 0.20（組立図 A-03 / row 5）</text>
+<text x="912" y="684" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#111827">入力  実測 0.24（検査記録 I-03 / row 2）</text>
+<text x="912" y="708" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="0" fill="#b63849">判定  0.24 &gt; 0.20（上限超過）</text>
+<text x="912" y="738" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12" font-weight="500" letter-spacing="0" fill="#b63849">output_code = clearance_out_of_range</text>
+<text x="912" y="762" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="12" font-weight="500" letter-spacing="0" fill="#475569">→ 最終不適合とはせず、測定条件を人が再確認</text>
+<rect x="896" y="780" width="532" height="180" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+<text x="914" y="810" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="13" font-weight="800" letter-spacing="0" fill="#111827">集計（GET /api/demo/review の summary）</text>
+<text x="914" y="838" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12.5" font-weight="500" letter-spacing="0" fill="#111827">rule_count = 3　適合 1 / 要確認 2</text>
+<text x="914" y="862" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">document_findings = 0（部品番号・材質・潤滑油に文書間差異なし）</text>
+<text x="914" y="886" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="500" letter-spacing="0" fill="#475569">evidence は各入力の page / table / row まで追跡可能</text>
+<text x="914" y="910" text-anchor="start" font-family="'Yu Gothic','Meiryo','Segoe UI',system-ui,sans-serif" font-size="11.5" font-weight="700" letter-spacing="0" fill="#92400e">全ルール human_review = true。確信度や適合にかかわらず自動承認しない。</text>
+<text x="914" y="938" text-anchor="start" font-family="ui-monospace,'Cascadia Code',Consolas,Menlo,monospace" font-size="12.5" font-weight="800" letter-spacing="0" fill="#b63849">→ review_status = "human_review_required"</text>
+</svg>

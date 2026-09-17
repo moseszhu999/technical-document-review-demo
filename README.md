@@ -76,16 +76,22 @@ flowchart TD
     ARK -- 成功 --> ANS[phase / delta / sources を逐次配信]
 ```
 
+### データモデルと統合
+
+![データモデル：JSON入力・決定論処理・レビュー統合](docs/diagrams/data-model.png)
+
+*JSON 入力を正規化し、文書間比較・ルール判定・証跡チェーン・AI候補を `DocumentReviewService` が1レスポンスへ統合。図中のフィールド・件数・数値はすべて実データ（`GET /api/demo/review` の実測値）と一致します。*
+
 ### 判定フロー
 
+![ルール判定フロー：決定論ルールとフェイルセーフ](docs/diagrams/rule-evaluation-flow.png)
+
+*`RuleEvaluator` は入力値を取得できない場合に「適合」へ倒さず「要確認」へ分岐。`all_equal` / `relative_tolerance` / `numeric_range` の判定と、公開デモ3ルールの実数値（R01: D3≠D2、R02: 誤差0.96%≦1.5%、R03: 0.24＞上限0.20）を示します。*
+
 ```text
-Document
-  → AI-assisted extraction candidate（候補のみ・人が確認）
-  → Normalize（共通形式）
-  → Rule / Compare（決定論的な判定）
-  → Finding（要確認の構造化）
-  → Evidence（元文書の page / table / row まで追跡）
-  → Human Review（最終判断は人）
+Document → AI抽出候補（候補のみ・人が確認）→ Normalize（共通形式）
+  → Rule / Compare（決定論判定）→ Finding（要確認の構造化）
+  → Evidence（元文書の page / table / row まで追跡）→ Human Review（最終判断は人）
 ```
 
 ---
