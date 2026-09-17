@@ -76,16 +76,22 @@ flowchart TD
     ARK -- 成功 --> ANS[phase / delta / sources 逐段下发]
 ```
 
+### 数据模型与集成
+
+![数据模型：JSON 输入、确定性处理、审查集成](docs/diagrams/data-model.png)
+
+*JSON 输入经归一化后，由 `DocumentReviewService` 把跨文档比对、规则判定、证据链、AI 候选整合为一个响应。图中的字段、件数、数值均与真实数据（`GET /api/demo/review` 的实测值）一致。*
+
 ### 判定流程
 
+![规则判定流程：确定性规则与故障安全](docs/diagrams/rule-evaluation-flow.png)
+
+*`RuleEvaluator` 在取不到输入值时不会倒向「合格」，而是分支为「需确认」。图中给出 `all_equal` / `relative_tolerance` / `numeric_range` 的判定，以及公开演示三条规则的真实数值（R01：D3≠D2，R02：误差 0.96%≤1.5%，R03：0.24＞上限 0.20）。*
+
 ```text
-Document（文档）
-  → AI-assisted extraction candidate（仅候选，人工确认）
-  → Normalize（归一化）
-  → Rule / Compare（确定性判定）
-  → Finding（结构化的需确认项）
-  → Evidence（可回溯到原文档 page / table / row）
-  → Human Review（最终由人判断）
+Document（文档）→ AI 抽取候选（仅候选，人工确认）→ Normalize（归一化）
+  → Rule / Compare（确定性判定）→ Finding（结构化的需确认项）
+  → Evidence（可回溯到 page / table / row）→ Human Review（最终由人判断）
 ```
 
 ---
