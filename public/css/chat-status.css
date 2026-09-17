@@ -9,3 +9,4 @@
 .chat-latency-note{display:flex;align-items:flex-start;gap:8px;margin:12px 14px 0;padding:9px 12px;border-radius:10px;font-size:11px;line-height:1.55;font-weight:650;color:#c3cede;background:rgba(69,216,255,.07);border:1px solid rgba(69,216,255,.25)}.chat-latency-note .chat-latency-icon{flex:0 0 auto;line-height:1.3}
 
 .chat-phase{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12px;font-weight:750;color:#8fb9c9}.chat-phase[hidden]{display:none}.stream-cursor{display:inline-block;width:7px;height:1.05em;margin-left:2px;vertical-align:-2px;border-radius:2px;background:#45d8ff;animation:stream-blink 1s steps(2,start) infinite}@keyframes stream-blink{50%{opacity:0}}@media (prefers-reduced-motion:reduce){.stream-cursor{animation:none;opacity:.6}}
+.chat-bubble[hidden],.chat-sources[hidden]{display:none!important}

@@ -6,7 +6,7 @@
     <title>製造業 技術文書レビュー・ワークスペース</title>
     <link rel="stylesheet" href="/css/demo.css">
     <link rel="stylesheet" href="/css/document-preview.css">
-    <link rel="stylesheet" href="/css/chat-status.css?v=20260916-3">
+    <link rel="stylesheet" href="/css/chat-status.css?v=20260917-1">
     <link rel="stylesheet" href="/css/light-theme.css?v=20260916-3">
     <link rel="stylesheet" href="/css/digital-twin-equipment-selector.css?v=20260915-1">
     <link rel="stylesheet" href="/css/factory-context.css?v=20260915-1">
