@@ -5,9 +5,10 @@
 ## 公開するもの
 
 - 文書 → 正規化 → Rule / Compare → Finding → Evidence → Human Review という責務分離
-- 製造業を題材にした完全架空の文書
+- 製造業を題材にした架空のデモ文書・ルール判定値（ナレッジの方法論とその出典は実在の公開資料）
 - 3件だけの簡略化した公開デモルール
 - Evidence locator の考え方
+- 公開規格（ISO 9001/JIS Q 9001、ISO 1122-1、ISO 1328-1、ISO 5753-1、ISO 492）と NORD 公式マニュアルへリンクの形で出典接地されたナレッジ（規格原文は転載しない）
 - AI 支援を candidate として扱う境界
 - Laravel のサービス分割と自動テスト
 - 文書 / 部品 / Rule / Evidence を結ぶ簡易 3D UI
