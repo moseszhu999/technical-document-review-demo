@@ -1,7 +1,4 @@
-const officialSourceReviewPromise = fetch('/api/demo/review').then(response => {
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
-});
+const officialSourceReviewPromise = window.DemoApi.getJson('/api/demo/review');
 
 function safeOfficialPdfUrl(value) {
     try {
@@ -140,6 +137,6 @@ twin3dStyle.rel = 'stylesheet';
 twin3dStyle.href = '/css/digital-twin-3d.css?v=20260913-1';
 if (!document.querySelector('link[href*="digital-twin-3d.css"]')) document.head.appendChild(twin3dStyle);
 
-import('/js/digital-twin.js?v=20260913-1')
+import('/js/digital-twin.js?v=20260918-1')
     .then(() => import('/js/digital-twin-3d.js?v=20260913-1'))
     .catch(error => console.error('[digital-twin-loader]', error));
