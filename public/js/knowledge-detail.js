@@ -123,7 +123,9 @@
             .knowledge-source-top a:hover{text-decoration:underline}
             .knowledge-source-item strong{display:block;color:var(--text);font-size:13px;margin-bottom:5px}
             .knowledge-source-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
-            .knowledge-demo-note{margin:0 0 10px;font-size:12px}
+            .knowledge-detail-section p.knowledge-demo-note{margin:0 0 10px;font-size:12px}
+            .knowledge-card-source-count{display:inline-flex;align-self:flex-start;margin-top:10px;border:1px solid var(--line);background:var(--panel-soft,var(--panel));color:var(--cyan);border-radius:999px;padding:4px 9px;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+            .knowledge-card-source-count[hidden]{display:none}
 
             /* ボタンの配色は .prompt-button（secondary）／.primary-action（primary）に任せ、ここは行レイアウトだけ。 */
             .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
@@ -351,7 +353,19 @@
             card.setAttribute('tabindex', '0');
             card.setAttribute('aria-label', `${id} の詳細を開く`);
             if (!card.querySelector('.knowledge-open-hint')) card.insertAdjacentHTML('beforeend', '<div class="knowledge-open-hint"><span>詳細・関連ルール・根拠を確認</span></div>');
+            if (!card.querySelector('.knowledge-card-source-count')) card.insertAdjacentHTML('beforeend', '<span class="knowledge-card-source-count" hidden></span>');
         });
+
+        dataPromise.then(([knowledge]) => {
+            const counts = new Map((knowledge.items ?? []).map(item => [item.knowledge_id, (item.sources ?? []).length]));
+            document.querySelectorAll('.knowledge-card[data-knowledge-detail]').forEach(card => {
+                const chip = card.querySelector('.knowledge-card-source-count');
+                const count = counts.get(card.dataset.knowledgeDetail) ?? 0;
+                if (!chip) return;
+                chip.textContent = count > 0 ? `出典 ${count}` : '';
+                chip.hidden = count === 0;
+            });
+        }).catch(() => {});
     }
 
     function boot() {
