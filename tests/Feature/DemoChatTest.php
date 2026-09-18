@@ -37,7 +37,7 @@ class DemoChatTest extends TestCase
         Http::assertSent(function (Request $request): bool {
             return $request->url() === 'https://ark.example.test/api/v3/chat/completions'
                 && $request['model'] === 'doubao-seed-2.1-pro'
-                && str_contains((string) $request['messages'][1]['content'], '公開デモ用の架空データ')
+                && str_contains((string) $request['messages'][1]['content'], '架空のデモレコード')
                 && str_contains((string) $request['messages'][1]['content'], 'DEMO-R02')
                 && $request->hasHeader('Authorization', 'Bearer test-only-key');
         });
@@ -52,5 +52,32 @@ class DemoChatTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('mode', 'grounded_fallback')
             ->assertJsonPath('sources.0', 'DEMO-R03');
+    }
+
+    public function test_chat_extracts_iso_and_jis_citations_as_sources(): void
+    {
+        config([
+            'services.ark.api_key' => 'test-only-key',
+            'services.ark.base_url' => 'https://ark.example.test/api/v3',
+            'services.ark.model' => 'doubao-seed-2.1-pro',
+            'services.ark.timeout' => 5,
+        ]);
+
+        Http::fake([
+            'https://ark.example.test/api/v3/chat/completions' => Http::response([
+                'choices' => [[
+                    'message' => [
+                        'content' => '減速比の定義は ISO 1122-1:1998 を、文書管理は JIS Q 9001:2015 を根拠にできます。',
+                    ],
+                ]],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/api/demo/chat', ['message' => '定義は？']);
+
+        $response->assertOk();
+        $sources = $response->json('sources');
+        $this->assertContains('ISO 1122-1:1998', $sources);
+        $this->assertContains('JIS Q 9001:2015', $sources);
     }
 }

@@ -186,7 +186,8 @@ class ArkChatService
                 ],
                 [
                     'role' => 'user',
-                    'content' => "以下は公開デモ用の架空データです。\n\n" . $this->groundingContext() . "\n\n質問: " . $message,
+                    'content' => "以下に公開デモの資料を添付します。ナレッジの sources に記載された公開規格・NORD公式資料は実在の公開情報で、それ以外（文書・ルール・数値・AI候補・デジタルツイン点位）は架空のデモレコードです。\n\n"
+                        . $this->groundingContext() . "\n\n質問: " . $message,
                 ],
             ],
         ];
@@ -250,13 +251,13 @@ class ArkChatService
     private function systemPrompt(): string
     {
         return <<<'PROMPT'
-あなたは製造業の技術文書レビューを支援する公開デモ用AIです。
-必ず与えられた文書・ナレッジ・ルール・デジタルツイン点位だけを根拠に、日本語で簡潔に回答してください。
-根拠が見つからない場合は「この公開デモの資料からは確認できません」と明示してください。
-実在する規格、法令、顧客情報、数値を推測して補わないでください。
-デジタルツインの車間配置、点位状態、担当ロールは公開デモ用の架空レコードです。NORDの公式公開資料そのものの仕様値と混同しないでください。
+あなたは製造業の技術文書レビューを支援する公開デモ用AIです。根拠は二層に区別し、必ず日本語で簡潔に回答してください。
+【実在の公開資料】ナレッジの sources にある公開規格（ISO/JIS）と NORD の公式マニュアル・カタログは、実在する公開資料として根拠にできます。可能な場合は規格番号・節（例: ISO 1122-1 1.1.3.1、ISO 5753-1、JIS Q 9001 8.5.2、B1050 p.73）を本文に含めてください。
+【架空のデモレコード】data/input の文書、DEMO-Rxx ルール、数値・しきい値（1.5%、0.10–0.20mm など）、AI候補、デジタルツイン点位は、すべて公開デモ用の架空レコードです。これらのしきい値を ISO/JIS 規格の規定値として説明してはいけません。
+公開規格に由来する事実と架空デモレコードは回答の中で明示的に区別し、架空レコードについては「この公開デモでは」と断ってください。
+根拠が見つからない場合は「この公開デモの資料からは確認できません」と明示し、実在する規格、法令、顧客情報、数値を推測して補わないでください。
+歯車形式の一部は NORD MAXXDRIVE の公式公開資料を参照しています。NORD の仕様値と架空デモの点位・判定値を混同しないでください。
 ルール判定は最終的な専門判断ではありません。要確認の項目は、人が元文書とエビデンスを確認する必要があることを明示してください。
-可能な場合は DEMO-Rxx、KB-xxx、DRAW-042、WI-042、INSP-042、ACC-042、INSP-01 のような根拠IDまたは点位IDを本文に含めてください。
 PROMPT;
     }
 
@@ -298,7 +299,14 @@ PROMPT;
     /** @return array<int,string> */
     private function extractSources(string $answer): array
     {
-        preg_match_all('/\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+|(?:RCV|STR|ASM|INSP|MNT|SHP)-\d+)\b/u', $answer, $matches);
+        preg_match_all(
+            '/\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+'
+            .'|(?:RCV|STR|ASM|INSP|MNT|SHP)-\d+'
+            .'|ISO(?:\/[A-Z]+)?\s?\d+(?:-\d+)?(?::\d{4})?'
+            .'|JIS\sQ\s\d+(?::\d{4})?)\b/u',
+            $answer,
+            $matches,
+        );
 
         return array_values(array_unique($matches[0] ?? []));
     }
