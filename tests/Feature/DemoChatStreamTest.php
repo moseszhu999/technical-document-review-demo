@@ -23,6 +23,7 @@ class DemoChatStreamTest extends TestCase
             'data: {"choices":[{"delta":{"content":" は適合です"}}]}',
             'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}',
             'data: [DONE]',
+            'data: {"choices":[{"delta":{"content":"SHOULD-NOT-BE-READ"}}]}',
         ])."\n\n";
 
         Http::fake([
@@ -46,12 +47,24 @@ class DemoChatStreamTest extends TestCase
         $this->assertStringContainsString('"text":" は適合です"', $content);
         $this->assertStringContainsString('event: sources', $content);
         $this->assertStringContainsString('event: done', $content);
+        $this->assertStringNotContainsString('SHOULD-NOT-BE-READ', $content);
 
         Http::assertSent(function (Request $request): bool {
             return $request['stream'] === true
                 && $request['model'] === 'ark-code-latest'
                 && $request->hasHeader('Authorization', 'Bearer test-only-key');
         });
+    }
+
+    public function test_stream_client_has_done_short_circuit_and_hard_timeout(): void
+    {
+        $script = (string) file_get_contents(public_path('js/gearbox-demo.js'));
+
+        $this->assertStringContainsString('new AbortController()', $script);
+        $this->assertStringContainsString('signal: controller.signal', $script);
+        $this->assertStringContainsString("event === 'done'", $script);
+        $this->assertStringContainsString('reader.cancel()', $script);
+        $this->assertStringContainsString('75000', $script);
     }
 
     public function test_stream_endpoint_falls_back_over_sse_when_ark_is_not_configured(): void
