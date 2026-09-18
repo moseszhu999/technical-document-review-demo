@@ -33,7 +33,7 @@
 <script type="module" src="/js/gearbox-model-v2.js?v=20260915-1"></script>
 <script type="module" src="/js/document-preview.js"></script>
 <script type="module" src="/js/digital-twin-structure-visibility.js?v=20260916-1"></script>
-<script type="module" src="/js/official-source-previews.js?v=20260913-1"></script>
+<script type="module" src="/js/official-source-previews.js?v=20260918-1"></script>
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
 <script src="/js/knowledge-detail.js?v=20260918-2"></script>
 <script src="/js/digital-twin-light-loader.js?v=20260915-1"></script>

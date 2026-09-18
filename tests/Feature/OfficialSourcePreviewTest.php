@@ -18,7 +18,9 @@ class OfficialSourcePreviewTest extends TestCase
             ->assertJsonPath('public_sources.1.key_previews.1.page', 163)
             ->assertJsonPath('public_sources.2.document_code', 'PL1050')
             ->assertJsonPath('public_sources.2.key_previews.0.page', 4)
-            ->assertJsonPath('public_sources.2.key_previews.1.page', 5);
+            ->assertJsonPath('public_sources.2.key_previews.1.page', 5)
+            ->assertJsonPath('public_sources.1.pdf_page_offset', 2)
+            ->assertJsonPath('public_sources.0.pdf_page_offset', null);
 
         foreach ([0, 1, 2] as $sourceIndex) {
             $this->assertStringStartsWith(
@@ -32,6 +34,15 @@ class OfficialSourcePreviewTest extends TestCase
     {
         $this->get('/demo')
             ->assertOk()
-            ->assertSee('/js/official-source-previews.js?v=20260913-1', false);
+            ->assertSee('/js/official-source-previews.js?v=20260918-1', false);
+    }
+
+    public function test_preview_javascript_applies_pdf_page_offset(): void
+    {
+        $script = file_get_contents(public_path('js/official-source-previews.js'));
+
+        $this->assertStringContainsString('pdf_page_offset', $script);
+        $this->assertStringContainsString('Number(page)', $script);
+        $this->assertStringContainsString('pageOffset', $script);
     }
 }

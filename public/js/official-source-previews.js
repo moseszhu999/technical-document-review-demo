@@ -41,8 +41,9 @@ function ensurePreviewStyles() {
     document.head.appendChild(style);
 }
 
-function buildPdfPageUrl(pdfUrl, page) {
-    return `${pdfUrl}#page=${encodeURIComponent(page)}&zoom=page-width`;
+function buildPdfPageUrl(pdfUrl, page, pageOffset = 0) {
+    const physicalPage = Number(page) + Number(pageOffset || 0);
+    return `${pdfUrl}#page=${encodeURIComponent(physicalPage)}&zoom=page-width`;
 }
 
 function installPreviewInteractions(section, source, pdfUrl) {
@@ -68,7 +69,7 @@ function installPreviewInteractions(section, source, pdfUrl) {
             if (!preview || !frame) return;
             section.querySelectorAll('.official-preview-tab').forEach(tab => tab.classList.remove('active'));
             button.classList.add('active');
-            const pageUrl = buildPdfPageUrl(pdfUrl, preview.page);
+            const pageUrl = buildPdfPageUrl(pdfUrl, preview.page, source.pdf_page_offset);
             frame.src = pageUrl;
             if (title) title.textContent = preview.title ?? `Page ${preview.page}`;
             if (description) description.textContent = preview.description ?? '';
@@ -113,10 +114,10 @@ async function enhanceOfficialSourceModal() {
                 <span>当前先提供已验证的官方页面入口，避免在不支持 PDF 内嵌的浏览器中显示黑色空白区域。</span>
                 <button type="button" class="official-preview-inline">尝试在页面内预览</button>
             </div>
-            <iframe class="official-pdf-frame" hidden src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy"></iframe>
+            <iframe class="official-pdf-frame" hidden src="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page, source.pdf_page_offset))}" title="${escapePreviewHtml(source.document_code)} official PDF preview" loading="lazy"></iframe>
             <div class="official-preview-actions">
                 <span data-preview-page>PDF page ${escapePreviewHtml(first.page)}</span>
-                <a class="official-preview-open" href="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page))}" target="_blank" rel="noopener noreferrer">この実ページをNORD PDFで開く ↗</a>
+                <a class="official-preview-open" href="${escapePreviewHtml(buildPdfPageUrl(pdfUrl, first.page, source.pdf_page_offset))}" target="_blank" rel="noopener noreferrer">この実ページをNORD PDFで開く ↗</a>
             </div>
         </div>
     `;
