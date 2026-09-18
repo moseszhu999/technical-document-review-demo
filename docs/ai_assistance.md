@@ -26,7 +26,7 @@ AI / OCR / LLM が有効な場所は、たとえば次です。
 モデルへ渡す根拠は二層です。ナレッジ（`data/knowledge/manufacturing_knowledge.json`）の `sources` に記載した公開規格（ISO/JIS）と NORD 公式資料は実在の公開情報で、リンクのみを提示し原文は転載しません。一方、次のデータはすべて公開デモ用の架空レコードであり、しきい値を規格の規定値として語ることは禁止しています。
 
 - `data/input/*.json`
-- `data/knowledge/manufacturing_knowledge.json`
+- `data/knowledge/manufacturing_knowledge.json`（デモの判定値・点位は架空レコード。`sources` の ISO/JIS・NORD リンクは実在の公開資料）
 - `data/rules/public_demo_rules.json`
 - `data/ai/assist_candidates.json`
 
