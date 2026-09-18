@@ -23,7 +23,7 @@ class DigitalTwinStructureVisibilityTest extends TestCase
         $view = (string) file_get_contents(resource_path('views/demo.blade.php'));
 
         $structure = strpos($view, '/js/digital-twin-structure-visibility.js?v=20260916-1');
-        $twinLoader = strpos($view, '/js/official-source-previews.js?v=20260913-1');
+        $twinLoader = strpos($view, '/js/official-source-previews.js?v=20260918-1');
 
         $this->assertNotFalse($structure);
         $this->assertNotFalse($twinLoader);
