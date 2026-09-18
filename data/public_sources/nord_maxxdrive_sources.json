@@ -50,6 +50,21 @@
           "page": 163,
           "title": "VL6 agitator dimensions",
           "description": "Application-specific dimension table for the VL6 agitator configuration without flange."
+        },
+        {
+          "page": 36,
+          "title": "Nomenclature – nominal ratio ranges by gear-unit type",
+          "description": "Official G1050 nomenclature table listing nominal ratio iN ranges for 2-/3-stage parallel and helical-bevel gear units."
+        },
+        {
+          "page": 88,
+          "title": "Structure of the power/torque ratings tables (nominal ratio)",
+          "description": "How to read the parallel ratings tables: nominal ratio, nominal input/output speed and torque columns."
+        },
+        {
+          "page": 89,
+          "title": "Structure of the exact ratio tables – nominal ratio iN vs exact ratio i_ges",
+          "description": "Official G1050 explanation distinguishing the catalog nominal ratio iN from the exact gear ratio i_ges per configuration."
         }
       ]
     },
