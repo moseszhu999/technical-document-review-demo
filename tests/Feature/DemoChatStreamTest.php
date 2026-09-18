@@ -67,6 +67,38 @@ class DemoChatStreamTest extends TestCase
         $this->assertStringContainsString('75000', $script);
     }
 
+    public function test_workspace_data_requests_share_single_flight_cache_across_panels(): void
+    {
+        $cache = (string) file_get_contents(public_path('js/demo-api-cache.js'));
+        $blade = (string) file_get_contents(resource_path('views/demo.blade.php'));
+        $scripts = [
+            (string) file_get_contents(public_path('js/gearbox-demo.js')),
+            (string) file_get_contents(public_path('js/knowledge-detail.js')),
+            (string) file_get_contents(public_path('js/official-source-previews.js')),
+            (string) file_get_contents(public_path('js/digital-twin.js')),
+        ];
+
+        $this->assertStringContainsString('const inflight = new Map()', $cache);
+        $this->assertStringContainsString('const cache = new Map()', $cache);
+        $this->assertStringContainsString('window.DemoApi = Object.freeze({getJson})', $cache);
+
+        foreach ($scripts as $script) {
+            $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/review')", $script);
+            $this->assertStringNotContainsString("fetch('/api/demo/review'", $script);
+        }
+
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/knowledge')", $scripts[0]);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/rules')", $scripts[0]);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/knowledge')", $scripts[1]);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/rules')", $scripts[1]);
+
+        $cachePos = strpos($blade, '/js/demo-api-cache.js');
+        $this->assertNotFalse($cachePos);
+        $this->assertLessThan(strpos($blade, '/js/gearbox-demo.js'), $cachePos);
+        $this->assertLessThan(strpos($blade, '/js/official-source-previews.js'), $cachePos);
+        $this->assertLessThan(strpos($blade, '/js/knowledge-detail.js'), $cachePos);
+    }
+
     public function test_stream_endpoint_falls_back_over_sse_when_ark_is_not_configured(): void
     {
         config(['services.ark.api_key' => '']);
