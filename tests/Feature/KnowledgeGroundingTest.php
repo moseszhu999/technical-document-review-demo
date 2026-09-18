@@ -96,6 +96,26 @@ class KnowledgeGroundingTest extends TestCase
         $this->assertStringContainsString('ISO 5753-1', $items['KB-003']['guidance']);
     }
 
+    public function test_sources_use_known_types_with_required_fields_and_no_demo_thresholds_in_standards(): void
+    {
+        $knowledge = $this->knowledge();
+        foreach ($knowledge['items'] as $item) {
+            foreach ($item['sources'] ?? [] as $source) {
+                $this->assertContains($source['type'], ['standard', 'official_manual']);
+                if ($source['type'] === 'standard') {
+                    foreach (['publisher', 'code', 'title', 'url'] as $key) {
+                        $this->assertArrayHasKey($key, $source);
+                        $this->assertNotSame('', trim((string) $source[$key]));
+                    }
+                    $citationText = ($source['code'] ?? '').' '.($source['title'] ?? '').' '.($source['locator'] ?? '');
+                    foreach (['1.5%', '0.10', '0.20', '12.5', '12.62'] as $threshold) {
+                        $this->assertStringNotContainsString($threshold, $citationText, "standard citation must not carry demo threshold {$threshold}");
+                    }
+                }
+            }
+        }
+    }
+
     public function test_g1050_registers_ratio_nomenclature_and_exact_ratio_pages(): void
     {
         $g1050 = collect($this->registry()['sources'])->firstWhere('source_id', 'NORD-G1050');

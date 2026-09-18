@@ -67,7 +67,7 @@ class DemoChatTest extends TestCase
             'https://ark.example.test/api/v3/chat/completions' => Http::response([
                 'choices' => [[
                     'message' => [
-                        'content' => '減速比の定義は ISO 1122-1:1998 を、文書管理は JIS Q 9001:2015 を根拠にできます。',
+                        'content' => '減速比の定義はISO 1122-1:1998で定義され、文書管理はJIS Q 9001:2015およびJIS B 1702でも参照されます。',
                     ],
                 ]],
             ], 200),
@@ -79,5 +79,6 @@ class DemoChatTest extends TestCase
         $sources = $response->json('sources');
         $this->assertContains('ISO 1122-1:1998', $sources);
         $this->assertContains('JIS Q 9001:2015', $sources);
+        $this->assertContains('JIS B 1702', $sources);
     }
 }
