@@ -69,8 +69,12 @@ flowchart TD
     S --> API[GET /api/demo/review]
     S --> UI[Blade + 3D 数字孪生]
 
+    PS[(data/public_sources<br/>NORD 官方资料登记表)] --> API
+    KC[(data/knowledge<br/>知识条目 + 真实出处 sources)] --> KAPI[GET /api/demo/knowledge]
+
     Q[提问] --> CHAT[POST /api/demo/chat/stream · SSE]
     S -. 接地上下文 .-> CHAT
+    KC -. 接地上下文 .-> CHAT
     CHAT --> ARK[ArkChatService<br/>火山方舟 Ark]
     ARK -- 失败/未配置 --> FB[确定性固定演示回答]
     ARK -- 成功 --> ANS[phase / delta / sources 逐段下发]
@@ -106,11 +110,15 @@ Document（文档）→ AI 抽取候选（仅候选，人工确认）→ Normali
 | `app/Services/RuleEvaluator.php` | 基于规则定义的**专业判定**，与通用比对逻辑解耦 |
 | `app/Services/RuleCatalog.php` | 以数据（JSON）形式提供规则，新增规则无需改代码 |
 | `app/Services/EvidenceChainBuilder.php` | 按 设计图→指导→检验→受入 的顺序构建证据链 |
+| `app/Services/AiCandidateReader.php` | 只负责读取 `data/ai/assist_candidates.json`（`mode: fixture`）的读取器，是替换为真实抽取服务的切入点 |
 | `app/Services/DocumentReviewService.php` | 通过依赖注入把上述组件组装起来的编排器 |
+| `app/Http/Controllers/DemoReviewController.php` | `GET /api/demo/review`。按固定顺序读取 4 份文档，并在审查结果上附加 NORD 官方资料登记表（`public_sources`） |
+| `app/Http/Controllers/DemoKnowledgeController.php` | `GET /api/demo/knowledge`。返回知识条目及其出处（`sources`） |
+| `app/Http/Controllers/DemoRuleCatalogController.php` | `GET /api/demo/rules`。返回规则目录 JSON |
 | `app/Services/ArkChatService.php` | 真实 LLM 客户端（同时支持非流式/流式），密钥仅在服务端、附带接地上下文 |
-| pp/Http/Controllers/DemoChatController.php | JSON 版对话，AI 失败时回退到固定演示回答 |
-| pp/Http/Controllers/DemoChatStreamController.php | SSE 版对话，逐段下发 phase / delta / sources / done，失败时也以流式发送固定回答 |
-| pp/Services/DemoFallbackResponder.php | 关键词匹配的带依据 ID 固定回答，被 JSON / SSE 两个接口共用 |
+| `app/Http/Controllers/DemoChatController.php` | JSON 版对话，AI 失败时回退到固定演示回答 |
+| `app/Http/Controllers/DemoChatStreamController.php` | SSE 版对话，逐段下发 phase / delta / sources / done，失败时也以流式发送固定回答 |
+| `app/Services/DemoFallbackResponder.php` | 关键词匹配的带依据 ID 固定回答，被 JSON / SSE 两个接口共用 |
 
 ### 规则引擎
 

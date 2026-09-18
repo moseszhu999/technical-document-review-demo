@@ -69,8 +69,12 @@ flowchart TD
     S --> API[GET /api/demo/review]
     S --> UI[Blade + 3D Digital Twin]
 
+    PS[(data/public_sources<br/>NORD 公式資料レジストリ)] --> API
+    KC[(data/knowledge<br/>ナレッジ + 実在の出典 sources)] --> KAPI[GET /api/demo/knowledge]
+
     Q[質問] --> CHAT[POST /api/demo/chat/stream · SSE]
     S -. grounding context .-> CHAT
+    KC -. grounding context .-> CHAT
     CHAT --> ARK[ArkChatService<br/>Volcengine Ark]
     ARK -- 失敗/未設定 --> FB[決定論的な固定デモ回答]
     ARK -- 成功 --> ANS[phase / delta / sources を逐次配信]
@@ -106,11 +110,15 @@ Document → AI抽出候補（候補のみ・人が確認）→ Normalize（共�
 | `app/Services/RuleEvaluator.php` | ルール定義に基づく**専門判定**。判定ロジックを比較処理から分離 |
 | `app/Services/RuleCatalog.php` | ルールをデータ（JSON）として提供。ルール追加 = コード変更なし |
 | `app/Services/EvidenceChainBuilder.php` | 設計図→指示→検査→受入の順序で証跡を構築 |
+| `app/Services/AiCandidateReader.php` | `data/ai/assist_candidates.json`（`mode: fixture`）を読むリーダー。実抽出サービスへの差し替え点 |
 | `app/Services/DocumentReviewService.php` | 上記をDIで統合するオーケストレータ |
+| `app/Http/Controllers/DemoReviewController.php` | `GET /api/demo/review`。4文書を固定順で読み込み、レビュー結果に NORD 公式資料レジストリ（`public_sources`）を添付 |
+| `app/Http/Controllers/DemoKnowledgeController.php` | `GET /api/demo/knowledge`。ナレッジとその出典（`sources`）を返却 |
+| `app/Http/Controllers/DemoRuleCatalogController.php` | `GET /api/demo/rules`。ルールカタログ JSON を返却 |
 | `app/Services/ArkChatService.php` | 実LLMクライアント（非ストリーム/ストリーム両対応）。キーはサーバー側のみ、接地文脈を付与 |
-| pp/Http/Controllers/DemoChatController.php | JSON 版チャット。AI失敗時は固定デモ回答へフォールバック |
-| pp/Http/Controllers/DemoChatStreamController.php | SSE 版チャット。phase / delta / sources / done を逐次配信し、失敗時も固定回答をストリーム配信 |
-| pp/Services/DemoFallbackResponder.php | キーワード連動の根拠ID付き固定回答を JSON / SSE で共用 |
+| `app/Http/Controllers/DemoChatController.php` | JSON 版チャット。AI失敗時は固定デモ回答へフォールバック |
+| `app/Http/Controllers/DemoChatStreamController.php` | SSE 版チャット。phase / delta / sources / done を逐次配信し、失敗時も固定回答をストリーム配信 |
+| `app/Services/DemoFallbackResponder.php` | キーワード連動の根拠ID付き固定回答を JSON / SSE で共用 |
 
 ### ルールエンジン
 
