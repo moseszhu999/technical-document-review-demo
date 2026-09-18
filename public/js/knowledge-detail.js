@@ -68,49 +68,68 @@
         const style = document.createElement('style');
         style.id = 'knowledge-detail-styles';
         style.textContent = `
+            /* ナレッジ詳細モーダルは配色を独自に持たない。サイズ・grid・間隔など構造だけを定義し、
+               色はすべてページ共通トークン（--panel / --line / --text / --muted / --cyan / --red）と
+               共有コンポーネント（.modal-card / .prompt-button / .primary-action / .status / .guidance / .modal-close）に従う。 */
             .knowledge-card[data-knowledge-detail]{cursor:pointer;position:relative;padding-bottom:48px}
-            .knowledge-card[data-knowledge-detail]:focus-visible{outline:2px solid rgba(69,216,255,.8);outline-offset:3px}
-            .knowledge-open-hint{position:absolute;left:18px;right:18px;bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
+            .knowledge-card[data-knowledge-detail]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+            .knowledge-open-hint{position:absolute;left:18px;right:18px;bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--cyan);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
             .knowledge-open-hint:after{content:'→';font-size:13px}
-            .knowledge-detail-modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px}
-            .knowledge-detail-modal.hidden{display:none}
-            .knowledge-detail-backdrop{position:absolute;inset:0;background:rgba(2,4,8,.82);backdrop-filter:blur(10px)}
-            .knowledge-detail-card{position:relative;z-index:1;width:min(980px,100%);max-height:88vh;overflow:auto;background:linear-gradient(145deg,#101a2a,#090f19);border:1px solid rgba(69,216,255,.2);border-radius:22px;padding:26px;box-shadow:0 35px 120px rgba(0,0,0,.58)}
-            .knowledge-detail-close{position:absolute;right:16px;top:12px;border:0;background:transparent;color:#8d99ad;font-size:28px;cursor:pointer}
-            .knowledge-detail-head{padding-right:44px;border-bottom:1px solid rgba(255,255,255,.09);padding-bottom:18px}
+
+            /* ダイアログの外殻・背景・開閉ボタンは .modal / .modal-backdrop / .modal-card / .modal-close を共有。
+               ここではナレッジ詳細に必要なカード幅と内側の余白だけを上書きする。 */
+            .knowledge-detail-card{width:min(980px,100%);padding:28px}
+            .knowledge-detail-head{padding-right:44px;border-bottom:1px solid var(--line);padding-bottom:18px}
+            .knowledge-detail-head h2{color:var(--text)}
+            .knowledge-detail-head p{margin:0;color:var(--muted);font-size:14px;line-height:1.75}
             .knowledge-detail-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
-            .knowledge-detail-badge{border:1px solid rgba(69,216,255,.23);border-radius:999px;padding:5px 8px;color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
-            .knowledge-detail-head h2{font-size:27px;margin:6px 0 8px;letter-spacing:-.02em}
-            .knowledge-detail-head p{margin:0;color:#aeb8c8;font-size:14px;line-height:1.75}
+            .knowledge-detail-badge{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--panel);color:var(--cyan);border-radius:999px;padding:5px 9px;font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+
             .knowledge-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
-            .knowledge-detail-section{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:16px;padding:15px}
+            .knowledge-detail-section{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px}
             .knowledge-detail-section.full{grid-column:1/-1}
-            .knowledge-detail-section h3{margin:0 0 10px;color:#e8edf4;font-size:14px;letter-spacing:.04em}
-            .knowledge-detail-section p{margin:0;color:#aeb8c8;font-size:13px;line-height:1.7}
-            .knowledge-steps{display:grid;gap:8px;counter-reset:kstep}
-            .knowledge-step{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;color:#cbd3de;font-size:13px;line-height:1.6}
-            .knowledge-step:before{counter-increment:kstep;content:counter(kstep);width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:rgba(69,216,255,.1);border:1px solid rgba(69,216,255,.22);color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
-            .knowledge-rule-stack,.knowledge-evidence-stack{display:grid;gap:9px}
-            .knowledge-rule-item,.knowledge-evidence-item{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:11px;background:rgba(4,8,14,.24)}
+            .knowledge-detail-section h3{margin:0 0 10px;color:var(--text);font-size:14px;letter-spacing:.04em}
+            .knowledge-detail-section p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+
+            .knowledge-steps{display:grid;gap:9px;counter-reset:kstep}
+            .knowledge-step{display:grid;grid-template-columns:26px 1fr;gap:9px;align-items:start;color:var(--text);font-size:13px;line-height:1.6}
+            .knowledge-step:before{counter-increment:kstep;content:counter(kstep);width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:var(--panel-soft,var(--panel));border:1px solid var(--line);color:var(--cyan);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+
+            /* 関連ルール／エビデンスは入れ子カードをやめ、境界線だけで視覚段数を減らす。 */
+            .knowledge-rule-stack,.knowledge-evidence-stack{display:grid}
+            .knowledge-rule-item,.knowledge-evidence-item{padding:11px 0;border-top:1px solid var(--line)}
+            .knowledge-rule-item:first-child,.knowledge-evidence-item:first-child{border-top:0;padding-top:0}
+            .knowledge-rule-item:last-child,.knowledge-evidence-item:last-child{padding-bottom:0}
             .knowledge-rule-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:5px}
-            .knowledge-rule-top code{color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace}
-            .knowledge-rule-status{border-radius:999px;padding:4px 7px;font:800 8px ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,204,102,.09);color:#ffcc66}
-            .knowledge-rule-status.pass{background:rgba(69,224,168,.1);color:#45e0a8}
-            .knowledge-rule-item strong,.knowledge-evidence-item strong{display:block;color:#e8edf4;font-size:13px;margin-bottom:5px}
+            .knowledge-rule-top code{color:var(--cyan);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .knowledge-rule-top .status{margin:0}
+            .knowledge-rule-item strong,.knowledge-evidence-item strong{display:block;color:var(--text);font-size:13px;margin-bottom:5px}
             .knowledge-rule-inputs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-            .knowledge-rule-inputs span{border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:5px 7px;color:#8795a9;font-size:11px}
-            .knowledge-evidence-source{color:#45d8ff;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:5px}
+            .knowledge-rule-inputs span{border:1px solid var(--line);background:var(--panel-soft,var(--panel));color:var(--muted);border-radius:999px;padding:4px 8px;font-size:11px}
+            .knowledge-evidence-source{color:var(--cyan);font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:5px}
             .knowledge-evidence-item p{font-size:12px}
-            .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}.knowledge-keywords span{border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 8px;color:#8d99ad;font-size:11px}
-            .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
-            .knowledge-detail-actions button{border:1px solid rgba(69,216,255,.24);background:rgba(69,216,255,.06);color:#dbe7ef;border-radius:10px;padding:10px 12px;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
-            .knowledge-detail-actions button.primary{border-color:rgba(255,77,95,.42);background:rgba(255,77,95,.11);color:#fff}
-            .knowledge-boundary{margin-top:15px;padding:10px 12px;border-left:2px solid #ff4d5f;background:rgba(255,77,95,.04);color:#78879b;font-size:12px;line-height:1.75}
-            .knowledge-load-error{padding:22px;border:1px solid rgba(255,77,95,.35);border-radius:14px;background:rgba(255,77,95,.07);color:#ffd8dd}
-            .knowledge-load-error strong{display:block;font-size:15px;margin-bottom:8px}
-            .knowledge-load-error p{margin:0;font-size:13px;line-height:1.7}
-            .knowledge-focus{outline:2px solid rgba(69,216,255,.55);box-shadow:0 0 28px rgba(69,216,255,.08)}
-            @media(max-width:760px){.knowledge-detail-grid{grid-template-columns:1fr}.knowledge-detail-section.full{grid-column:auto}.knowledge-detail-card{padding:20px}}
+
+            .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}
+            .knowledge-keywords span{border:1px solid var(--line);background:var(--panel-soft,var(--panel));color:var(--muted);border-radius:999px;padding:5px 9px;font-size:11px}
+
+            /* ボタンの配色は .prompt-button（secondary）／.primary-action（primary）に任せ、ここは行レイアウトだけ。 */
+            .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+            .knowledge-detail-actions .prompt-button,.knowledge-detail-actions .primary-action{flex:1 1 200px;width:auto;margin:0;padding:11px 14px;border-radius:11px;text-align:center;font:700 12px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif;letter-spacing:.02em}
+
+            /* 末尾の注意書きはページ共通の .guidance コールアウトを共有し、外側の間隔だけを上書きする。 */
+            .knowledge-boundary.guidance{margin:16px 0 0;padding:11px 13px;font-size:12px;line-height:1.75}
+
+            .knowledge-load-error{padding:22px;border:1px solid var(--red);background:var(--panel);color:var(--red);border-radius:14px}
+            .knowledge-load-error strong{display:block;font-size:15px;margin-bottom:8px;color:var(--red)}
+            .knowledge-load-error p{margin:0;font-size:13px;line-height:1.7;color:var(--muted)}
+            .knowledge-focus{outline:2px solid var(--cyan);outline-offset:2px}
+
+            @media(max-width:760px){
+                .knowledge-detail-grid{grid-template-columns:1fr}
+                .knowledge-detail-section.full{grid-column:auto}
+                .knowledge-detail-card{padding:20px}
+                .knowledge-detail-actions .prompt-button,.knowledge-detail-actions .primary-action{flex-basis:100%}
+            }
         `;
         document.head.appendChild(style);
     }
@@ -118,10 +137,10 @@
     function createModal() {
         if (document.querySelector('#knowledge-detail-modal')) return;
         document.body.insertAdjacentHTML('beforeend', `
-            <div id="knowledge-detail-modal" class="knowledge-detail-modal hidden" aria-hidden="true">
-                <div class="knowledge-detail-backdrop" data-knowledge-close></div>
-                <section class="knowledge-detail-card" role="dialog" aria-modal="true" aria-labelledby="knowledge-detail-title">
-                    <button type="button" class="knowledge-detail-close" data-knowledge-close aria-label="閉じる">×</button>
+            <div id="knowledge-detail-modal" class="modal hidden" aria-hidden="true">
+                <div class="modal-backdrop" data-knowledge-close></div>
+                <section class="modal-card knowledge-detail-card" role="dialog" aria-modal="true" aria-labelledby="knowledge-detail-title">
+                    <button type="button" class="knowledge-detail-close modal-close" data-knowledge-close aria-label="閉じる">×</button>
                     <div id="knowledge-detail-content"></div>
                 </section>
             </div>
@@ -164,7 +183,7 @@
         const inputs = (evaluation?.inputs ?? []).map(input => `<span>${escapeHtml(fieldLabels[input.name] ?? input.name)}: ${escapeHtml(input.value ?? 'なし')}</span>`).join('');
         return `
             <div class="knowledge-rule-item" data-knowledge-rule="${escapeHtml(ruleId)}">
-                <div class="knowledge-rule-top"><code>${escapeHtml(ruleId)}</code><span class="knowledge-rule-status ${status === 'pass' ? 'pass' : ''}">${escapeHtml(statusLabels[status] ?? status)}</span></div>
+                <div class="knowledge-rule-top"><code>${escapeHtml(ruleId)}</code><span class="status ${status === 'pass' ? 'status-pass' : 'status-review'}">${escapeHtml(statusLabels[status] ?? status)}</span></div>
                 <strong>${escapeHtml(rule?.title ?? evaluation?.title ?? '関連ルール')}</strong>
                 <p>${escapeHtml(rule?.judgment ?? rule?.public_rule ?? evaluation?.public_rule ?? '現在のレビュー結果と根拠を確認してください。')}</p>
                 ${inputs ? `<div class="knowledge-rule-inputs">${inputs}</div>` : ''}
@@ -212,11 +231,11 @@
                 <section class="knowledge-detail-section full"><h3>検索キーワード</h3><div class="knowledge-keywords">${(item.keywords ?? []).map(keyword => `<span>${escapeHtml(keyword)}</span>`).join('')}</div></section>
             </div>
             <div class="knowledge-detail-actions">
-                <button type="button" data-knowledge-action="rules">ルールカタログで確認</button>
-                <button type="button" data-knowledge-action="review">レビュー画面で根拠を確認</button>
-                <button type="button" class="primary" data-knowledge-action="ai">このナレッジをAIに質問</button>
+                <button type="button" class="prompt-button" data-knowledge-action="rules">ルールカタログで確認</button>
+                <button type="button" class="prompt-button" data-knowledge-action="review">レビュー画面で根拠を確認</button>
+                <button type="button" class="primary-action" data-knowledge-action="ai">このナレッジをAIに質問</button>
             </div>
-            <div class="knowledge-boundary">このナレッジは公開デモ用の架空データです。AIの回答・候補だけで最終判断せず、ルールと元文書の根拠を人が確認する設計を示しています。</div>
+            <div class="knowledge-boundary guidance">このナレッジは公開デモ用の架空データです。AIの回答・候補だけで最終判断せず、ルールと元文書の根拠を人が確認する設計を示しています。</div>
         `;
         content.dataset.knowledgeId = item.knowledge_id;
         const modal = document.querySelector('#knowledge-detail-modal');
