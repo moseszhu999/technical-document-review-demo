@@ -34,7 +34,7 @@ class OfficialSourcePreviewTest extends TestCase
     {
         $this->get('/demo')
             ->assertOk()
-            ->assertSee('/js/official-source-previews.js?v=20260918-1', false);
+            ->assertSee('/js/official-source-previews.js?v=20260918-2', false);
     }
 
     public function test_preview_javascript_applies_pdf_page_offset(): void
