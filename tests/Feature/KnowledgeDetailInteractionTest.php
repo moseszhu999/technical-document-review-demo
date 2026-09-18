@@ -10,7 +10,7 @@ class KnowledgeDetailInteractionTest extends TestCase
     {
         $view = (string) file_get_contents(resource_path('views/demo.blade.php'));
 
-        $this->assertStringContainsString('/js/knowledge-detail.js?v=20260918-2', $view);
+        $this->assertStringContainsString('/js/knowledge-detail.js?v=20260918-3', $view);
     }
 
     public function test_knowledge_cards_open_real_detail_content_and_actions(): void
@@ -25,9 +25,9 @@ class KnowledgeDetailInteractionTest extends TestCase
         $this->assertStringContainsString('ルールカタログで確認', $script);
         $this->assertStringContainsString('レビュー画面で根拠を確認', $script);
         $this->assertStringContainsString('このナレッジをAIに質問', $script);
-        $this->assertStringContainsString("fetchJson('/api/demo/knowledge'", $script);
-        $this->assertStringContainsString("fetchJson('/api/demo/review'", $script);
-        $this->assertStringContainsString("fetchJson('/api/demo/rules'", $script);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/knowledge'", $script);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/review'", $script);
+        $this->assertStringContainsString("window.DemoApi.getJson('/api/demo/rules'", $script);
         $this->assertStringContainsString('出典・参考資料', $script);
         $this->assertStringContainsString('knowledge-sources', $script);
         $this->assertStringContainsString('noopener noreferrer', $script);
