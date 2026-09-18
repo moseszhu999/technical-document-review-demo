@@ -29,7 +29,7 @@
 <div id="document-modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title"><div class="modal-backdrop"></div><section class="modal-card"><button class="modal-close" id="modal-close" aria-label="閉じる">×</button><div class="eyebrow">文書プレビュー</div><h2 id="modal-title">文書</h2><div id="modal-meta" class="modal-meta"></div><div id="modal-content" class="document-preview"></div></section></div>
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/js/chat-connection-status.js?v=20260916-3"></script>
-<script type="module" src="/js/gearbox-demo.js?v=20260916-2"></script>
+<script type="module" src="/js/gearbox-demo.js?v=20260918-1"></script>
 <script type="module" src="/js/gearbox-model-v2.js?v=20260915-1"></script>
 <script type="module" src="/js/document-preview.js"></script>
 <script type="module" src="/js/digital-twin-structure-visibility.js?v=20260916-1"></script>
