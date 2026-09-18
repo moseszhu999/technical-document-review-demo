@@ -55,8 +55,9 @@ class ArkChatService
         $buffer = '';
         $answer = '';
         $reasoningAnnounced = false;
+        $upstreamDone = false;
 
-        while (! $stream->eof()) {
+        while (! $stream->eof() && ! $upstreamDone) {
             $buffer .= (string) $stream->read(512);
             $newlinePos = strpos($buffer, "\n");
 
@@ -72,7 +73,8 @@ class ArkChatService
                 $payload = trim(substr($line, 5));
 
                 if ($payload === '[DONE]') {
-                    continue;
+                    $upstreamDone = true;
+                    break;
                 }
 
                 $decoded = json_decode($payload, true);

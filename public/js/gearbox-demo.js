@@ -407,12 +407,15 @@ async function askAssistant(message) {
     addChatMessage('user', message);
     const ui = createStreamingMessage();
     const messagesEl = document.querySelector('#chat-messages');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 75000);
 
     try {
         const response = await fetch('/api/demo/chat/stream', {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'Accept': 'text/event-stream'},
             body: JSON.stringify({message}),
+            signal: controller.signal,
         });
 
         if (!response.ok || !response.body) {
@@ -423,6 +426,7 @@ async function askAssistant(message) {
         const decoder = new TextDecoder('utf-8');
         let buffer = '';
         let answer = '';
+        let receivedDone = false;
 
         const handleEvent = (event, data) => {
             if (event === 'meta') {
@@ -441,12 +445,15 @@ async function askAssistant(message) {
                     ui.sources.hidden = false;
                     ui.sources.textContent = sources.join(' · ');
                 }
+            } else if (event === 'done') {
+                receivedDone = true;
             } else if (event === 'error') {
                 throw new Error(data.message || 'AI ストリームエラー');
             }
         };
 
         for (;;) {
+            if (receivedDone) break;
             const {value, done} = await reader.read();
             if (done) break;
             buffer += decoder.decode(value, {stream: true});
@@ -471,6 +478,12 @@ async function askAssistant(message) {
 
                 const parsed = JSON.parse(dataLines.join(String.fromCharCode(10)));
                 handleEvent(event, parsed);
+                if (receivedDone) break;
+            }
+
+            if (receivedDone) {
+                await reader.cancel().catch(() => {});
+                break;
             }
         }
 
@@ -480,6 +493,8 @@ async function askAssistant(message) {
     } catch (error) {
         ui.node.remove();
         throw error;
+    } finally {
+        window.clearTimeout(timeout);
     }
 }
 document.querySelector('#chat-form').addEventListener('submit', async event => {
