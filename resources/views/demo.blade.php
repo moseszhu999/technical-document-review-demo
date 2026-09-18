@@ -35,7 +35,7 @@
 <script type="module" src="/js/digital-twin-structure-visibility.js?v=20260916-1"></script>
 <script type="module" src="/js/official-source-previews.js?v=20260918-1"></script>
 <script src="/js/japanese-localization.js?v=20260914-1"></script>
-<script src="/js/knowledge-detail.js?v=20260918-2"></script>
+<script src="/js/knowledge-detail.js?v=20260918-3"></script>
 <script src="/js/digital-twin-light-loader.js?v=20260915-1"></script>
 <script src="/js/digital-twin-equipment-selector.js?v=20260915-1"></script>
 </body>

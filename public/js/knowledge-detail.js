@@ -344,6 +344,32 @@
         }
     }
 
+    // Registered once, not from decorateKnowledgeCards(): that function is the
+    // #knowledge-list observer callback, and dataPromise is already resolved by then,
+    // so re-registering it queued a microtask on every mutation. Microtasks never
+    // yield the event loop, which froze the whole page.
+    let knowledgeSourceCounts = null;
+    dataPromise.then(([knowledge]) => {
+        knowledgeSourceCounts = new Map((knowledge.items ?? []).map(item => [item.knowledge_id, (item.sources ?? []).length]));
+        applyKnowledgeSourceCounts();
+    }).catch(() => {});
+
+    function applyKnowledgeSourceCounts() {
+        if (!knowledgeSourceCounts) return;
+
+        document.querySelectorAll('.knowledge-card[data-knowledge-detail]').forEach(card => {
+            const chip = card.querySelector('.knowledge-card-source-count');
+            if (!chip) return;
+            const count = knowledgeSourceCounts.get(card.dataset.knowledgeDetail) ?? 0;
+            const label = count > 0 ? `出典 ${count}` : '';
+            // The pill lives inside the observed subtree: writing it unconditionally
+            // records a childList mutation even when nothing changed, which re-fires
+            // the observer and deadlocks the page.
+            if (chip.textContent !== label) { chip.textContent = label; }
+            if (chip.hidden !== (count === 0)) { chip.hidden = count === 0; }
+        });
+    }
+
     function decorateKnowledgeCards() {
         document.querySelectorAll('#knowledge-list .knowledge-card').forEach(card => {
             const id = card.querySelector('.knowledge-id')?.textContent?.trim();
@@ -356,16 +382,7 @@
             if (!card.querySelector('.knowledge-card-source-count')) card.insertAdjacentHTML('beforeend', '<span class="knowledge-card-source-count" hidden></span>');
         });
 
-        dataPromise.then(([knowledge]) => {
-            const counts = new Map((knowledge.items ?? []).map(item => [item.knowledge_id, (item.sources ?? []).length]));
-            document.querySelectorAll('.knowledge-card[data-knowledge-detail]').forEach(card => {
-                const chip = card.querySelector('.knowledge-card-source-count');
-                const count = counts.get(card.dataset.knowledgeDetail) ?? 0;
-                if (!chip) return;
-                chip.textContent = count > 0 ? `出典 ${count}` : '';
-                chip.hidden = count === 0;
-            });
-        }).catch(() => {});
+        applyKnowledgeSourceCounts();
     }
 
     function boot() {
