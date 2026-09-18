@@ -162,22 +162,10 @@
         `);
     }
 
-    async function fetchJson(url, options = {}) {
-        const controller = new AbortController();
-        const timeout = window.setTimeout(() => controller.abort(), 10000);
-        try {
-            const response = await fetch(url, {...options, signal: controller.signal});
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
-        } finally {
-            window.clearTimeout(timeout);
-        }
-    }
-
     const dataPromise = Promise.all([
-        fetchJson('/api/demo/knowledge', {headers:{'Accept':'application/json'}}),
-        fetchJson('/api/demo/review', {headers:{'Accept':'application/json'}}),
-        fetchJson('/api/demo/rules', {headers:{'Accept':'application/json'}}),
+        window.DemoApi.getJson('/api/demo/knowledge'),
+        window.DemoApi.getJson('/api/demo/review'),
+        window.DemoApi.getJson('/api/demo/rules'),
     ]);
 
     function showKnowledgeError(error) {
