@@ -28,6 +28,10 @@ class KnowledgeDetailInteractionTest extends TestCase
         $this->assertStringContainsString("fetchJson('/api/demo/knowledge'", $script);
         $this->assertStringContainsString("fetchJson('/api/demo/review'", $script);
         $this->assertStringContainsString("fetchJson('/api/demo/rules'", $script);
+        $this->assertStringContainsString('出典・参考資料', $script);
+        $this->assertStringContainsString('knowledge-sources', $script);
+        $this->assertStringContainsString('noopener noreferrer', $script);
+        $this->assertStringContainsString('public_sources', $script);
     }
 
     public function test_each_demo_knowledge_entry_has_explicit_review_steps(): void

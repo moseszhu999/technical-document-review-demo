@@ -112,6 +112,19 @@
             .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}
             .knowledge-keywords span{border:1px solid var(--line);background:var(--panel-soft,var(--panel));color:var(--muted);border-radius:999px;padding:5px 9px;font-size:11px}
 
+            .knowledge-sources{display:grid}
+            .knowledge-source-item{padding:11px 0;border-top:1px solid var(--line)}
+            .knowledge-source-item:first-child{border-top:0;padding-top:0}
+            .knowledge-source-item:last-child{padding-bottom:0}
+            .knowledge-source-top{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:5px}
+            .knowledge-source-publisher{margin-right:auto;color:var(--muted);font-size:11px}
+            .knowledge-source-top code{color:var(--cyan);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .knowledge-source-top a{color:var(--cyan);font-size:11px;text-decoration:none}
+            .knowledge-source-top a:hover{text-decoration:underline}
+            .knowledge-source-item strong{display:block;color:var(--text);font-size:13px;margin-bottom:5px}
+            .knowledge-source-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+            .knowledge-demo-note{margin:0 0 10px;font-size:12px}
+
             /* ボタンの配色は .prompt-button（secondary）／.primary-action（primary）に任せ、ここは行レイアウトだけ。 */
             .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
             .knowledge-detail-actions .prompt-button,.knowledge-detail-actions .primary-action{flex:1 1 200px;width:auto;margin:0;padding:11px 14px;border-radius:11px;text-align:center;font:700 12px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif;letter-spacing:.02em}
@@ -203,6 +216,40 @@
             </div>`).join('')}</div>`;
     }
 
+    function renderSource(source, review) {
+        if (source.type === 'standard') {
+            return `
+            <div class="knowledge-source-item">
+                <div class="knowledge-source-top">
+                    <span class="knowledge-source-publisher">${escapeHtml(source.publisher ?? '')}</span>
+                    <code>${escapeHtml(source.code)}</code>
+                    <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式ページ ↗</a>
+                </div>
+                <strong>${escapeHtml(source.title)}</strong>
+                ${source.locator ? `<p>${escapeHtml(source.locator)}</p>` : ''}
+            </div>`;
+        }
+
+        const registered = (review.public_sources ?? []).find(entry => entry.source_id === source.registry_ref);
+        const code = registered?.document_code ?? source.registry_ref;
+        const page = source.page ? ` · p.${escapeHtml(source.page)}` : '';
+        const title = registered?.title ?? '';
+        const link = registered?.official_url
+            ? `<a href="${escapeHtml(registered.official_url)}" target="_blank" rel="noopener noreferrer">公式ページ ↗</a>`
+            : '';
+
+        return `
+        <div class="knowledge-source-item">
+            <div class="knowledge-source-top">
+                <span class="knowledge-source-publisher">${escapeHtml(registered?.publisher ?? 'NORD')} 公式資料</span>
+                <code>${escapeHtml(code)}${page}</code>
+                ${link}
+            </div>
+            ${title ? `<strong>${escapeHtml(title)}</strong>` : ''}
+            ${source.note ? `<p>${escapeHtml(source.note)}</p>` : ''}
+        </div>`;
+    }
+
     async function openKnowledge(knowledgeId) {
         const [knowledge, review, ruleCatalog] = await dataPromise;
         const item = (knowledge.items ?? []).find(entry => entry.knowledge_id === knowledgeId);
@@ -213,6 +260,7 @@
             'AI候補と確定判断を分けて扱う',
             '最終判断を人が確認する',
         ];
+        const sourcesHtml = `<div class="knowledge-sources">${(item.sources ?? []).map(source => renderSource(source, review)).join('')}</div>`;
         const rulesHtml = (item.linked_rules ?? []).length
             ? `<div class="knowledge-rule-stack">${item.linked_rules.map(id => renderRule(id, ruleCatalog, review)).join('')}</div>`
             : '<p>このナレッジに直接紐付くルールはありません。</p>';
@@ -226,16 +274,17 @@
             <div class="knowledge-detail-grid">
                 <section class="knowledge-detail-section"><h3>レビュー時の考え方</h3><p>${escapeHtml(item.guidance)}</p></section>
                 <section class="knowledge-detail-section"><h3>確認ステップ</h3><div class="knowledge-steps">${steps.map(step => `<div class="knowledge-step">${escapeHtml(step)}</div>`).join('')}</div></section>
-                <section class="knowledge-detail-section"><h3>関連ルールと現在の判定</h3>${rulesHtml}</section>
+                <section class="knowledge-detail-section"><h3>関連ルールと現在の判定</h3><p class="knowledge-demo-note">このセクションの数値・判定は公開デモ用の架空レコードで、公開規格の規定値ではありません。</p>${rulesHtml}</section>
                 <section class="knowledge-detail-section"><h3>根拠・エビデンス</h3>${renderEvidence(item, review)}</section>
                 <section class="knowledge-detail-section full"><h3>検索キーワード</h3><div class="knowledge-keywords">${(item.keywords ?? []).map(keyword => `<span>${escapeHtml(keyword)}</span>`).join('')}</div></section>
+                <section class="knowledge-detail-section full"><h3>出典・参考資料</h3>${sourcesHtml}</section>
             </div>
             <div class="knowledge-detail-actions">
                 <button type="button" class="prompt-button" data-knowledge-action="rules">ルールカタログで確認</button>
                 <button type="button" class="prompt-button" data-knowledge-action="review">レビュー画面で根拠を確認</button>
                 <button type="button" class="primary-action" data-knowledge-action="ai">このナレッジをAIに質問</button>
             </div>
-            <div class="knowledge-boundary guidance">このナレッジは公開デモ用の架空データです。AIの回答・候補だけで最終判断せず、ルールと元文書の根拠を人が確認する設計を示しています。</div>
+            <div class="knowledge-boundary guidance">ナレッジのガイドは公開規格（ISO/JIS）と NORD 公式資料（出典欄）に基づきます。ただし関連 DEMO ルールの入力値・しきい値・判定結果は公開デモ用の架空レコードです。AIの回答・候補だけで最終判断せず、ルールと元文書の根拠を人が確認する設計を示しています。</div>
         `;
         content.dataset.knowledgeId = item.knowledge_id;
         const modal = document.querySelector('#knowledge-detail-modal');
