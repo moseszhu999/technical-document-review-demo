@@ -1,42 +1,126 @@
 {
-  "schema": "public_demo_knowledge_v1",
-  "note": "公開デモ用の架空ナレッジです。実際の規格・顧客文書は含みません。",
+  "schema": "public_demo_knowledge_v2",
+  "note": "ガイドの方法論は公開規格（ISO/JIS）とメーカー公式資料（NORD）に基づきます。出典は各 item の sources を参照してください。関連する DEMO ルールの入力値・しきい値・判定結果は、すべて公開デモ用の架空レコードです。",
   "items": [
     {
       "knowledge_id": "KB-001",
       "title": "図面改訂管理ガイド",
       "category": "文書管理",
-      "summary": "設計図の改訂番号と、検査・受入文書が参照する改訂番号を確認する。",
-      "guidance": "改訂番号に差異がある場合は、自動的に不適合と確定せず、元文書を確認して理由を記録する。",
+      "summary": "設計図の改訂番号と、検査・受入文書が参照する改訂番号を、文書管理のルールに沿って確認する。",
+      "guidance": "改訂番号の管理は ISO 9001:2015 7.5.3.2 c)（JIS Q 9001:2015 7.5.3）が求める文書化した情報の変更管理にあたる。差異を見つけても自動的に不適合とせず、変更記録・配布履歴を確認し、理由を記録してから人手判断へ引き渡す。",
       "linked_rules": ["DEMO-R01"],
-      "keywords": ["図面", "改訂", "検査"]
+      "keywords": ["図面", "改訂", "検査"],
+      "sources": [
+        {
+          "type": "standard",
+          "publisher": "ISO",
+          "code": "ISO 9001:2015",
+          "title": "品質マネジメントシステム－要求事項（Quality management systems – Requirements）",
+          "locator": "7.5.3.2 c) 変更管理（版の管理）、8.5.6 変更の管理",
+          "url": "https://www.iso.org/standard/62085.html"
+        },
+        {
+          "type": "standard",
+          "publisher": "JSA（日本規格協会）",
+          "code": "JIS Q 9001:2015",
+          "title": "品質マネジメントシステム－要求事項（ISO 9001:2015 の日本語規格・公式プレビュー）",
+          "locator": "7.5.3 文書化した情報の管理",
+          "url": "https://webdesk.jsa.or.jp/preview/pre_jis_q_09001_000_000_2015_j_ed10_ch.pdf"
+        }
+      ]
     },
     {
       "knowledge_id": "KB-002",
       "title": "減速比確認ガイド",
       "category": "検査",
-      "summary": "組立図の設計減速比と検査記録の実測値を比較する。",
-      "guidance": "設計値と実測値を同じ単位・同じ対象として確認した上で比較し、デモ用許容差を超えた場合はレビュー候補にする。",
+      "summary": "組立図の設計減速比と検査記録の実測値を、用語定義と単位をそろえて比較する。",
+      "guidance": "減速比は ISO 1122-1:1998 1.1.3.1 で「被動歯車(wheel)の歯数を小歯車(pinion)の歯数で割った値」と定義される。設計値と実測値は同じ対象・単位で比較する。歯車の精度等級は ISO 1328-1:2013 のフランク公差等級（1～11級）で規定されるが、相対誤差 1.5% という DEMO-R02 のしきい値は公開規格の規定値ではない架空のデモ用許容差である。NORD G1050（p.88–89）は公称減速比 iN と実減速比 i_ges を別欄で示す実例である。許容差を超えた場合は人にエスカレーションする。",
       "linked_rules": ["DEMO-R02"],
-      "keywords": ["減速比", "実測", "検査"]
+      "keywords": ["減速比", "実測", "検査"],
+      "sources": [
+        {
+          "type": "standard",
+          "publisher": "ISO",
+          "code": "ISO 1122-1:1998",
+          "title": "Vocabulary of gear terms – Part 1: Definitions related to geometry（歯車用語－幾何関連の定義）",
+          "locator": "1.1.3.1 歯車比（gear ratio）＝被動歯車の歯数÷小歯車の歯数",
+          "url": "https://www.iso.org/obp/ui/en/#!iso:std:5649:en"
+        },
+        {
+          "type": "standard",
+          "publisher": "ISO",
+          "code": "ISO 1328-1:2013",
+          "title": "Cylindrical gears – ISO system of flank tolerance classification – Part 1（円筒歯車のフランク公差等級方式）",
+          "locator": "フランク公差等級 1～11（数値が小さいほど高精度）",
+          "url": "https://www.iso.org/obp/ui/#iso:std:iso:1328:-1:ed-2:v1:en"
+        },
+        {
+          "type": "official_manual",
+          "registry_ref": "NORD-G1050",
+          "page": "88–89",
+          "note": "定格表の見方／公称減速比 iN と実減速比 i_ges の区別（英語版）"
+        }
+      ]
     },
     {
       "knowledge_id": "KB-003",
       "title": "ベアリングすきま確認ガイド",
       "category": "検査",
-      "summary": "指定された下限・上限と実測すきまを比較する。",
-      "guidance": "対象部品を確認し、実測値が範囲外ならエビデンスとともに人による確認へ送る。",
+      "summary": "指定された下限・上限と実測すきまを、測定条件をそろえて比較する。",
+      "guidance": "軸受の内部すきまは ISO 5753-1:2009 で C2/C0/C3 等のグループとして規定されるが、これは未組立・無負荷状態の値で、組立後の実測すきまとは条件が異なる。軸受自体の公差等級は ISO 492:2023 による。DEMO-R03 の 0.10–0.20 mm という判定帯は公開規格の値ではない架空のデモ用基準である。範囲外の場合は測定条件とエビデンスを添え、最終的な適否は専門担当者が確認する。",
       "linked_rules": ["DEMO-R03"],
-      "keywords": ["ベアリング", "すきま", "軸受"]
+      "keywords": ["ベアリング", "すきま", "軸受"],
+      "sources": [
+        {
+          "type": "standard",
+          "publisher": "ISO",
+          "code": "ISO 5753-1:2009",
+          "title": "Rolling bearings – Internal clearance – Part 1（転がり軸受－内部すきま－第1部：ラジアル内部すきま）",
+          "locator": "すきまグループ C2/C0/C3 等。規格値は未組立・無負荷状態",
+          "url": "https://www.iso.org/standard/46232.html"
+        },
+        {
+          "type": "standard",
+          "publisher": "ISO",
+          "code": "ISO 492:2023",
+          "title": "Rolling bearings – Radial bearings – GPS and tolerance values（ラジアル軸受の幾何製品仕様及び公差値）",
+          "locator": "寸法精度・回転精度の公差等級",
+          "url": "https://www.iso.org/standard/80376.html"
+        },
+        {
+          "type": "standard",
+          "publisher": "日本軸受工業会（JBIA）",
+          "code": "ISO 492:2023 日本語解説",
+          "title": "ISO 492:2023（転がり軸受－ラジアル軸受）日本語概要",
+          "locator": "規格内容の日本語による概要説明",
+          "url": "https://www.jbia.or.jp/cbo/pdf/492_2023.pdf"
+        }
+      ]
     },
     {
       "knowledge_id": "KB-004",
       "title": "エビデンス追跡ガイド",
       "category": "レビュー工程",
       "summary": "指摘事項は元文書の位置情報までたどれるエビデンスとセットで扱う。",
-      "guidance": "システムの候補を最終結論とせず、文書、位置、判断ルールを確認できる状態で専門担当者へ引き渡す。",
+      "guidance": "トレーサビリティが要求される場合、ISO 9001:2015 8.5.2（JIS Q 9001:2015 8.5.2）は追跡を可能にする文書化した情報の保持を求める。点検・保守記録の実例として NORD B1050 マニュアル p.73（Inspection and maintenance intervals）が参考になる。システムの候補を最終結論とせず、文書・位置・判定ルールを確認できる状態で専門担当者へ引き渡す。",
       "linked_rules": ["DEMO-R01", "DEMO-R02", "DEMO-R03"],
-      "keywords": ["エビデンス", "根拠", "レビュー", "確認"]
+      "keywords": ["エビデンス", "根拠", "レビュー", "確認"],
+      "sources": [
+        {
+          "type": "standard",
+          "publisher": "JSA（日本規格協会）",
+          "code": "JIS Q 9001:2015",
+          "title": "品質マネジメントシステム－要求事項（ISO 9001:2015 の日本語規格・公式プレビュー）",
+          "locator": "8.5.2 識別及びトレーサビリティ",
+          "url": "https://webdesk.jsa.or.jp/preview/pre_jis_q_09001_000_000_2015_j_ed10_ch.pdf"
+        },
+        {
+          "type": "official_manual",
+          "registry_ref": "NORD-B1050",
+          "page": "73",
+          "note": "5.1 Inspection and maintenance intervals（点検・保守周期の記録例）"
+        }
+      ]
     }
   ]
 }
