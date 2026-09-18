@@ -165,7 +165,7 @@ class ArkChatService
                 'model' => $settings['model'],
                 'api_key_source' => $settings['api_key_source'],
                 'error_class' => $e::class,
-                'error_message' => $this->safeErrorField($e->getMessage()),
+                'error_message' => $this->safeErrorField($e->getMessage(), $settings['api_key']),
             ]);
 
             throw $e;
@@ -206,8 +206,8 @@ class ArkChatService
             'status' => $response->status(),
             'model' => $settings['model'],
             'api_key_source' => $settings['api_key_source'],
-            'ark_error_code' => $this->safeErrorField($response->json('error.code')),
-            'ark_error_message' => $this->safeErrorField($response->json('error.message')),
+            'ark_error_code' => $this->safeErrorField($response->json('error.code'), $settings['api_key']),
+            'ark_error_message' => $this->safeErrorField($response->json('error.message'), $settings['api_key']),
         ]);
     }
 
@@ -234,7 +234,7 @@ class ArkChatService
         return trim($value);
     }
 
-    private function safeErrorField(mixed $value): ?string
+    private function safeErrorField(mixed $value, string $apiKey = ''): ?string
     {
         if (! is_scalar($value)) {
             return null;
@@ -245,7 +245,17 @@ class ArkChatService
             return null;
         }
 
-        return mb_substr($text, 0, 240);
+        // 上流がエラーメッセージへ鍵をエコーすることがあるため、切り詰める前に伏せます。
+        return mb_substr($this->redact($text, $apiKey), 0, 240);
+    }
+
+    private function redact(string $text, string $apiKey): string
+    {
+        if ($apiKey === '') {
+            return $text;
+        }
+
+        return str_replace($apiKey, '[redacted]', $text);
     }
 
     private function systemPrompt(): string

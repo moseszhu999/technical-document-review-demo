@@ -135,7 +135,7 @@ Document（文档）→ AI 抽取候选（仅候选，人工确认）→ Normali
 ## AI 的用法与边界
 
 - **接地（Grounding）**：`ArkChatService::groundingContext()` 会把文档、知识库、规则、AI 候选、数字孪生点位附到 prompt，并通过系统提示强制「只以所给资料为依据」「没有依据就明确说无法确认」。知识条目的方法论均带 `sources` 出处（ISO/JIS 公开标准与 NORD 官方手册），与虚构演示记录明确区分。
-- **密钥处理**：API Key 只从服务端环境变量读取，绝不发送到浏览器（并有专门测试断言不外泄）。
+- **密钥处理**：API Key 只从服务端环境变量读取，绝不发送到浏览器。响应体、页面、日志中均不出现，由 `ApiKeyConfidentialityTest` 断言；上游若把密钥回显在错误信息里，也会在写入日志前先抹除。
 - **失败兜底**：LLM 未配置、连接失败或超时时，`DemoChatController` 会回退到**带依据 ID 的固定演示回答**，离线也能完整演示。
 - **抽取候选是夹具**：`data/ai/assist_candidates.json` 是 `mode: fixture` 的模拟输出，用来展示「AI 候选进入系统后，规则与证据如何介入」的接缝；生产中替换为真实抽取服务即可，契约不变。
 - **流式响应**：推理型模型思考较慢，因此对话走 SSE 专用端点 `POST /api/demo/chat/stream`，按 `phase`（思考中）→ `delta`（正文逐字）→ `sources`（依据 ID）→ `done` 的顺序下发；思考阶段就开始有响应，不会让人干等。未配置或失败时也会以流式返回同一份固定演示回答。同时保留非流式的 `POST /api/demo/chat` 作为向后兼容。
