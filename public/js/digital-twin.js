@@ -267,12 +267,12 @@ async function bootDigitalTwin() {
     const reviewView = document.querySelector('#review-view');
     const detailGrid = reviewView?.querySelector('.grid');
     if (!reviewView || !detailGrid || document.querySelector('#digital-twin-root')) return;
-    const [registryResponse, reviewResponse] = await Promise.all([
+    const [registryResponse, review] = await Promise.all([
         fetch('/data/workshop-assets.json', {headers:{'Accept':'application/json'}}),
-        fetch('/api/demo/review', {headers:{'Accept':'application/json'}}),
+        window.DemoApi.getJson('/api/demo/review'),
     ]);
-    if (!registryResponse.ok || !reviewResponse.ok) throw new Error('Digital twin data could not be loaded.');
-    const [registry, review] = await Promise.all([registryResponse.json(), reviewResponse.json()]);
+    if (!registryResponse.ok) throw new Error('Digital twin data could not be loaded.');
+    const registry = await registryResponse.json();
     const root = buildTwinRoot(registry);
     detailGrid.before(root);
 
