@@ -300,10 +300,12 @@ PROMPT;
     private function extractSources(string $answer): array
     {
         preg_match_all(
-            '/\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+'
-            .'|(?:RCV|STR|ASM|INSP|MNT|SHP)-\d+'
-            .'|ISO(?:\/[A-Z]+)?\s?\d+(?:-\d+)?(?::\d{4})?'
-            .'|JIS\sQ\s\d+(?::\d{4})?)\b/u',
+            '/(?:'
+            .'\b(?:DEMO-R\d+|KB-\d+|AI-C\d+|DRAW-\d+|WI-\d+|INSP-\d+|ACC-\d+'
+            .'|(?:RCV|STR|ASM|INSP|MNT|SHP)-\d+)\b'
+            .'|(?<![A-Za-z0-9])(?:ISO(?:\/[A-Z]+)?\s?\d+(?:-\d+)?(?::\d{4})?'
+            .'|JIS\s?[A-Z]\s?\d+(?::\d{4})?)(?![A-Za-z0-9])'
+            .')/u',
             $answer,
             $matches,
         );
