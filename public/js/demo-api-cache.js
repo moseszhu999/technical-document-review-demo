@@ -8,7 +8,7 @@
         if (inflight.has(key)) return inflight.get(key);
 
         const controller = new AbortController();
-        const timeoutMs = Number(options.timeoutMs ?? 15000);
+        const timeoutMs = Number(options.timeoutMs ?? 60000);
         const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
 
         const requestOptions = {...options};
