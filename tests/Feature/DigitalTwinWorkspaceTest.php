@@ -36,7 +36,7 @@ class DigitalTwinWorkspaceTest extends TestCase
         $this->assertStringContainsString('HUMAN CONFIRMATION', $script);
         $this->assertStringContainsString('data-twin-asset', $script);
         $this->assertStringContainsString('.twin-map', $style);
-        $this->assertStringContainsString("import('/js/digital-twin.js?v=20260913-1')", $loader);
+        $this->assertStringContainsString("import('/js/digital-twin.js?v=20260918-1')", $loader);
         $this->assertStringContainsString("import('/js/digital-twin-3d.js?v=20260913-1')", $loader);
     }
 
