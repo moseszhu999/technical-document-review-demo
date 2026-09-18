@@ -23,7 +23,7 @@ AI / OCR / LLM が有効な場所は、たとえば次です。
 
 チャット画面では、サーバー側から火山方舟 Ark の Chat Completions API を呼び出せます。ブラウザへ API Key は渡しません。
 
-モデルへ渡す根拠は、この公開デモに含まれる次の架空データだけです。
+モデルへ渡す根拠は二層です。ナレッジ（`data/knowledge/manufacturing_knowledge.json`）の `sources` に記載した公開規格（ISO/JIS）と NORD 公式資料は実在の公開情報で、リンクのみを提示し原文は転載しません。一方、次のデータはすべて公開デモ用の架空レコードであり、しきい値を規格の規定値として語ることは禁止しています。
 
 - `data/input/*.json`
 - `data/knowledge/manufacturing_knowledge.json`
