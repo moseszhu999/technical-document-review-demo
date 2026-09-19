@@ -1,0 +1,327 @@
+(() => {
+    let knowledgeTrigger = null;
+
+    const stepsByKnowledge = {
+        'KB-001': [
+            '対象図面の改訂番号を確認する',
+            '検査記録・受入記録が参照する改訂番号と照合する',
+            '差異がある場合は元文書と変更理由を確認する',
+            'AIだけで確定せず、人手確認の結果を記録する',
+        ],
+        'KB-002': [
+            '設計減速比と実測減速比が同じ対象・同じ単位か確認する',
+            'DEMO-R02 の入力値と許容差を確認する',
+            '判定に使った文書位置と値をエビデンスとして追跡する',
+            '許容差を超えた場合は人にエスカレーションする',
+        ],
+        'KB-003': [
+            '対象ベアリングと測定箇所を確認する',
+            '下限値・上限値・実測値を同じ条件で比較する',
+            '範囲外の場合は関連文書と測定記録を確認する',
+            '最終的な適否は専門担当者が確認する',
+        ],
+        'KB-004': [
+            '指摘事項に対応する元文書を特定する',
+            'ページ・表・行・節などの位置情報まで追跡する',
+            'ルールの入力値と判定結果を照合する',
+            '根拠が不足する場合は結論を出さず、人に引き渡す',
+        ],
+    };
+
+    const statusLabels = {
+        pass: '適合',
+        needs_review: '要確認',
+        human_review_required: '人手確認が必要',
+        candidate: '候補',
+        unknown: '未確認',
+        not_evaluated: '未評価',
+    };
+
+    const fieldLabels = {
+        drawing_revision: '図面改訂番号',
+        inspection_revision: '検査参照改訂番号',
+        gear_ratio_design: '設計減速比',
+        gear_ratio_measured: '実測減速比',
+        clearance_min_mm: 'すきま下限（mm）',
+        clearance_max_mm: 'すきま上限（mm）',
+        clearance_measured_mm: '実測すきま（mm）',
+    };
+
+    const locatorLabels = {page: 'ページ', table: '表', row: '行', section: '節', column: '列'};
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function locatorText(locator) {
+        if (!locator || Object.keys(locator).length === 0) return '位置情報なし';
+        return Object.entries(locator)
+            .map(([key, value]) => `${locatorLabels[key] ?? key}: ${value}`)
+            .join(' · ');
+    }
+
+    function ensureStyles() {
+        if (document.querySelector('#knowledge-detail-styles')) return;
+        const style = document.createElement('style');
+        style.id = 'knowledge-detail-styles';
+        style.textContent = `
+            .knowledge-card[data-knowledge-detail]{cursor:pointer;position:relative;padding-bottom:48px}
+            .knowledge-card[data-knowledge-detail]:focus-visible{outline:2px solid rgba(69,216,255,.8);outline-offset:3px}
+            .knowledge-open-hint{position:absolute;left:18px;right:18px;bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#45d8ff;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
+            .knowledge-open-hint:after{content:'→';font-size:13px}
+            .knowledge-detail-modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px}
+            .knowledge-detail-modal.hidden{display:none}
+            .knowledge-detail-backdrop{position:absolute;inset:0;background:rgba(234,239,245,.78);backdrop-filter:blur(10px)}
+            .knowledge-detail-card{position:relative;z-index:1;width:min(980px,100%);max-height:88vh;overflow:auto;background:#fff;border:1px solid #d8e1eb;border-radius:22px;padding:26px;box-shadow:0 30px 90px rgba(38,54,75,.20)}
+            .knowledge-detail-close{position:absolute;right:16px;top:12px;border:0;background:transparent;color:#667085;font-size:28px;cursor:pointer}
+            .knowledge-detail-close:hover{color:#172033}
+            .knowledge-detail-head{padding-right:44px;border-bottom:1px solid #e1e8ef;padding-bottom:18px}
+            .knowledge-detail-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+            .knowledge-detail-badge{border:1px solid #b9dce7;border-radius:999px;padding:5px 8px;color:#167c9d;font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .knowledge-detail-head h2{font-size:27px;margin:6px 0 8px;letter-spacing:-.02em}
+            .knowledge-detail-head p{margin:0;color:#596579;font-size:14px;line-height:1.75}
+            .knowledge-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+            .knowledge-detail-section{border:1px solid #dfe6ee;background:#fbfcfe;border-radius:16px;padding:15px}
+            .knowledge-detail-section.full{grid-column:1/-1}
+            .knowledge-detail-section h3{margin:0 0 10px;color:#263548;font-size:14px;letter-spacing:.04em}
+            .knowledge-detail-section p{margin:0;color:#596579;font-size:13px;line-height:1.7}
+            .knowledge-steps{display:grid;gap:8px;counter-reset:kstep}
+            .knowledge-step{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;color:#435267;font-size:13px;line-height:1.6}
+            .knowledge-step:before{counter-increment:kstep;content:counter(kstep);width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#eef8fb;border:1px solid #b9dce7;color:#167c9d;font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .knowledge-rule-stack,.knowledge-evidence-stack{display:grid;gap:9px}
+            .knowledge-rule-item,.knowledge-evidence-item{border:1px solid #dfe6ee;border-radius:12px;padding:11px;background:#fff}
+            .knowledge-rule-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:5px}
+            .knowledge-rule-top code{color:#167c9d;font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .knowledge-rule-status{border-radius:999px;padding:4px 7px;font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;background:#fff7e5;color:#956012}
+            .knowledge-rule-status.pass{background:#eaf7f3;color:#11755f}
+            .knowledge-rule-item strong,.knowledge-evidence-item strong{display:block;color:#263548;font-size:13px;margin-bottom:5px}
+            .knowledge-rule-inputs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+            .knowledge-rule-inputs span{border:1px solid #dfe6ee;border-radius:8px;padding:5px 7px;color:#667085;font-size:11px}
+            .knowledge-evidence-source{color:#167c9d;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:5px}
+            .knowledge-evidence-item p{font-size:12px}
+            .knowledge-keywords{display:flex;gap:6px;flex-wrap:wrap}.knowledge-keywords span{border:1px solid #dfe6ee;border-radius:999px;padding:5px 8px;color:#667085;font-size:11px;background:#fff}
+            .knowledge-detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+            .knowledge-detail-actions button{border:1px solid #b9dce7;background:#eef8fb;color:#176d88;border-radius:10px;padding:10px 12px;font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
+            .knowledge-detail-actions button.primary{border-color:#e69a8d;background:#fff1f2;color:#a93444}
+            .knowledge-boundary{margin-top:15px;padding:10px 12px;border-left:2px solid #d94b5c;background:#fff5f3;color:#596579;font-size:12px;line-height:1.75}
+            .knowledge-load-error{padding:22px;border:1px solid rgba(255,77,95,.35);border-radius:14px;background:rgba(255,77,95,.07);color:#ffd8dd}
+            .knowledge-load-error strong{display:block;font-size:15px;margin-bottom:8px}
+            .knowledge-load-error p{margin:0;font-size:13px;line-height:1.7}
+            .knowledge-focus{outline:2px solid rgba(69,216,255,.55);box-shadow:0 0 28px rgba(69,216,255,.08)}
+            @media(max-width:760px){.knowledge-detail-grid{grid-template-columns:1fr}.knowledge-detail-section.full{grid-column:auto}.knowledge-detail-card{padding:20px}}
+        `;
+        document.head.appendChild(style);
+    }
+
+    function createModal() {
+        if (document.querySelector('#knowledge-detail-modal')) return;
+        document.body.insertAdjacentHTML('beforeend', `
+            <div id="knowledge-detail-modal" class="knowledge-detail-modal hidden" aria-hidden="true">
+                <div class="knowledge-detail-backdrop" data-knowledge-close></div>
+                <section class="knowledge-detail-card" role="dialog" aria-modal="true" aria-labelledby="knowledge-detail-title">
+                    <button type="button" class="knowledge-detail-close" data-knowledge-close aria-label="閉じる">×</button>
+                    <div id="knowledge-detail-content"></div>
+                </section>
+            </div>
+        `);
+    }
+
+    async function fetchJson(url, options = {}) {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 10000);
+        try {
+            const response = await fetch(url, {...options, signal: controller.signal});
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } finally {
+            window.clearTimeout(timeout);
+        }
+    }
+
+    const dataPromise = Promise.all([
+        fetchJson('/api/demo/knowledge', {headers:{'Accept':'application/json'}}),
+        fetchJson('/api/demo/review', {headers:{'Accept':'application/json'}}),
+        fetchJson('/api/demo/rules', {headers:{'Accept':'application/json'}}),
+    ]);
+
+    function showKnowledgeError(error) {
+        const content = document.querySelector('#knowledge-detail-content');
+        const modal = document.querySelector('#knowledge-detail-modal');
+        if (!content || !modal) return;
+        content.innerHTML = '<div class="knowledge-load-error" role="alert"><strong>ナレッジ詳細を読み込めませんでした。</strong><p>ネットワーク状態を確認して、もう一度お試しください。</p></div>';
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.querySelector('.knowledge-detail-close')?.focus();
+        console.error(error);
+    }
+
+    function renderRule(ruleId, ruleCatalog, review) {
+        const rule = (ruleCatalog.rules ?? []).find(item => item.rule_id === ruleId);
+        const evaluation = (review.rule_results ?? []).find(item => item.rule_id === ruleId);
+        const status = evaluation?.status ?? 'not_evaluated';
+        const inputs = (evaluation?.inputs ?? []).map(input => `<span>${escapeHtml(fieldLabels[input.name] ?? input.name)}: ${escapeHtml(input.value ?? 'なし')}</span>`).join('');
+        return `
+            <div class="knowledge-rule-item" data-knowledge-rule="${escapeHtml(ruleId)}">
+                <div class="knowledge-rule-top"><code>${escapeHtml(ruleId)}</code><span class="knowledge-rule-status ${status === 'pass' ? 'pass' : ''}">${escapeHtml(statusLabels[status] ?? status)}</span></div>
+                <strong>${escapeHtml(rule?.title ?? evaluation?.title ?? '関連ルール')}</strong>
+                <p>${escapeHtml(rule?.judgment ?? rule?.public_rule ?? evaluation?.public_rule ?? '現在のレビュー結果と根拠を確認してください。')}</p>
+                ${inputs ? `<div class="knowledge-rule-inputs">${inputs}</div>` : ''}
+            </div>`;
+    }
+
+    function renderEvidence(item, review) {
+        const evidence = (review.rule_results ?? [])
+            .filter(rule => (item.linked_rules ?? []).includes(rule.rule_id))
+            .flatMap(rule => (rule.evidence ?? []).map(entry => ({...entry, rule_id: rule.rule_id})));
+        if (!evidence.length) return '<p>現在、このナレッジに直接紐付くエビデンスはありません。</p>';
+        return `<div class="knowledge-evidence-stack">${evidence.map(entry => `
+            <div class="knowledge-evidence-item">
+                <div class="knowledge-evidence-source">${escapeHtml(entry.rule_id)} · ${escapeHtml(entry.source_document ?? entry.document_type ?? 'SOURCE')}</div>
+                <strong>${escapeHtml(entry.value ?? '値なし')}</strong>
+                <p>${escapeHtml(locatorText(entry.locator))}</p>
+            </div>`).join('')}</div>`;
+    }
+
+    async function openKnowledge(knowledgeId) {
+        const [knowledge, review, ruleCatalog] = await dataPromise;
+        const item = (knowledge.items ?? []).find(entry => entry.knowledge_id === knowledgeId);
+        if (!item) return;
+        const steps = stepsByKnowledge[item.knowledge_id] ?? [
+            '関連する文書と対象を確認する',
+            'ルール入力と根拠位置を確認する',
+            'AI候補と確定判断を分けて扱う',
+            '最終判断を人が確認する',
+        ];
+        const rulesHtml = (item.linked_rules ?? []).length
+            ? `<div class="knowledge-rule-stack">${item.linked_rules.map(id => renderRule(id, ruleCatalog, review)).join('')}</div>`
+            : '<p>このナレッジに直接紐付くルールはありません。</p>';
+        const content = document.querySelector('#knowledge-detail-content');
+        content.innerHTML = `
+            <header class="knowledge-detail-head">
+                <div class="knowledge-detail-badges"><span class="knowledge-detail-badge">${escapeHtml(item.knowledge_id)}</span><span class="knowledge-detail-badge">${escapeHtml(item.category)}</span></div>
+                <h2 id="knowledge-detail-title">${escapeHtml(item.title)}</h2>
+                <p>${escapeHtml(item.summary)}</p>
+            </header>
+            <div class="knowledge-detail-grid">
+                <section class="knowledge-detail-section"><h3>レビュー時の考え方</h3><p>${escapeHtml(item.guidance)}</p></section>
+                <section class="knowledge-detail-section"><h3>確認ステップ</h3><div class="knowledge-steps">${steps.map(step => `<div class="knowledge-step">${escapeHtml(step)}</div>`).join('')}</div></section>
+                <section class="knowledge-detail-section"><h3>関連ルールと現在の判定</h3>${rulesHtml}</section>
+                <section class="knowledge-detail-section"><h3>根拠・エビデンス</h3>${renderEvidence(item, review)}</section>
+                <section class="knowledge-detail-section full"><h3>検索キーワード</h3><div class="knowledge-keywords">${(item.keywords ?? []).map(keyword => `<span>${escapeHtml(keyword)}</span>`).join('')}</div></section>
+            </div>
+            <div class="knowledge-detail-actions">
+                <button type="button" data-knowledge-action="rules">ルールカタログで確認</button>
+                <button type="button" data-knowledge-action="review">レビュー画面で根拠を確認</button>
+                <button type="button" class="primary" data-knowledge-action="ai">このナレッジをAIに質問</button>
+            </div>
+            <div class="knowledge-boundary">このナレッジは公開デモ用の架空データです。AIの回答・候補だけで最終判断せず、ルールと元文書の根拠を人が確認する設計を示しています。</div>
+        `;
+        content.dataset.knowledgeId = item.knowledge_id;
+        const modal = document.querySelector('#knowledge-detail-modal');
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.querySelector('.knowledge-detail-card')?.scrollTo({top: 0});
+        modal.querySelector('.knowledge-detail-close')?.focus();
+    }
+
+    function closeKnowledge() {
+        const modal = document.querySelector('#knowledge-detail-modal');
+        modal?.classList.add('hidden');
+        modal?.setAttribute('aria-hidden', 'true');
+        knowledgeTrigger?.focus();
+        knowledgeTrigger = null;
+    }
+
+    function activateTab(viewId) {
+        document.querySelector(`.nav-tab[data-view="${viewId}"]`)?.click();
+    }
+
+    async function handleAction(action) {
+        const id = document.querySelector('#knowledge-detail-content')?.dataset.knowledgeId;
+        const [knowledge] = await dataPromise;
+        const item = (knowledge.items ?? []).find(entry => entry.knowledge_id === id);
+        if (!item) return;
+        if (action === 'rules') {
+            closeKnowledge();
+            activateTab('rules-view');
+            window.setTimeout(() => {
+                document.querySelectorAll('.rule-row').forEach(row => row.classList.remove('knowledge-focus'));
+                const ruleId = item.linked_rules?.[0];
+                const row = [...document.querySelectorAll('.rule-row')].find(node => ruleId && node.textContent.includes(ruleId));
+                row?.classList.add('knowledge-focus');
+                row?.scrollIntoView({behavior:'smooth', block:'center'});
+            }, 100);
+        }
+        if (action === 'review') {
+            closeKnowledge();
+            activateTab('review-view');
+            const [,, ruleCatalog] = await dataPromise;
+            const firstRuleId = item.linked_rules?.[0];
+            const rule = (ruleCatalog.rules ?? []).find(entry => entry.rule_id === firstRuleId);
+            const target = rule?.target_asset_id;
+            if (target) window.setTimeout(() => document.querySelector(`.part-tab[data-asset="${CSS.escape(target)}"]`)?.click(), 100);
+            window.setTimeout(() => document.querySelector('#evidence')?.scrollIntoView({behavior:'smooth', block:'center'}), 140);
+        }
+        if (action === 'ai') {
+            closeKnowledge();
+            activateTab('chat-view');
+            window.setTimeout(() => {
+                const input = document.querySelector('#chat-input');
+                if (!input) return;
+                input.value = `${item.knowledge_id}「${item.title}」について、関連ルールと根拠を使って説明してください。`;
+                input.focus();
+            }, 100);
+        }
+    }
+
+    function decorateKnowledgeCards() {
+        document.querySelectorAll('#knowledge-list .knowledge-card').forEach(card => {
+            const id = card.querySelector('.knowledge-id')?.textContent?.trim();
+            if (!id || card.dataset.knowledgeDetail === id) return;
+            card.dataset.knowledgeDetail = id;
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-label', `${id} の詳細を開く`);
+            if (!card.querySelector('.knowledge-open-hint')) card.insertAdjacentHTML('beforeend', '<div class="knowledge-open-hint"><span>詳細・関連ルール・根拠を確認</span></div>');
+        });
+    }
+
+    function boot() {
+        ensureStyles();
+        createModal();
+        const list = document.querySelector('#knowledge-list');
+        if (!list) return;
+        decorateKnowledgeCards();
+        new MutationObserver(decorateKnowledgeCards).observe(list, {childList:true, subtree:true});
+        list.addEventListener('click', event => {
+            const card = event.target.closest('.knowledge-card[data-knowledge-detail]');
+            if (card) {
+                knowledgeTrigger = card;
+                openKnowledge(card.dataset.knowledgeDetail).catch(showKnowledgeError);
+            }
+        });
+        list.addEventListener('keydown', event => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            const card = event.target.closest('.knowledge-card[data-knowledge-detail]');
+            if (!card) return;
+            event.preventDefault();
+            knowledgeTrigger = card;
+            openKnowledge(card.dataset.knowledgeDetail).catch(showKnowledgeError);
+        });
+        document.querySelector('#knowledge-detail-modal')?.addEventListener('click', event => {
+            if (event.target.closest('[data-knowledge-close]')) closeKnowledge();
+            const action = event.target.closest('[data-knowledge-action]')?.dataset.knowledgeAction;
+            if (action) handleAction(action).catch(console.error);
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !document.querySelector('#knowledge-detail-modal')?.classList.contains('hidden')) closeKnowledge();
+        });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
+})();
