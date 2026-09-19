@@ -200,6 +200,7 @@ composer test
 - **规则版本管理**：规则目录的版本化、有效期与审计日志。
 - **存储/缓存**：把每次重读 JSON 改为数据库与缓存。
 - **异步化**：抽取与判定走任务队列，支持重算。
+- **中国区运营要求**：以等保 2.0 定级判断为起点，连带商用密码（SM2/SM3/SM4）、PIPL、数据安全法、ICP 许可等要求。技术侧梳理见 [`docs/china-deployment-compliance.md`](docs/china-deployment-compliance.md)。
 
 ---
 
