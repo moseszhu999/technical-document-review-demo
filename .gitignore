@@ -4,3 +4,7 @@
 /vendor
 .env
 .phpunit.result.cache
+
+# 中国区合规设计（仅本地，面试时单独提交，不公开）
+/docs/china-deployment-compliance.md
+/docs/china-deployment-compliance.pdf
